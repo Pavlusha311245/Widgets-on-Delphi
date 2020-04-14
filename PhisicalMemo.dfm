@@ -7,6 +7,7 @@ object PhisicalMemoryForm: TPhisicalMemoryForm
   ClientHeight = 120
   ClientWidth = 240
   Color = clNavy
+  TransparentColor = True
   TransparentColorValue = clNavy
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -2139,18 +2140,18 @@ object PhisicalMemoryForm: TPhisicalMemoryForm
     Width = 240
     Height = 120
     Align = alClient
+    Center = True
     PopupMenu = PopupMenu
     Transparent = True
     OnMouseDown = PhisicalMemoryBackgroundMouseDown
   end
   object DiskNumber1: TLabel
-    Left = 89
+    Left = 73
     Top = 22
-    Width = 61
+    Width = 94
     Height = 19
     Alignment = taCenter
-    AutoSize = False
-    Caption = 'C: 0/0 Gb'
+    Caption = 'C: 000/000 Gb'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWhite
     Font.Height = -16
@@ -2162,13 +2163,12 @@ object PhisicalMemoryForm: TPhisicalMemoryForm
     OnMouseDown = PhisicalMemoryBackgroundMouseDown
   end
   object DiskNumber2: TLabel
-    Left = 89
+    Left = 73
     Top = 62
-    Width = 61
+    Width = 93
     Height = 19
     Alignment = taCenter
-    AutoSize = False
-    Caption = 'D: 0/0 Gb'
+    Caption = 'D: 000/000 Gb'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWhite
     Font.Height = -16

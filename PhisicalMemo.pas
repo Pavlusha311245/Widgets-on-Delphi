@@ -29,6 +29,7 @@ type
     procedure N2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure WMEXITSIZEMOVE(var message: TMessage); message WM_EXITSIZEMOVE;
+
     procedure N3Click(Sender: TObject);
 
   private

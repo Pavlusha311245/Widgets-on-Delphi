@@ -17,7 +17,7 @@ uses
   Forms,
   Classes,
   Messages,
-  CpuUsageWidget in '..\..\..\..\..\Program Files (x86)\Borland\Delphi7\Projects\CpuUsageWidget.pas' {CpuUsageForm};
+  CpuUsageWidget in 'CpuUsageWidget.pas' {CpuUsageForm};
 
 {$R *.res}
 

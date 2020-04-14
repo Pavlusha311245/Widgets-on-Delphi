@@ -23,8 +23,10 @@ type
     procedure CpuUsagebackgroundMouseDown(Sender: TObject;
       Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure FormShow(Sender: TObject);
+    procedure WMMoving(var Msg: TWMMoving); message WM_MOVING;
     procedure N4Click(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
+    procedure N1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -77,12 +79,37 @@ begin
 end;
 
 procedure TCpuUsageForm.TimerTimer(Sender: TObject);
-var i:integer;
+var
+  i: integer;
 begin
-CollectCPUData;
+  CollectCPUData;
   for i := 0 to GetCPUCount - 1 do
     LabelPercentCpuUsage.Caption := FloatToStr(Abs(Round(GetCPUUsage(i) * 100)))
       + '%'; //Function CPU Usage
+end;
+
+procedure TCpuUsageForm.N1Click(Sender: TObject);
+begin
+  CpuUsageForm.Free;
+end;
+
+procedure TCpuUsageForm.WMMoving(var Msg: TWMMoving);
+var
+  workArea: TRect;
+begin
+  workArea := Screen.WorkareaRect;
+  with Msg.DragRect^ do
+  begin
+    if Left < workArea.Left then
+      OffsetRect(Msg.DragRect^, workArea.Left - Left, 0);
+    if Top < workArea.Top then
+      OffsetRect(Msg.DragRect^, 0, workArea.Top - Top);
+    if Right > workArea.Right then
+      OffsetRect(Msg.DragRect^, workArea.Right - Right, 0);
+    if Bottom > workArea.Bottom then
+      OffsetRect(Msg.DragRect^, 0, workArea.Bottom - Bottom);
+  end;
+  inherited;
 end;
 
 end.

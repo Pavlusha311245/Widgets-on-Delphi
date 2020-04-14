@@ -2139,6 +2139,7 @@ object CpuUsageForm: TCpuUsageForm
     Width = 120
     Height = 120
     Align = alClient
+    Center = True
     Transparent = True
     OnMouseDown = CpuUsagebackgroundMouseDown
   end
@@ -2157,6 +2158,7 @@ object CpuUsageForm: TCpuUsageForm
     ParentFont = False
     Transparent = True
     Layout = tlCenter
+    OnMouseDown = CpuUsagebackgroundMouseDown
   end
   object LabelCPU: TLabel
     Left = 45
@@ -2173,6 +2175,7 @@ object CpuUsageForm: TCpuUsageForm
     ParentFont = False
     Transparent = True
     Layout = tlCenter
+    OnMouseDown = CpuUsagebackgroundMouseDown
   end
   object PopupMenu: TPopupMenu
     object W1: TMenuItem
@@ -2180,6 +2183,7 @@ object CpuUsageForm: TCpuUsageForm
     end
     object N1: TMenuItem
       Caption = #1047#1072#1082#1088#1099#1090#1100' '#1074#1080#1076#1078#1077#1090
+      OnClick = N1Click
     end
     object N2: TMenuItem
       Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100' '#1074#1080#1076#1078#1077#1090
