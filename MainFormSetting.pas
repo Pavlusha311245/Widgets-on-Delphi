@@ -1,0 +1,334 @@
+unit MainFormSetting;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ExtCtrls, sPanel, sSkinManager, ImgList, acAlphaImageList,
+  ExtCtrlsX, ComCtrls, sTreeView, StdCtrls, sLabel, sEdit, sComboBox,
+  Buttons, sBitBtn, Menus, sComboBoxes, IniFiles, TeeProcs, acArcControls,
+  PhisicalMemo, CpuUsageWidget, Registry,
+  sCalculator, sUpDown;
+
+type
+  TMainForm = class(TForm)
+    gradientMainForm: TsGradientPanel;
+    skins: TsSkinManager;
+    tray: TTrayIcon;
+    imagesMainForm: TsAlphaImageList;
+    TrayPopup: TPopupMenu;
+    E1: TMenuItem;
+    ActiveWidget: TsBitBtn;
+    RefreshWidget: TsBitBtn;
+    CloseWidget: TsBitBtn;
+    selectWidgetMainForm: TsTreeView;
+    settingPanelMainForm: TsPanel;
+    lbl1: TsLabel;
+    lbl3: TsLabel;
+    edt1: TsEdit;
+    cbb1: TsComboBox;
+    edt3: TsEdit;
+    sknslctr1: TsSkinSelector;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    sbtbtn4: TsBitBtn;
+    tmr1: TTimer;
+    spdwn1: TsUpDown;
+    spdwn2: TsUpDown;
+    procedure E1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure N3Click(Sender: TObject);
+    procedure ActiveWidgetClick(Sender: TObject);
+    procedure selectWidgetMainFormClick(Sender: TObject);
+    procedure CloseWidgetClick(Sender: TObject);
+    procedure RefreshWidgetClick(Sender: TObject);
+    procedure trayDblClick(Sender: TObject);
+    procedure sbtbtn4Click(Sender: TObject);
+    procedure N1Click(Sender: TObject);
+    procedure AddStart;
+    procedure DelStart;
+    procedure edt1KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure edt3KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  MainForm: TMainForm;
+  siniFile: TIniFile;
+  pathINI,
+    pathINIPhiscalMemory,
+    pathINIDateAndTime,
+    pathINICPUUsage: string;
+
+implementation
+
+uses
+  AboutApplication;
+
+{$R *.dfm}
+
+////////////////////////////////////////////////////////////////////////////////
+//DLL DateAndTime
+
+procedure ShowDateAndTime; stdcall;
+  external 'DateAndTime.dll' name 'ShowDateAndTime';
+
+procedure RefreshDateAndTime; stdcall;
+  external 'DateAndTime.dll' name 'RefreshDateAndTime';
+
+procedure CloseDateAndTime; stdcall;
+  external 'DateAndTime.dll' name 'CloseDateAndTime';
+
+procedure DateFormPos(x, y: integer); stdcall;
+  external 'DateAndTime.dll' name 'FormPos';
+
+////////////////////////////////////////////////////////////////////////////////
+//DLL CPUUsage
+
+procedure ShowCpuUsage; stdcall;
+  external 'CpuUsage.dll' name 'ShowCpuUsage';
+
+procedure RefreshCpuUsage; stdcall;
+  external 'CpuUsage.dll' name 'RefreshCpuUsage';
+
+procedure CloseCpuUsage; stdcall;
+  external 'CpuUsage.dll' name 'CloseCpuUsage';
+
+procedure CpuFormPos(x, y: integer); stdcall;
+  external 'CpuUsage.dll' name 'FormPos';
+////////////////////////////////////////////////////////////////////////////////
+//DLL PhisicalMemory
+
+procedure ShowPhisicalMemory; stdcall;
+  external 'PhisicalMemory.dll' name 'ShowPhisicalMemory';
+
+procedure RefreshPhisicalMemory; stdcall;
+  external 'PhisicalMemory.dll' name 'RefreshPhisicalMemory';
+
+procedure ClosePhisicalMemory; stdcall;
+  external 'PhisicalMemory.dll' name 'ClosePhisicalMemory';
+
+procedure MemoryFormPos(x, y: integer); stdcall;
+  external 'PhisicalMemory.dll' name 'FormPos';
+////////////////////////////////////////////////////////////////////////////////
+
+procedure TMainForm.E1Click(Sender: TObject);
+begin
+  //Сохранение активного скина
+  sIniFile := TIniFile.Create(pathINI);
+  siniFile.WriteString('Main', 'Skin', skins.SkinName);
+  siniFile.Free;
+  MainForm.Close;
+  ////////////////////////////////////////////////////////////////////////////////
+end;
+
+procedure TMainForm.AddStart;
+var
+  reg: tregistry;
+begin
+  //Добавление приложения в автозагрузку
+  reg := tregistry.create;
+  reg.rootkey := HKEY_CURRENT_USER;
+  reg.lazywrite := false;
+  reg.openkey('software\microsoft\windows\currentversion\run', false);
+  reg.writestring(Application.Title, Application.ExeName);
+  reg.closekey;
+  reg.free;
+  ////////////////////////////////////////////////////////////////////////////////
+end;
+
+procedure TMainForm.DelStart;
+var
+  reg: tregistry;
+begin
+  //Удаление из автозагрузки
+  reg := tregistry.create;
+  reg.rootkey := HKEY_CURRENT_USER;
+  if reg.openkey('software\microsoft\windows\currentversion\run', false) then
+    reg.DeleteValue(Application.Title);
+  reg.closekey;
+  reg.free;
+  //////////////////////////////////////////////////////////////////////////////
+end;
+
+procedure TMainForm.FormCreate(Sender: TObject);
+var
+  activeDate: Boolean;
+  activeCPU: Boolean;
+  activeMemory: Boolean;
+begin
+  //Путь к настройкам виджетов и главной формы
+  pathINI := extractfilepath(application.ExeName) + '\Settings.ini';
+  pathINIDateAndTime :=
+    extractfilepath(application.ExeName) + '\DateAndTimeSettings.ini';
+  pathINICPUUsage :=
+    extractfilepath(application.ExeName) + '\CPUUsageSettings.ini';
+  pathINIPhiscalMemory := extractfilepath(application.ExeName) +
+    '\PhisicalMemorySettings.ini';
+  ////////////////////////////////////////////////////////////////////////////////
+//Загрузка скина и виджетов
+  skins.SkinDirectory := extractfilepath(application.ExeName) + '\Skins';
+  if FileExists(pathINI) then
+  begin
+    sIniFile := TIniFile.Create(pathINI);
+    skins.SkinName := siniFile.ReadString('Main', 'Skin', '');
+    sIniFile.Free;
+  end
+  else
+    showmessage('*.ini File not found!');
+  skins.Active := True;
+  if FileExists(pathINIDateAndTime) then
+  begin
+    sIniFile := TIniFile.Create(pathINIDateAndTime);
+    activeDate := sIniFile.ReadBool('State', 'Active', false);
+    sIniFile.Free;
+  end
+  else
+    showmessage('File not found!');
+  if FileExists(pathINICPUUsage) then
+  begin
+    sIniFile := TIniFile.Create(pathINICPUUsage);
+    activeCPU := sIniFile.ReadBool('State', 'Active', false);
+    sIniFile.Free;
+  end
+  else
+    showmessage('File not found!');
+  if FileExists(pathINIPhiscalMemory) then
+  begin
+    sIniFile := TIniFile.Create(pathINIPhiscalMemory);
+    activeMemory := sIniFile.ReadBool('State', 'Active', false);
+    sIniFile.Free;
+  end
+  else
+    showmessage('File not found!');
+  if activeDate = True then
+    ShowDateAndTime;
+  if activeCPU = True then
+    ShowCpuUsage;
+  if activeMemory = True then
+    ShowPhisicalMemory;
+end;
+
+procedure TMainForm.N3Click(Sender: TObject);
+begin
+  MainForm.Show;
+end;
+
+procedure TMainForm.ActiveWidgetClick(Sender: TObject);
+begin
+  case selectWidgetMainForm.Selected.AbsoluteIndex of
+    0: ShowDateAndTime;
+    1: ShowCpuUsage;
+    2: ShowPhisicalMemory;
+  end;
+end;
+
+procedure TMainForm.selectWidgetMainFormClick(Sender: TObject);
+begin
+  case selectWidgetMainForm.Selected.AbsoluteIndex of
+    0:
+      begin
+        ActiveWidget.Enabled := True;
+        RefreshWidget.Enabled := true;
+        CloseWidget.Enabled := true;
+      end;
+    1:
+      begin
+        ActiveWidget.Enabled := True;
+        RefreshWidget.Enabled := true;
+        CloseWidget.Enabled := true;
+      end;
+    2:
+      begin
+        ActiveWidget.Enabled := True;
+        RefreshWidget.Enabled := true;
+        CloseWidget.Enabled := true;
+      end;
+  end;
+end;
+
+procedure TMainForm.CloseWidgetClick(Sender: TObject);
+begin
+  case selectWidgetMainForm.Selected.AbsoluteIndex of
+    0: CloseDateAndTime;
+    1: CloseCpuUsage;
+    2: ClosePhisicalMemory;
+  end;
+end;
+
+procedure TMainForm.RefreshWidgetClick(Sender: TObject);
+begin
+  case selectWidgetMainForm.Selected.AbsoluteIndex of
+    0: RefreshDateAndTime;
+    1: RefreshCpuUsage;
+    2: RefreshPhisicalMemory;
+  end;
+end;
+
+procedure TMainForm.trayDblClick(Sender: TObject);
+begin
+  MainForm.Show;
+end;
+
+procedure TMainForm.sbtbtn4Click(Sender: TObject);
+begin
+  MainForm.Visible := false;
+end;
+
+procedure TMainForm.N1Click(Sender: TObject);
+begin
+  AboutApplication.About.Show;
+end;
+
+procedure TMainForm.edt1KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = 13 then
+  begin
+    case selectWidgetMainForm.Selected.AbsoluteIndex of
+      0:
+        begin
+          DateFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+        end;
+      1:
+        begin
+          CpuFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+        end;
+      2:
+        begin
+          MemoryFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+        end;
+    end;
+  end;
+end;
+
+procedure TMainForm.edt3KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = 13 then
+  begin
+    case selectWidgetMainForm.Selected.AbsoluteIndex of
+      0:
+        begin
+          DateFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+        end;
+      1:
+        begin
+          CpuFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+        end;
+      2:
+        begin
+          MemoryFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+        end;
+    end;
+  end;
+end;
+
+end.
+

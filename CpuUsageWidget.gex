@@ -1,0 +1,6 @@
+[General]
+Name=DateAndTime
+Project=1
+[Classes]
+Count=1
+Class0="TDateAndTimeForm","TForm","DateAndTimeWidget","0","C:\Users\zavad\Desktop\йспянбюъ\Pre-alpha\DateAndTimeWidget.pas"
