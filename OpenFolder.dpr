@@ -1,4 +1,4 @@
-library CpuUsage;
+library OpenFolder;
 
 { Important note about DLL memory management: ShareMem must be the
   first unit in your library's USES clause AND your project's (select
@@ -12,15 +12,13 @@ library CpuUsage;
 
 uses
   SysUtils,
-  IniFiles,
   Windows,
   Forms,
   Classes,
-  Messages,
-  CpuUsageWidget in 'CpuUsageWidget.pas' {CpuUsageForm};
+  IniFiles,
+  FolderWidget in 'FolderWidget.pas' {FolderForm};
 
 {$R *.res}
-
 procedure isEmpy(Obj: TObject; var empty: boolean);
 var
   v: TClass;
@@ -33,16 +31,16 @@ begin
   end;
 end;
 
-procedure ShowCpuUsage; stdcall;
+procedure ShowFolder; stdcall;
 var
   empty: boolean;
 begin
-  isEmpy(CpuUsageForm, empty);
+  isEmpy(FolderForm, empty);
   if empty = true then
   begin
     Application.CreateHandle;
-    CpuUsageForm := TCpuUsageForm.Create(Application);
-    CpuUsageForm.Show;
+    FolderForm := TFolderForm.Create(Application);
+    FolderForm.Show;
     if FileExists(pathINI) then
     begin
       sIniFile := TIniFile.Create(pathINI);
@@ -52,23 +50,23 @@ begin
   end;
 end;
 
-procedure RefreshCpuUsage; stdcall;
+procedure RefreshFolder; stdcall;
 var
   empty: boolean;
 begin
-  isEmpy(CpuUsageForm, empty);
+  isEmpy(FolderForm, empty);
   if empty = false then
-    CpuUsageForm.Refresh;
+    FolderForm.Refresh;
 end;
 
-procedure CloseCpuUsage; stdcall;
+procedure CloseFolder; stdcall;
 var
   empty: Boolean;
 begin
-  isEmpy(CpuUsageForm, empty);
+  isEmpy(FolderForm, empty);
   if empty = false then
   begin
-    CpuUsageForm.Destroy;
+    FolderForm.Destroy;
     sIniFile := TIniFile.Create(pathINI);
     sIniFile.WriteBool('State', 'Active', False);
     sIniFile.Free;
@@ -79,14 +77,14 @@ procedure FormPos(x, y: integer); stdcall;
 var
   empty: Boolean;
 begin
-  isEmpy(CpuUsageForm, empty);
+  isEmpy(FolderForm, empty);
   if empty = false then
   begin
-    CpuUsageForm.Top := x;
-    CpuUsageForm.Left := y;
+    FolderForm.Top := x;
+    FolderForm.Left := y;
   end;
 end;
-exports ShowCpuUsage, RefreshCpuUsage, CloseCpuUsage, FormPos;
+exports ShowFolder, RefreshFolder, CloseFolder, FormPos;
 begin
 end.
  

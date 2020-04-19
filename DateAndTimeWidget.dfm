@@ -1,6 +1,8 @@
 object DateAndTimeForm: TDateAndTimeForm
   Left = 539
   Top = 145
+  AlphaBlend = True
+  AlphaBlendValue = 0
   Anchors = [akLeft, akTop, akRight, akBottom]
   BorderIcons = [biMinimize, biMaximize]
   BorderStyle = bsNone
@@ -8,6 +10,7 @@ object DateAndTimeForm: TDateAndTimeForm
   ClientHeight = 120
   ClientWidth = 120
   Color = clNavy
+  TransparentColor = True
   TransparentColorValue = clNavy
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -2186,5 +2189,10 @@ object DateAndTimeForm: TDateAndTimeForm
         OnClick = N3Click
       end
     end
+  end
+  object TimerShow: TTimer
+    Interval = 5
+    OnTimer = TimerShowTimer
+    Top = 64
   end
 end

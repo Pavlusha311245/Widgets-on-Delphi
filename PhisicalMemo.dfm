@@ -1,6 +1,8 @@
 object PhisicalMemoryForm: TPhisicalMemoryForm
   Left = 354
   Top = 165
+  AlphaBlend = True
+  AlphaBlendValue = 0
   Anchors = [akLeft, akTop, akRight, akBottom]
   BorderStyle = bsNone
   Caption = 'PhisicalMemoryForm'
@@ -2148,7 +2150,7 @@ object PhisicalMemoryForm: TPhisicalMemoryForm
   object DiskNumber1: TLabel
     Left = 73
     Top = 22
-    Width = 94
+    Width = 93
     Height = 19
     Alignment = taCenter
     Caption = 'C: 000/000 Gb'
@@ -2184,7 +2186,6 @@ object PhisicalMemoryForm: TPhisicalMemoryForm
     Top = 48
     Width = 81
     Height = 9
-    Smooth = True
     TabOrder = 0
     OnMouseDown = PhisicalMemoryBackgroundMouseDown
   end
@@ -2193,7 +2194,6 @@ object PhisicalMemoryForm: TPhisicalMemoryForm
     Top = 88
     Width = 81
     Height = 9
-    Smooth = True
     TabOrder = 1
     OnMouseDown = PhisicalMemoryBackgroundMouseDown
   end
@@ -2219,5 +2219,23 @@ object PhisicalMemoryForm: TPhisicalMemoryForm
         Caption = #1054#1073#1085#1086#1074#1080#1090#1100
       end
     end
+  end
+  object TimerC: TTimer
+    Enabled = False
+    Interval = 25
+    OnTimer = TimerCTimer
+    Top = 48
+  end
+  object TimerD: TTimer
+    Enabled = False
+    Interval = 25
+    OnTimer = TimerDTimer
+    Left = 40
+    Top = 48
+  end
+  object TimerShow: TTimer
+    Interval = 5
+    OnTimer = TimerShowTimer
+    Top = 96
   end
 end

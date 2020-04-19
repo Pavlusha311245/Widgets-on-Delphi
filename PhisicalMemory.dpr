@@ -42,13 +42,14 @@ begin
     Application.CreateHandle;
     PhisicalMemoryForm := TPhisicalMemoryForm.Create(Application);
     PhisicalMemoryForm.Show;
+    if FileExists(pathINI) then
+    begin
+      sIniFile := TIniFile.Create(pathINI);
+      sIniFile.WriteBool('State', 'Active', true);
+      sIniFile.Free;
+    end;
   end;
-  if FileExists(pathINI) then
-  begin
-    sIniFile := TIniFile.Create(pathINI);
-    sIniFile.WriteBool('State', 'Active', true);
-    sIniFile.Free;
-  end;
+
 end;
 
 procedure RefreshPhisicalMemory; stdcall;
@@ -66,10 +67,12 @@ var
 begin
   isEmpy(PhisicalMemoryForm, empty);
   if empty = false then
-    PhisicalMemoryForm.Free;
-  sIniFile := TIniFile.Create(pathINI);
-  sIniFile.WriteBool('State', 'Active', false);
-  sIniFile.Free;
+  begin
+    PhisicalMemoryForm.Destroy;
+    sIniFile := TIniFile.Create(pathINI);
+    sIniFile.WriteBool('State', 'Active', false);
+    sIniFile.Free;
+  end;
 end;
 
 procedure FormPos(x, y: integer); stdcall;

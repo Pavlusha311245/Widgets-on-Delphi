@@ -1,4 +1,4 @@
-library DateAndTime;
+library OpenApp;
 
 { Important note about DLL memory management: ShareMem must be the
   first unit in your library's USES clause AND your project's (select
@@ -12,11 +12,11 @@ library DateAndTime;
 
 uses
   SysUtils,
-  Windows,
-  Forms,
-  IniFiles,
   Classes,
-  DateAndTimeWidget in 'DateAndTimeWidget.pas' {DateAndTimeForm};
+  Forms,
+  Windows,
+  IniFiles,
+  AppWidget in 'AppWidget.pas' {AppForm};
 
 {$R *.res}
 
@@ -32,58 +32,60 @@ begin
   end;
 end;
 
-procedure ShowDateAndTime; stdcall;
+procedure ShowApp; stdcall;
 var
   empty: boolean;
 begin
-  isEmpy(DateAndTimeForm, empty);
+  isEmpy(AppForm, empty);
   if empty = true then
   begin
     Application.CreateHandle;
-    DateAndTimeForm := TDateAndTimeForm.Create(Application);
-    DateAndTimeForm.Show;
-  end;
-  if FileExists(pathINI) then
-  begin
-    sIniFile := TIniFile.Create(pathINI);
-    sIniFile.WriteBool('State', 'Active', true);
-    sIniFile.Free;
+    AppForm := TAppForm.Create(Application);
+    AppForm.Show;
+    if FileExists(pathINI) then
+    begin
+      sIniFile := TIniFile.Create(pathINI);
+      sIniFile.WriteBool('State', 'Active', true);
+      sIniFile.Free;
+    end;
   end;
 end;
 
-procedure RefreshDateAndTime; stdcall;
+procedure RefreshApp; stdcall;
 var
   empty: boolean;
 begin
-  isEmpy(DateAndTimeForm, empty);
+  isEmpy(AppForm, empty);
   if empty = false then
-    DateAndTimeForm.Refresh;
+    AppForm.Refresh;
 end;
 
-procedure CloseDateAndTime; stdcall;
+procedure CloseApp; stdcall;
 var
   empty: Boolean;
 begin
-  isEmpy(DateAndTimeForm, empty);
+  isEmpy(AppForm, empty);
   if empty = false then
-    DateAndTimeForm.Free;
-  sIniFile := TIniFile.Create(pathINI);
-  sIniFile.WriteBool('State', 'Active', False);
-  sIniFile.Free;
+  begin
+    AppForm.Destroy;
+    sIniFile := TIniFile.Create(pathINI);
+    sIniFile.WriteBool('State', 'Active', False);
+    sIniFile.Free;
+  end;
 end;
 
 procedure FormPos(x, y: integer); stdcall;
 var
   empty: Boolean;
 begin
-  isEmpy(DateAndTimeForm, empty);
+  isEmpy(AppForm, empty);
   if empty = false then
   begin
-    DateAndTimeForm.Top := x;
-    DateAndTimeForm.Left := y;
+    AppForm.Top := x;
+    AppForm.Left := y;
   end;
 end;
-exports ShowDateAndTime, RefreshDateAndTime, CloseDateAndTime, FormPos;
+exports ShowApp, RefreshApp, CloseApp, FormPos;
 begin
 end.
-
+ 

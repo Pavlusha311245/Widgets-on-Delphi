@@ -18,6 +18,7 @@ type
     W1: TMenuItem;
     Time: TLabel;
     DateAndTimeBackground: TImage;
+    TimerShow: TTimer;
     procedure DateAndTimeBackgroundMouseDown(Sender: TObject; Button:
       TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -31,6 +32,7 @@ type
     procedure WMMoving(var Msg: TWMMoving); message WM_MOVING;
     procedure TimeMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure TimerShowTimer(Sender: TObject);
   private
   public
     { Public declarations }
@@ -43,6 +45,19 @@ var
 implementation
 
 {$R *.dfm}
+function GMT: TTime;
+var TZ: _TIME_ZONE_INFORMATION;
+    dif: Integer;
+    h,m,s,ms: Word;
+    T: TTime;
+begin
+  T := Now;
+  DecodeTime(T,h,m,s,ms);
+  GetTimeZoneInformation(TZ);
+  dif := TZ.Bias div 60;
+  h := h+dif+3;
+  Result := EncodeTime(h,m,s,ms);
+end;
 
 procedure TDateAndTimeForm.DateAndTimeBackgroundMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -53,7 +68,7 @@ end;
 
 procedure TDateAndTimeForm.TimePickerNowTimer(Sender: TObject);
 begin
-  Time.Caption := TimeToStr(now);
+  Time.Caption := TimeToStr(GMT);
 end;
 
 procedure TDateAndTimeForm.FormCreate(Sender: TObject);
@@ -80,7 +95,7 @@ begin
   sIniFile := TIniFile.Create(pathINI);
   sIniFile.WriteBool('State', 'Active', false);
   sIniFile.Free;
-  DateAndTimeForm.Free;
+  DateAndTimeForm.Destroy;
 end;
 
 procedure TDateAndTimeForm.N3Click(Sender: TObject);
@@ -133,6 +148,14 @@ procedure TDateAndTimeForm.TimeMouseDown(Sender: TObject;
 begin
   ReleaseCapture;
   DateAndTimeForm.perform(WM_SysCommand, $F012, 0);
+end;
+
+procedure TDateAndTimeForm.TimerShowTimer(Sender: TObject);
+begin
+  if AlphaBlendValue <> 255 then
+    AlphaBlendValue := AlphaBlendValue + 5
+  else
+    TimerShow.Enabled := false;
 end;
 
 end.

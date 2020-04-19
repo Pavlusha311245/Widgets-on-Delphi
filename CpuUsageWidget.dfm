@@ -1,11 +1,14 @@
 object CpuUsageForm: TCpuUsageForm
   Left = 280
   Top = 147
+  AlphaBlend = True
+  AlphaBlendValue = 0
   BorderStyle = bsNone
   Caption = 'CpuUsageForm'
   ClientHeight = 120
   ClientWidth = 120
   Color = clNavy
+  TransparentColor = True
   TransparentColorValue = clNavy
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -2143,23 +2146,6 @@ object CpuUsageForm: TCpuUsageForm
     Transparent = True
     OnMouseDown = CpuUsagebackgroundMouseDown
   end
-  object LabelPercentCpuUsage: TLabel
-    Left = 38
-    Top = 40
-    Width = 43
-    Height = 21
-    Alignment = taCenter
-    Caption = '100%'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWhite
-    Font.Height = -19
-    Font.Name = 'Times New Roman'
-    Font.Style = []
-    ParentFont = False
-    Transparent = True
-    Layout = tlCenter
-    OnMouseDown = CpuUsagebackgroundMouseDown
-  end
   object LabelCPU: TLabel
     Left = 45
     Top = 68
@@ -2176,6 +2162,23 @@ object CpuUsageForm: TCpuUsageForm
     Transparent = True
     Layout = tlCenter
     OnMouseDown = CpuUsagebackgroundMouseDown
+  end
+  object LabelPercentCpuUsage: TLabel
+    Left = 38
+    Top = 40
+    Width = 44
+    Height = 21
+    Alignment = taCenter
+    AutoSize = False
+    Caption = '100%'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWhite
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+    Transparent = True
+    Layout = tlCenter
   end
   object PopupMenu: TPopupMenu
     object W1: TMenuItem
@@ -2198,8 +2201,13 @@ object CpuUsageForm: TCpuUsageForm
     end
   end
   object Timer: TTimer
-    Interval = 300
+    Interval = 500
     OnTimer = TimerTimer
     Left = 32
+  end
+  object TimerShow: TTimer
+    Interval = 5
+    OnTimer = TimerShowTimer
+    Left = 64
   end
 end

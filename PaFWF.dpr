@@ -15,6 +15,21 @@ uses
   Classes;
 
 {$R *.res}
-
+procedure ShowMain; stdcall;
+begin
+  MainForm.Show;
+end;
+procedure isEmpy(Obj: TObject; var empty: boolean); stdcall;
+var
+  v: TClass;
+begin
+  try
+    v := Obj.ClassParent;
+    empty := false;
+  except
+    empty := true;
+  end;
+end;
+exports ShowMain, isEmpy;
 begin
 end.

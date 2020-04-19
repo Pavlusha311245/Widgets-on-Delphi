@@ -16,17 +16,20 @@ type
     N3: TMenuItem;
     N4: TMenuItem;
     Timer: TTimer;
-    LabelPercentCpuUsage: TLabel;
     LabelCPU: TLabel;
+    LabelPercentCpuUsage: TLabel;
+    TimerShow: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure N3Click(Sender: TObject);
     procedure CpuUsagebackgroundMouseDown(Sender: TObject;
       Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure FormShow(Sender: TObject);
     procedure WMMoving(var Msg: TWMMoving); message WM_MOVING;
+    procedure WMEXITSIZEMOVE(var message: TMessage); message WM_EXITSIZEMOVE;
     procedure N4Click(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
     procedure N1Click(Sender: TObject);
+    procedure TimerShowTimer(Sender: TObject);
   private
     { Private declarations }
   public
@@ -44,7 +47,6 @@ implementation
 procedure TCpuUsageForm.FormCreate(Sender: TObject);
 begin
   pathINI := extractfilepath(application.ExeName) + '\CPUUsageSettings.ini';
-
 end;
 
 procedure TCpuUsageForm.N3Click(Sender: TObject);
@@ -69,8 +71,15 @@ end;
 
 procedure TCpuUsageForm.FormShow(Sender: TObject);
 begin
+  ShowWindow(Application.Handle, SW_HIDE);
   CpuUsagebackground.Picture.LoadFromFile(extractfilepath(application.ExeName)
     + '\Images\background_120.png');
+  if FileExists(pathINI) then
+  begin
+    sIniFile := TIniFile.Create(pathINI);
+    CpuUsageForm.Top := sIniFile.ReadInteger('Position', 'Top', 0);
+    CpuUsageForm.Left := sIniFile.ReadInteger('Position', 'Left', 0);
+  end;
 end;
 
 procedure TCpuUsageForm.N4Click(Sender: TObject);
@@ -90,7 +99,10 @@ end;
 
 procedure TCpuUsageForm.N1Click(Sender: TObject);
 begin
-  CpuUsageForm.Free;
+  sIniFile := TIniFile.Create(pathINI);
+  sIniFile.WriteBool('State', 'Active', false);
+  sIniFile.Free;
+  CpuUsageForm.Destroy;
 end;
 
 procedure TCpuUsageForm.WMMoving(var Msg: TWMMoving);
@@ -110,6 +122,22 @@ begin
       OffsetRect(Msg.DragRect^, 0, workArea.Bottom - Bottom);
   end;
   inherited;
+end;
+
+procedure TCpuUsageForm.WMEXITSIZEMOVE(var message: TMessage);
+begin
+  sIniFile := TIniFile.Create(pathINI);
+  sIniFile.WriteInteger('Position', 'Top', CpuUsageForm.top);
+  sIniFile.WriteInteger('Position', 'Left', CpuUsageForm.Left);
+  sIniFile.Free;
+end;
+
+procedure TCpuUsageForm.TimerShowTimer(Sender: TObject);
+begin
+  if AlphaBlendValue <> 255 then
+    AlphaBlendValue := AlphaBlendValue + 5
+  else
+    TimerShow.Enabled := false;
 end;
 
 end.

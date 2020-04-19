@@ -8,7 +8,7 @@ uses
   ExtCtrlsX, ComCtrls, sTreeView, StdCtrls, sLabel, sEdit, sComboBox,
   Buttons, sBitBtn, Menus, sComboBoxes, IniFiles, TeeProcs, acArcControls,
   PhisicalMemo, CpuUsageWidget, Registry,
-  sCalculator, sUpDown;
+  sCalculator, sUpDown, IBExtract, ShellAPI;
 
 type
   TMainForm = class(TForm)
@@ -33,9 +33,15 @@ type
     N2: TMenuItem;
     N3: TMenuItem;
     sbtbtn4: TsBitBtn;
-    tmr1: TTimer;
     spdwn1: TsUpDown;
     spdwn2: TsUpDown;
+    N4: TMenuItem;
+    N5: TMenuItem;
+    N6: TMenuItem;
+    N7: TMenuItem;
+    N8: TMenuItem;
+    N9: TMenuItem;
+    N10: TMenuItem;
     procedure E1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure N3Click(Sender: TObject);
@@ -52,6 +58,11 @@ type
       Shift: TShiftState);
     procedure edt3KeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure N5Click(Sender: TObject);
+    procedure N6Click(Sender: TObject);
+    procedure N7Click(Sender: TObject);
+    procedure N8Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -64,6 +75,8 @@ var
   pathINI,
     pathINIPhiscalMemory,
     pathINIDateAndTime,
+    pathINIOpenFolder,
+    pathINIOpenApp,
     pathINICPUUsage: string;
 
 implementation
@@ -117,6 +130,34 @@ procedure ClosePhisicalMemory; stdcall;
 procedure MemoryFormPos(x, y: integer); stdcall;
   external 'PhisicalMemory.dll' name 'FormPos';
 ////////////////////////////////////////////////////////////////////////////////
+//DLL OpenFolder
+
+procedure ShowFolder; stdcall;
+  external 'OpenFolder.dll' name 'ShowFolder';
+
+procedure RefreshFolder; stdcall;
+  external 'OpenFolder.dll' name 'RefreshFolder';
+
+procedure CloseFolder; stdcall;
+  external 'OpenFolder.dll' name 'CloseFolder';
+
+procedure FolderFormPos(x, y: integer); stdcall;
+  external 'OpenFolder.dll' name 'FormPos';
+///////////////////////////////////////////////////////////////////////////////
+//DLL OpenApp
+
+procedure ShowApp; stdcall;
+  external 'OpenApp.dll' name 'ShowApp';
+
+procedure RefreshApp; stdcall;
+  external 'OpenApp.dll' name 'RefreshApp';
+
+procedure CloseApp; stdcall;
+  external 'OpenApp.dll' name 'CloseApp';
+
+procedure AppFormPos(x, y: integer); stdcall;
+  external 'OpenApp.dll' name 'FormPos';
+////////////////////////////////////////////////////////////////////////////////
 
 procedure TMainForm.E1Click(Sender: TObject);
 begin
@@ -162,6 +203,8 @@ var
   activeDate: Boolean;
   activeCPU: Boolean;
   activeMemory: Boolean;
+  activeFolder: Boolean;
+  activeApp: Boolean;
 begin
   //Путь к настройкам виджетов и главной формы
   pathINI := extractfilepath(application.ExeName) + '\Settings.ini';
@@ -171,6 +214,10 @@ begin
     extractfilepath(application.ExeName) + '\CPUUsageSettings.ini';
   pathINIPhiscalMemory := extractfilepath(application.ExeName) +
     '\PhisicalMemorySettings.ini';
+  pathINIOpenFolder := extractfilepath(application.ExeName) +
+    '\OpenFolderSettings.ini';
+  pathINIOpenApp := extractfilepath(application.ExeName) +
+    '\OpenAppSettings.ini';
   ////////////////////////////////////////////////////////////////////////////////
 //Загрузка скина и виджетов
   skins.SkinDirectory := extractfilepath(application.ExeName) + '\Skins';
@@ -207,12 +254,32 @@ begin
   end
   else
     showmessage('File not found!');
+  if FileExists(pathINIOpenFolder) then
+  begin
+    sIniFile := TIniFile.Create(pathINIOpenFolder);
+    activeFolder := sIniFile.ReadBool('State', 'Active', false);
+    sIniFile.Free;
+  end
+  else
+    showmessage('File not found!');
+  if FileExists(pathINIOpenApp) then
+  begin
+    sIniFile := TIniFile.Create(pathINIOpenApp);
+    activeApp := sIniFile.ReadBool('State', 'Active', false);
+    sIniFile.Free;
+  end
+  else
+    showmessage('File not found!');
   if activeDate = True then
     ShowDateAndTime;
   if activeCPU = True then
     ShowCpuUsage;
   if activeMemory = True then
     ShowPhisicalMemory;
+  if activeFolder = True then
+    ShowFolder;
+  if activeApp = true then
+    ShowApp;
 end;
 
 procedure TMainForm.N3Click(Sender: TObject);
@@ -226,6 +293,8 @@ begin
     0: ShowDateAndTime;
     1: ShowCpuUsage;
     2: ShowPhisicalMemory;
+    3: ShowFolder;
+    4: ShowApp;
   end;
 end;
 
@@ -250,6 +319,18 @@ begin
         RefreshWidget.Enabled := true;
         CloseWidget.Enabled := true;
       end;
+    3:
+      begin
+        ActiveWidget.Enabled := True;
+        RefreshWidget.Enabled := true;
+        CloseWidget.Enabled := true;
+      end;
+    4:
+      begin
+        ActiveWidget.Enabled := True;
+        RefreshWidget.Enabled := true;
+        CloseWidget.Enabled := true;
+      end;
   end;
 end;
 
@@ -259,6 +340,8 @@ begin
     0: CloseDateAndTime;
     1: CloseCpuUsage;
     2: ClosePhisicalMemory;
+    3: CloseFolder;
+    4: CloseApp;
   end;
 end;
 
@@ -268,6 +351,8 @@ begin
     0: RefreshDateAndTime;
     1: RefreshCpuUsage;
     2: RefreshPhisicalMemory;
+    3: RefreshFolder;
+    4: RefreshApp;
   end;
 end;
 
@@ -304,6 +389,14 @@ begin
         begin
           MemoryFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
         end;
+      3:
+        begin
+          FolderFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+        end;
+      4:
+        begin
+
+        end;
     end;
   end;
 end;
@@ -326,8 +419,87 @@ begin
         begin
           MemoryFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
         end;
+      3:
+        begin
+          FolderFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+        end;
     end;
   end;
+end;
+
+procedure TMainForm.N5Click(Sender: TObject);
+var
+  active: Boolean;
+begin
+  if FileExists(pathINIDateAndTime) then
+  begin
+    sIniFile := TIniFile.Create(pathINIDateAndTime);
+    active := sIniFile.ReadBool('State', 'Active', false);
+    sIniFile.Free;
+  end;
+  if active = False then
+    ShowDateAndTime
+  else
+    CloseDateAndTime;
+end;
+
+procedure TMainForm.N6Click(Sender: TObject);
+var
+  active: boolean;
+begin
+  if FileExists(pathINICPUUsage) then
+  begin
+    sIniFile := TIniFile.Create(pathINICPUUsage);
+    active := sIniFile.ReadBool('State', 'Active', false);
+    sIniFile.Free;
+  end;
+  if active = False then
+    ShowCpuUsage
+  else
+    CloseCpuUsage;
+end;
+
+procedure TMainForm.N7Click(Sender: TObject);
+var
+  active: boolean;
+begin
+  if FileExists(pathINIPhiscalMemory) then
+  begin
+    sIniFile := TIniFile.Create(pathINIPhiscalMemory);
+    active := sIniFile.ReadBool('State', 'Active', false);
+    sIniFile.Free;
+  end;
+  if active = False then
+    ShowPhisicalMemory
+  else
+    ClosePhisicalMemory;
+end;
+
+procedure TMainForm.N8Click(Sender: TObject);
+var
+  active: boolean;
+begin
+  if FileExists(pathINIOpenFolder) then
+  begin
+    sIniFile := TIniFile.Create(pathINIOpenFolder);
+    active := sIniFile.ReadBool('State', 'Active', false);
+    sIniFile.Free;
+  end;
+  if active = False then
+    ShowFolder
+  else
+    CloseFolder;
+end;
+
+procedure TMainForm.FormShow(Sender: TObject);
+var
+  i: TIcon;
+begin
+  //  OpenDialog1.Execute;
+  //  i := tIcon.Create;
+  //  I.Handle := ExtractIcon(HInstance, PAnsiChar(OpenDialog1.FileName), 0);
+  //  i.SaveToFile('f.ico');
+  //  i := nil;
 end;
 
 end.

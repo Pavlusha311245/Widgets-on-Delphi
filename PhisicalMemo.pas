@@ -21,6 +21,9 @@ type
     DiskNumber2: TLabel;
     ProgressDisk1: TProgressBar;
     ProgressDisk2: TProgressBar;
+    TimerC: TTimer;
+    TimerD: TTimer;
+    TimerShow: TTimer;
     procedure PhisicalMemoryBackgroundMouseDown(Sender: TObject; Button:
       TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -31,6 +34,9 @@ type
     procedure WMEXITSIZEMOVE(var message: TMessage); message WM_EXITSIZEMOVE;
 
     procedure N3Click(Sender: TObject);
+    procedure TimerCTimer(Sender: TObject);
+    procedure TimerDTimer(Sender: TObject);
+    procedure TimerShowTimer(Sender: TObject);
 
   private
     { Private declarations }
@@ -42,6 +48,9 @@ var
   PhisicalMemoryForm: TPhisicalMemoryForm;
   pathINI: string;
   sIniFile: TIniFile;
+
+const
+  BtoGb = 1073741824;
 
 implementation
 
@@ -55,6 +64,7 @@ begin
 end;
 
 procedure TPhisicalMemoryForm.FormShow(Sender: TObject);
+
 begin
   ShowWindow(Application.Handle, SW_HIDE);
   PhisicalMemoryBackground.Picture.LoadFromFile(extractfilepath(application.ExeName) + '\Images\background_240.png');
@@ -67,23 +77,38 @@ begin
   end
   else
     showmessage('File not found');
-
 end;
 
 procedure TPhisicalMemoryForm.TimerMesuareDiskSizeTimer(Sender: TObject);
+var
+  sizeC, sizeD: integer;
 begin
-  DiskNumber1.Caption := 'C: ' + IntToStr((DiskSize(3) div 1073741824) -
-    (DiskFree(3)
-    div 1073741824)) + '/' + IntToStr(DiskSize(3) div 1073741824) + ' Gb';
-  ProgressDisk1.Position := Trunc(100 - (((DiskFree(3) div 1073741824) /
-    (DiskSize(3) div
-    1073741824)) * 100));
-  DiskNumber2.Caption := 'D: ' + IntToStr((DiskSize(4) div 1073741824) -
-    (DiskFree(4)
-    div 1073741824)) + '/' + IntToStr(DiskSize(4) div 1073741824) + ' Gb';
-  ProgressDisk2.Position := Trunc(100 - (((DiskFree(4) div 1073741824) /
-    (DiskSize(4) div
-    1073741824)) * 100));
+  sizeD := Trunc((((DiskSize(4)
+    div BtoGb) - (DiskFree(4)
+    div BtoGb)) / (DiskSize(4)
+    div BtoGb)) * 100);
+  sizeC := Trunc((((DiskSize(3)
+    div BtoGb) - (DiskFree(3)
+    div BtoGb)) / (DiskSize(3)
+    div BtoGb)) * 100);
+  if ProgressDisk1.Position = sizeC then
+  begin
+    DiskNumber1.Caption := 'C: ' + IntToStr((DiskSize(3) div BtoGb) -
+      (DiskFree(3)
+      div BtoGb)) + '/' + IntToStr(DiskSize(3) div BtoGb) + ' Gb';
+    ProgressDisk1.Position := Trunc(100 - (((DiskFree(3) div BtoGb) /
+      (DiskSize(3) div
+      BtoGb)) * 100));
+  end;
+  if ProgressDisk2.Position = sizeD then
+  begin
+    DiskNumber2.Caption := 'D: ' + IntToStr((DiskSize(4) div BtoGb) -
+      (DiskFree(4)
+      div BtoGb)) + '/' + IntToStr(DiskSize(4) div BtoGb) + ' Gb';
+    ProgressDisk2.Position := Trunc(100 - (((DiskFree(4) div BtoGb) /
+      (DiskSize(4) div
+      BtoGb)) * 100));
+  end;
 end;
 
 procedure TPhisicalMemoryForm.N2Click(Sender: TObject);
@@ -91,7 +116,7 @@ begin
   sIniFile := TIniFile.Create(pathINI);
   sIniFile.WriteBool('State', 'Active', false);
   sIniFile.Free;
-  PhisicalMemoryForm.free;
+  PhisicalMemoryForm.Destroy;
 end;
 
 procedure TPhisicalMemoryForm.FormCreate(Sender: TObject);
@@ -128,15 +153,61 @@ begin
 end;
 
 procedure TPhisicalMemoryForm.N3Click(Sender: TObject);
-var ans:PAnsiChar; dir:string;
+var
+  ans: PAnsiChar;
+  dir: string;
 begin
-  dir:=extractfilepath(application.ExeName) +
+  dir := extractfilepath(application.ExeName) +
     '\PhisicalMemorySettings.ini';
-  ans:=PAnsiChar(dir);
+  ans := PAnsiChar(dir);
   ShellExecute(Handle, 'open',
     'c:\windows\notepad.exe',
     ans, nil,
     SW_SHOWNORMAL);
+end;
+
+procedure TPhisicalMemoryForm.TimerCTimer(Sender: TObject);
+var
+  i: Integer;
+  sizeC: integer;
+begin
+  sizeC := Trunc((((DiskSize(3)
+    div BtoGb) - (DiskFree(3)
+    div BtoGb)) / (DiskSize(3)
+    div BtoGb)) * 100);
+
+  if ProgressDisk1.Position <> sizeC then
+    ProgressDisk1.Position := ProgressDisk1.Position + 1
+  else
+    TimerC.Enabled := False;
+
+end;
+
+procedure TPhisicalMemoryForm.TimerDTimer(Sender: TObject);
+var
+  i: Integer;
+  sizeD: Integer;
+begin
+  sizeD := Trunc((((DiskSize(4)
+    div BtoGb) - (DiskFree(4)
+    div BtoGb)) / (DiskSize(4)
+    div BtoGb)) * 100);
+  if ProgressDisk2.Position <> sizeD then
+    ProgressDisk2.Position := ProgressDisk2.Position + 1
+  else
+    TimerD.Enabled := False;
+end;
+
+procedure TPhisicalMemoryForm.TimerShowTimer(Sender: TObject);
+begin
+  if AlphaBlendValue <> 255 then
+    AlphaBlendValue := AlphaBlendValue + 5
+  else
+  begin
+    TimerShow.Enabled := false;
+    TimerC.Enabled := true;
+    TimerD.Enabled := true;
+  end;
 end;
 
 end.
