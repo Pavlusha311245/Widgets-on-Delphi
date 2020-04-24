@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, IniFiles, ExtCtrls, acPNG, Menus, ShellAPI;
+  Dialogs, IniFiles, ExtCtrls, acPNG, Menus, ShellAPI, FileCtrl;
 
 type
   TFolderForm = class(TForm)
@@ -17,6 +17,8 @@ type
     N3: TMenuItem;
     N4: TMenuItem;
     TimerShow: TTimer;
+    N5: TMenuItem;
+    DialogPathFolder: TOpenDialog;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure WMMoving(var Msg: TWMMoving); message WM_MOVING;
@@ -28,6 +30,7 @@ type
     procedure FolderBackgroundMouseDown(Sender: TObject;
       Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure TimerShowTimer(Sender: TObject);
+    procedure N5Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -141,6 +144,16 @@ begin
     AlphaBlendValue := AlphaBlendValue + 5
   else
     TimerShow.Enabled := false;
+end;
+
+procedure TFolderForm.N5Click(Sender: TObject);
+var SelectedDirName:string;
+begin
+ SelectDirectory('Выберите каталог','',SelectedDirName);
+ sIniFile:=TIniFile.Create(pathINI);
+ sIniFile.WriteString('Folder','Path',SelectedDirName);
+ sIniFile.Free;
+ FolderForm.FolderFontground.Hint:=SelectedDirName;
 end;
 
 end.

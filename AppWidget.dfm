@@ -1844,6 +1844,7 @@ object AppForm: TAppForm
     Cursor = crHandPoint
     Align = alCustom
     Center = True
+    PopupMenu = PopupMenu
     OnClick = AppFontgroundClick
   end
   object PopupMenu: TPopupMenu
@@ -1856,6 +1857,10 @@ object AppForm: TAppForm
     end
     object N2: TMenuItem
       Caption = #1056#1077#1076#1072#1090#1080#1088#1086#1074#1072#1090#1100' '#1074#1080#1076#1078#1077#1090
+      object N5: TMenuItem
+        Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1091#1090#1100' '#1082' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102
+        OnClick = N5Click
+      end
       object N3: TMenuItem
         Caption = #1048#1079#1084#1077#1085#1080#1090#1100
         OnClick = N3Click
@@ -1870,5 +1875,9 @@ object AppForm: TAppForm
     Interval = 5
     OnTimer = TimerShowTimer
     Left = 32
+  end
+  object DialogPathApp: TOpenDialog
+    Filter = 'Applications|*.exe'
+    Left = 64
   end
 end

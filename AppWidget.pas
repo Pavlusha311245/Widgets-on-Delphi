@@ -17,6 +17,8 @@ type
     AppBackground: TImage;
     TimerShow: TTimer;
     AppFontground: TImage;
+    N5: TMenuItem;
+    DialogPathApp: TOpenDialog;
     procedure FormCreate(Sender: TObject);
     procedure N1Click(Sender: TObject);
     procedure AppBackgroundMouseDown(Sender: TObject; Button: TMouseButton;
@@ -28,6 +30,7 @@ type
     procedure N4Click(Sender: TObject);
     procedure N3Click(Sender: TObject);
     procedure AppFontgroundClick(Sender: TObject);
+    procedure N5Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -169,6 +172,18 @@ begin
     sIniFile.Free;
   end;
   ShellExecute(0, 'open', PAnsiChar(pathFile), nil, nil, SW_SHOWNORMAL);
+end;
+
+procedure TAppForm.N5Click(Sender: TObject);
+begin
+  if DialogPathApp.Execute then begin
+    sIniFile:=TIniFile.Create(pathINI);
+    sIniFile.WriteString('App','Path',DialogPathApp.FileName);
+    sIniFile.Free;
+  end;
+  N4Click(AppForm);
+  AppFontground.Enabled:=false;
+  AppFontground.Enabled:=true;
 end;
 
 end.

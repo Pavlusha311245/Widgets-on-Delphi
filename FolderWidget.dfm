@@ -2153,6 +2153,7 @@ object FolderForm: TFolderForm
     Height = 36
     Cursor = crHandPoint
     Align = alCustom
+    ParentShowHint = False
     Picture.Data = {
       0B54504E474772617068696336000100424D3600010000000000360000002800
       0000800000008000000001002000000000000000010000000000000000000000
@@ -4207,6 +4208,7 @@ object FolderForm: TFolderForm
       000000000000}
     PopupMenu = PopupMenu
     Proportional = True
+    ShowHint = True
     OnClick = FolderFontgroundClick
   end
   object PopupMenu: TPopupMenu
@@ -4219,6 +4221,10 @@ object FolderForm: TFolderForm
     end
     object N2: TMenuItem
       Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100' '#1074#1080#1076#1078#1077#1090
+      object N5: TMenuItem
+        Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1091#1090#1100' '#1082' '#1087#1072#1087#1082#1077
+        OnClick = N5Click
+      end
       object N3: TMenuItem
         Caption = #1048#1079#1084#1077#1085#1080#1090#1100
         OnClick = N3Click
@@ -4233,5 +4239,8 @@ object FolderForm: TFolderForm
     Interval = 5
     OnTimer = TimerShowTimer
     Left = 32
+  end
+  object DialogPathFolder: TOpenDialog
+    Left = 64
   end
 end

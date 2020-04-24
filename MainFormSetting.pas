@@ -62,7 +62,7 @@ type
     procedure N6Click(Sender: TObject);
     procedure N7Click(Sender: TObject);
     procedure N8Click(Sender: TObject);
-    procedure FormShow(Sender: TObject);
+    procedure N9Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -157,6 +157,20 @@ procedure CloseApp; stdcall;
 
 procedure AppFormPos(x, y: integer); stdcall;
   external 'OpenApp.dll' name 'FormPos';
+////////////////////////////////////////////////////////////////////////////////
+//DLL Calendar
+
+procedure ShowCalendar; stdcall;
+  external 'Calendar.dll' name 'ShowCalendar';
+
+procedure RefreshCalendar; stdcall;
+  external 'Calendar.dll' name 'RefreshCalendar';
+
+procedure CloseCalendar; stdcall;
+  external 'Calendar.dll' name 'CloseCalendar';
+
+procedure CalendarFormPos(x, y: integer); stdcall;
+  external 'Calendar.dll' name 'FormPos';
 ////////////////////////////////////////////////////////////////////////////////
 
 procedure TMainForm.E1Click(Sender: TObject);
@@ -295,6 +309,7 @@ begin
     2: ShowPhisicalMemory;
     3: ShowFolder;
     4: ShowApp;
+    5: ShowCalendar;
   end;
 end;
 
@@ -331,6 +346,12 @@ begin
         RefreshWidget.Enabled := true;
         CloseWidget.Enabled := true;
       end;
+    5:
+      begin
+        ActiveWidget.Enabled := True;
+        RefreshWidget.Enabled := true;
+        CloseWidget.Enabled := true;
+      end;
   end;
 end;
 
@@ -342,6 +363,7 @@ begin
     2: ClosePhisicalMemory;
     3: CloseFolder;
     4: CloseApp;
+    5: CloseCalendar;
   end;
 end;
 
@@ -353,6 +375,7 @@ begin
     2: RefreshPhisicalMemory;
     3: RefreshFolder;
     4: RefreshApp;
+    5: RefreshCalendar;
   end;
 end;
 
@@ -395,7 +418,7 @@ begin
         end;
       4:
         begin
-
+          AppFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
         end;
     end;
   end;
@@ -422,6 +445,10 @@ begin
       3:
         begin
           FolderFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+        end;
+      4:
+        begin
+          AppFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
         end;
     end;
   end;
@@ -491,15 +518,20 @@ begin
     CloseFolder;
 end;
 
-procedure TMainForm.FormShow(Sender: TObject);
+procedure TMainForm.N9Click(Sender: TObject);
 var
-  i: TIcon;
+  active: boolean;
 begin
-  //  OpenDialog1.Execute;
-  //  i := tIcon.Create;
-  //  I.Handle := ExtractIcon(HInstance, PAnsiChar(OpenDialog1.FileName), 0);
-  //  i.SaveToFile('f.ico');
-  //  i := nil;
+  if FileExists(pathINIOpenApp) then
+  begin
+    sIniFile := TIniFile.Create(pathINIOpenApp);
+    active := sIniFile.ReadBool('State', 'Active', false);
+    sIniFile.Free;
+  end;
+  if active = False then
+    ShowApp
+  else
+    CloseApp;
 end;
 
 end.

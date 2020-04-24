@@ -1,0 +1,39 @@
+#------------------------------------------------------------------------------
+VERSION = BWS.01
+#------------------------------------------------------------------------------
+!ifndef ROOT
+ROOT = $(MAKEDIR)\..
+!endif
+#------------------------------------------------------------------------------
+MAKE = $(ROOT)\bin\make.exe -$(MAKEFLAGS) -f$**
+DCC = $(ROOT)\bin\dcc32.exe $**
+BRCC = $(ROOT)\bin\brcc32.exe $**
+#------------------------------------------------------------------------------
+PROJECTS = Widgets.exe DateAndTime.dll CpuUsage.dll OpenApp.dll OpenFolder.dll \
+  PhisicalMemory.dll Calendar.dll
+#------------------------------------------------------------------------------
+default: $(PROJECTS)
+#------------------------------------------------------------------------------
+
+Widgets.exe: Widgets.dpr
+  $(DCC)
+
+DateAndTime.dll: DateAndTime.dpr
+  $(DCC)
+
+CpuUsage.dll: CpuUsage.dpr
+  $(DCC)
+
+OpenApp.dll: OpenApp.dpr
+  $(DCC)
+
+OpenFolder.dll: OpenFolder.dpr
+  $(DCC)
+
+PhisicalMemory.dll: PhisicalMemory.dpr
+  $(DCC)
+
+Calendar.dll: Calendar.dpr
+  $(DCC)
+
+

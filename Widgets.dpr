@@ -1,7 +1,8 @@
 program Widgets;
 
 uses
-  Forms,Windows,
+  Forms,
+  Windows,
   MainFormSetting in 'MainFormSetting.pas' {MainForm},
   AboutApplication in 'AboutApplication.pas' {About};
 
