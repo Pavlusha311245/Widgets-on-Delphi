@@ -2140,7 +2140,7 @@ object CalendarForm: TCalendarForm
     Width = 170
     Height = 170
     Align = alCustom
-    Date = 43941.470643333330000000
+    Date = 43941.934010231480000000
     PopupMenu = PopupMenu
     TabOrder = 0
   end

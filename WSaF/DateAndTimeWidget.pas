@@ -73,7 +73,7 @@ end;
 
 procedure TDateAndTimeForm.FormCreate(Sender: TObject);
 begin
-  pathINI := extractfilepath(application.ExeName) + '\WSaF\Settings\DateAndTimeSettings.ini';
+  pathINI := extractfilepath(application.ExeName) + '\Settings\DateAndTimeSettings.ini';
 end;
 
 procedure TDateAndTimeForm.FormShow(Sender: TObject);
@@ -108,7 +108,7 @@ var
   ans: PAnsiChar;
   dir: string;
 begin
-  dir := extractfilepath(application.ExeName) + '\WSaF\Settings\DateAndTimeSettings.ini';
+  dir := extractfilepath(application.ExeName) + '\Settings\DateAndTimeSettings.ini';
   ans := PAnsiChar(dir);
   ShellExecute(Handle, 'open',
     'c:\windows\notepad.exe',

@@ -158,7 +158,7 @@ var
   dir: string;
 begin
   dir := extractfilepath(application.ExeName) +
-    'WSaF\Settings\PhisicalMemorySettings.ini';
+    '\Settings\PhisicalMemorySettings.ini';
   ans := PAnsiChar(dir);
   ShellExecute(Handle, 'open',
     'c:\windows\notepad.exe',

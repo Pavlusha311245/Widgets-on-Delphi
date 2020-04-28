@@ -41,7 +41,7 @@ implementation
 
 procedure TCalendarForm.FormCreate(Sender: TObject);
 begin
-  pathINI := extractfilepath(application.ExeName) + '\WSaF\Settings\CalendarSettings.ini';
+  pathINI := extractfilepath(application.ExeName) + '\Settings\CalendarSettings.ini';
 end;
 
 procedure TCalendarForm.N1Click(Sender: TObject);
@@ -62,7 +62,7 @@ var
   ans: PAnsiChar;
   dir: string;
 begin
-  dir := extractfilepath(application.ExeName) + '\WSaF\Settings\CalendarSettings.ini';
+  dir := extractfilepath(application.ExeName) + '\Settings\CalendarSettings.ini';
   ans := PAnsiChar(dir);
   ShellExecute(Handle, 'open',
     'c:\windows\notepad.exe',

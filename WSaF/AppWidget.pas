@@ -47,7 +47,7 @@ implementation
 
 procedure TAppForm.FormCreate(Sender: TObject);
 begin
-  pathINI := extractfilepath(application.ExeName) + '\WSaF\Settings\OpenAppSettings.ini';
+  pathINI := extractfilepath(application.ExeName) + '\Settings\OpenAppSettings.ini';
 end;
 
 procedure TAppForm.N1Click(Sender: TObject);
@@ -153,7 +153,7 @@ var
   ans: PAnsiChar;
   dir: string;
 begin
-  dir := extractfilepath(application.ExeName) + '\WSaF\Settings\OpenAppSettings.ini';
+  dir := extractfilepath(application.ExeName) + '\Settings\OpenAppSettings.ini';
   ans := PAnsiChar(dir);
   ShellExecute(Handle, 'open',
     'c:\windows\notepad.exe',

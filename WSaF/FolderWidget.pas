@@ -48,7 +48,7 @@ implementation
 
 procedure TFolderForm.FormCreate(Sender: TObject);
 begin
-  pathINI := extractfilepath(application.ExeName) + '\WSaF\Settings\OpenFolderSettings.ini';
+  pathINI := extractfilepath(application.ExeName) + '\Settings\OpenFolderSettings.ini';
 end;
 
 procedure TFolderForm.FormShow(Sender: TObject);
@@ -102,7 +102,7 @@ var
   ans: PAnsiChar;
   dir: string;
 begin
-  dir := extractfilepath(application.ExeName) + '\WSaF\Settings\OpenFolderSettings.ini';
+  dir := extractfilepath(application.ExeName) + '\Settings\OpenFolderSettings.ini';
   ans := PAnsiChar(dir);
   ShellExecute(Handle, 'open',
     'c:\windows\notepad.exe',
