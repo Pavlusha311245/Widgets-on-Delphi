@@ -122,7 +122,7 @@ end;
 procedure TPhisicalMemoryForm.FormCreate(Sender: TObject);
 begin
   pathINI := extractfilepath(application.ExeName) +
-    '\PhisicalMemorySettings.ini';
+    '\WSaF\Settings\PhisicalMemorySettings.ini';
 end;
 
 procedure TPhisicalMemoryForm.WMEXITSIZEMOVE(var message: TMessage);
@@ -158,7 +158,7 @@ var
   dir: string;
 begin
   dir := extractfilepath(application.ExeName) +
-    '\PhisicalMemorySettings.ini';
+    'WSaF\Settings\PhisicalMemorySettings.ini';
   ans := PAnsiChar(dir);
   ShellExecute(Handle, 'open',
     'c:\windows\notepad.exe',
