@@ -168,7 +168,6 @@ end;
 
 procedure TPhisicalMemoryForm.TimerCTimer(Sender: TObject);
 var
-  i: Integer;
   sizeC: integer;
 begin
   sizeC := Trunc((((DiskSize(3)
@@ -185,7 +184,6 @@ end;
 
 procedure TPhisicalMemoryForm.TimerDTimer(Sender: TObject);
 var
-  i: Integer;
   sizeD: Integer;
 begin
   sizeD := Trunc((((DiskSize(4)

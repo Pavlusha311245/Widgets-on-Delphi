@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, IniFiles, ExtCtrls, Menus, ShellAPI, acPNG, StdCtrls;
+  Dialogs, IniFiles, ExtCtrls, Menus, ShellAPI, acPNG, StdCtrls, adCpuUsage;
 
 type
   TCpuUsageForm = class(TForm)

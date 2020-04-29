@@ -9,8 +9,8 @@ MAKE = $(ROOT)\bin\make.exe -$(MAKEFLAGS) -f$**
 DCC = $(ROOT)\bin\dcc32.exe $**
 BRCC = $(ROOT)\bin\brcc32.exe $**
 #------------------------------------------------------------------------------
-PROJECTS = Widgets.exe DateAndTime.dll CpuUsage.dll OpenApp.dll OpenFolder.dll \
-  PhisicalMemory.dll Calendar.dll
+PROJECTS = Widgets.exe CpuUsage.dll Calendar.dll PhisicalMemory.dll \
+  OpenFolder.dll OpenApp.dll DateAndTime.dll Calculator.dll
 #------------------------------------------------------------------------------
 default: $(PROJECTS)
 #------------------------------------------------------------------------------
@@ -18,22 +18,25 @@ default: $(PROJECTS)
 Widgets.exe: Widgets.dpr
   $(DCC)
 
-DateAndTime.dll: DateAndTime.dpr
-  $(DCC)
-
 CpuUsage.dll: CpuUsage.dpr
   $(DCC)
 
-OpenApp.dll: OpenApp.dpr
+Calendar.dll: WSaF\Calendar.dpr
   $(DCC)
 
-OpenFolder.dll: OpenFolder.dpr
+PhisicalMemory.dll: WSaF\PhisicalMemory.dpr
   $(DCC)
 
-PhisicalMemory.dll: PhisicalMemory.dpr
+OpenFolder.dll: WSaF\OpenFolder.dpr
   $(DCC)
 
-Calendar.dll: Calendar.dpr
+OpenApp.dll: WSaF\OpenApp.dpr
+  $(DCC)
+
+DateAndTime.dll: WSaF\DateAndTime.dpr
+  $(DCC)
+
+Calculator.dll: WSaF\Calculator.dpr
   $(DCC)
 
 

@@ -85,92 +85,105 @@ uses
   AboutApplication;
 
 {$R *.dfm}
-
 ////////////////////////////////////////////////////////////////////////////////
 //DLL DateAndTime
 
 procedure ShowDateAndTime; stdcall;
-  external 'DateAndTime.dll' name 'ShowDateAndTime';
+  external '\WSaF\DateAndTime.dll' name 'ShowDateAndTime';
 
 procedure RefreshDateAndTime; stdcall;
-  external 'DateAndTime.dll' name 'RefreshDateAndTime';
+  external '\WSaF\DateAndTime.dll' name 'RefreshDateAndTime';
 
 procedure CloseDateAndTime; stdcall;
-  external 'DateAndTime.dll' name 'CloseDateAndTime';
+  external '\WSaF\DateAndTime.dll' name 'CloseDateAndTime';
 
 procedure DateFormPos(x, y: integer); stdcall;
-  external 'DateAndTime.dll' name 'FormPos';
+  external '\WSaF\DateAndTime.dll' name 'FormPos';
 
 ////////////////////////////////////////////////////////////////////////////////
 //DLL CPUUsage
 
 procedure ShowCpuUsage; stdcall;
-  external 'CpuUsage.dll' name 'ShowCpuUsage';
+  external '\WSaF\CpuUsage.dll' name 'ShowCpuUsage';
 
 procedure RefreshCpuUsage; stdcall;
-  external 'CpuUsage.dll' name 'RefreshCpuUsage';
+  external '\WSaF\CpuUsage.dll' name 'RefreshCpuUsage';
 
 procedure CloseCpuUsage; stdcall;
-  external 'CpuUsage.dll' name 'CloseCpuUsage';
+  external '\WSaF\CpuUsage.dll' name 'CloseCpuUsage';
 
 procedure CpuFormPos(x, y: integer); stdcall;
-  external 'CpuUsage.dll' name 'FormPos';
+  external '\WSaF\CpuUsage.dll' name 'FormPos';
 ////////////////////////////////////////////////////////////////////////////////
 //DLL PhisicalMemory
 
 procedure ShowPhisicalMemory; stdcall;
-  external 'PhisicalMemory.dll' name 'ShowPhisicalMemory';
+  external '\WSaF\PhisicalMemory.dll' name 'ShowPhisicalMemory';
 
 procedure RefreshPhisicalMemory; stdcall;
-  external 'PhisicalMemory.dll' name 'RefreshPhisicalMemory';
+  external '\WSaF\PhisicalMemory.dll' name 'RefreshPhisicalMemory';
 
 procedure ClosePhisicalMemory; stdcall;
-  external 'PhisicalMemory.dll' name 'ClosePhisicalMemory';
+  external '\WSaF\PhisicalMemory.dll' name 'ClosePhisicalMemory';
 
 procedure MemoryFormPos(x, y: integer); stdcall;
-  external 'PhisicalMemory.dll' name 'FormPos';
+  external '\WSaF\PhisicalMemory.dll' name 'FormPos';
 ////////////////////////////////////////////////////////////////////////////////
 //DLL OpenFolder
 
 procedure ShowFolder; stdcall;
-  external 'OpenFolder.dll' name 'ShowFolder';
+  external '\WSaF\OpenFolder.dll' name 'ShowFolder';
 
 procedure RefreshFolder; stdcall;
-  external 'OpenFolder.dll' name 'RefreshFolder';
+  external '\WSaF\OpenFolder.dll' name 'RefreshFolder';
 
 procedure CloseFolder; stdcall;
-  external 'OpenFolder.dll' name 'CloseFolder';
+  external '\WSaF\OpenFolder.dll' name 'CloseFolder';
 
 procedure FolderFormPos(x, y: integer); stdcall;
-  external 'OpenFolder.dll' name 'FormPos';
+  external '\WSaF\OpenFolder.dll' name 'FormPos';
 ///////////////////////////////////////////////////////////////////////////////
 //DLL OpenApp
 
 procedure ShowApp; stdcall;
-  external 'OpenApp.dll' name 'ShowApp';
+  external '\WSaF\OpenApp.dll' name 'ShowApp';
 
 procedure RefreshApp; stdcall;
-  external 'OpenApp.dll' name 'RefreshApp';
+  external '\WSaF\OpenApp.dll' name 'RefreshApp';
 
 procedure CloseApp; stdcall;
-  external 'OpenApp.dll' name 'CloseApp';
+  external '\WSaF\OpenApp.dll' name 'CloseApp';
 
 procedure AppFormPos(x, y: integer); stdcall;
-  external 'OpenApp.dll' name 'FormPos';
+  external '\WSaF\OpenApp.dll' name 'FormPos';
 ////////////////////////////////////////////////////////////////////////////////
 //DLL Calendar
 
 procedure ShowCalendar; stdcall;
-  external 'Calendar.dll' name 'ShowCalendar';
+  external '\WSaF\Calendar.dll' name 'ShowCalendar';
 
 procedure RefreshCalendar; stdcall;
-  external 'Calendar.dll' name 'RefreshCalendar';
+  external '\WSaF\Calendar.dll' name 'RefreshCalendar';
 
 procedure CloseCalendar; stdcall;
-  external 'Calendar.dll' name 'CloseCalendar';
+  external '\WSaF\Calendar.dll' name 'CloseCalendar';
 
 procedure CalendarFormPos(x, y: integer); stdcall;
-  external 'Calendar.dll' name 'FormPos';
+  external '\WSaF\Calendar.dll' name 'FormPos';
+////////////////////////////////////////////////////////////////////////////////
+//DLL Calculator
+
+procedure ShowCalc; stdcall;
+  external '\WSaF\Calculator.dll' name 'ShowCalc';
+
+procedure RefreshCalc; stdcall;
+  external '\WSaF\Calculator.dll' name 'RefreshCalc';
+
+procedure CloseCalc; stdcall;
+  external '\WSaF\Calculator.dll' name 'CloseCalc';
+
+procedure CalculatorFormPos(x, y: integer); stdcall;
+  external '\WSaF\Calculator.dll' name 'FormPos';
 ////////////////////////////////////////////////////////////////////////////////
 
 procedure TMainForm.E1Click(Sender: TObject);
