@@ -17,7 +17,8 @@ uses
   Forms,
   Classes,
   Messages,
-  CpuUsageWidget in 'CpuUsageWidget.pas' {CpuUsageForm};
+  CpuUsageWidget in 'CpuUsageWidget.pas' {CpuUsageForm},
+  adCpuUsage in 'WSaF\adCpuUsage.pas';
 
 {$R *.res}
 
