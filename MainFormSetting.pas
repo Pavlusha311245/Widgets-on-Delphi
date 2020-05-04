@@ -45,7 +45,6 @@ type
     procedure FormCreate(Sender: TObject);
     procedure N3Click(Sender: TObject);
     procedure ActiveWidgetClick(Sender: TObject);
-    procedure selectWidgetMainFormClick(Sender: TObject);
     procedure CloseWidgetClick(Sender: TObject);
     procedure RefreshWidgetClick(Sender: TObject);
     procedure trayDblClick(Sender: TObject);
@@ -62,6 +61,7 @@ type
     procedure N7Click(Sender: TObject);
     procedure N8Click(Sender: TObject);
     procedure N9Click(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -77,113 +77,115 @@ var
     pathINIOpenFolder,
     pathINIOpenApp,
     pathINICPUUsage: string;
-const
-  pathDLL = 'D:\';
 implementation
 
 uses
   AboutApplication;
 
 {$R *.dfm}
+//procedure pathDLL(var path:string);
+//begin
+//  path:=extractfilepath(application.ExeName)+path;
+//end;
 ////////////////////////////////////////////////////////////////////////////////
 //DLL DateAndTime
 
 procedure ShowDateAndTime; stdcall;
-  external '\WSaF\DateAndTime.dll' name 'ShowDateAndTime';
+  external 'WSaF\DateAndTime.dll' name 'ShowDateAndTime';
 
 procedure RefreshDateAndTime; stdcall;
-  external '\WSaF\DateAndTime.dll' name 'RefreshDateAndTime';
+  external 'WSaF\DateAndTime.dll' name 'RefreshDateAndTime';
 
 procedure CloseDateAndTime; stdcall;
-  external '\WSaF\DateAndTime.dll' name 'CloseDateAndTime';
+  external 'WSaF\DateAndTime.dll' name 'CloseDateAndTime';
 
 procedure DateFormPos(x, y: integer); stdcall;
-  external '\WSaF\DateAndTime.dll' name 'FormPos';
+  external 'WSaF\DateAndTime.dll' name 'FormPos';
 
 ////////////////////////////////////////////////////////////////////////////////
 //DLL CPUUsage
 
 procedure ShowCpuUsage; stdcall;
-  external '\WSaF\CpuUsage.dll' name 'ShowCpuUsage';
+  external 'WSaF\CpuUsage.dll' name 'ShowCpuUsage';
 
 procedure RefreshCpuUsage; stdcall;
-  external '\WSaF\CpuUsage.dll' name 'RefreshCpuUsage';
+  external 'WSaF\CpuUsage.dll' name 'RefreshCpuUsage';
 
 procedure CloseCpuUsage; stdcall;
-  external '\WSaF\CpuUsage.dll' name 'CloseCpuUsage';
+  external 'WSaF\CpuUsage.dll' name 'CloseCpuUsage';
 
 procedure CpuFormPos(x, y: integer); stdcall;
-  external '\WSaF\CpuUsage.dll' name 'FormPos';
+  external 'WSaF\CpuUsage.dll' name 'FormPos';
 ////////////////////////////////////////////////////////////////////////////////
 //DLL PhisicalMemory
 
 procedure ShowPhisicalMemory; stdcall;
-  external '\WSaF\PhisicalMemory.dll' name 'ShowPhisicalMemory';
+  external 'WSaF\PhisicalMemory.dll' name 'ShowPhisicalMemory';
 
 procedure RefreshPhisicalMemory; stdcall;
-  external '\WSaF\PhisicalMemory.dll' name 'RefreshPhisicalMemory';
+  external 'WSaF\PhisicalMemory.dll' name 'RefreshPhisicalMemory';
 
 procedure ClosePhisicalMemory; stdcall;
-  external '\WSaF\PhisicalMemory.dll' name 'ClosePhisicalMemory';
+  external 'WSaF\PhisicalMemory.dll' name 'ClosePhisicalMemory';
 
 procedure MemoryFormPos(x, y: integer); stdcall;
-  external '\WSaF\PhisicalMemory.dll' name 'FormPos';
+  external 'WSaF\PhisicalMemory.dll' name 'FormPos';
 ////////////////////////////////////////////////////////////////////////////////
 //DLL OpenFolder
 
 procedure ShowFolder; stdcall;
-  external '\WSaF\OpenFolder.dll' name 'ShowFolder';
+  external 'WSaF\OpenFolder.dll' name 'ShowFolder';
 
 procedure RefreshFolder; stdcall;
-  external '\WSaF\OpenFolder.dll' name 'RefreshFolder';
+  external 'WSaF\OpenFolder.dll' name 'RefreshFolder';
 
 procedure CloseFolder; stdcall;
-  external '\WSaF\OpenFolder.dll' name 'CloseFolder';
+  external 'WSaF\OpenFolder.dll' name 'CloseFolder';
 
 procedure FolderFormPos(x, y: integer); stdcall;
-  external '\WSaF\OpenFolder.dll' name 'FormPos';
+  external 'WSaF\OpenFolder.dll' name 'FormPos';
 ///////////////////////////////////////////////////////////////////////////////
 //DLL OpenApp
 
 procedure ShowApp; stdcall;
-  external '\WSaF\OpenApp.dll' name 'ShowApp';
+  external 'WSaF\OpenApp.dll' name 'ShowApp';
 
 procedure RefreshApp; stdcall;
-  external '\WSaF\OpenApp.dll' name 'RefreshApp';
+  external 'WSaF\OpenApp.dll' name 'RefreshApp';
 
 procedure CloseApp; stdcall;
-  external '\WSaF\OpenApp.dll' name 'CloseApp';
+  external 'WSaF\OpenApp.dll' name 'CloseApp';
 
 procedure AppFormPos(x, y: integer); stdcall;
-  external '\WSaF\OpenApp.dll' name 'FormPos';
+  external 'WSaF\OpenApp.dll' name 'FormPos';
 ////////////////////////////////////////////////////////////////////////////////
 //DLL Calendar
 
 procedure ShowCalendar; stdcall;
-  external '\WSaF\Calendar.dll' name 'ShowCalendar';
+  external 'WSaF\Calendar.dll' name 'ShowCalendar';
 
 procedure RefreshCalendar; stdcall;
-  external '\WSaF\Calendar.dll' name 'RefreshCalendar';
+  external 'WSaF\Calendar.dll' name 'RefreshCalendar';
 
 procedure CloseCalendar; stdcall;
-  external '\WSaF\Calendar.dll' name 'CloseCalendar';
+  external 'WSaF\Calendar.dll' name 'CloseCalendar';
 
 procedure CalendarFormPos(x, y: integer); stdcall;
-  external '\WSaF\Calendar.dll' name 'FormPos';
+  external 'WSaF\Calendar.dll' name 'FormPos';
 ////////////////////////////////////////////////////////////////////////////////
 //DLL Calculator
 
 procedure ShowCalc; stdcall;
-  external '\WSaF\Calculator.dll' name 'ShowCalc';
+  external 'WSaF\Calculator.dll' name 'ShowCalc';
 
 procedure RefreshCalc; stdcall;
-  external '\WSaF\Calculator.dll' name 'RefreshCalc';
+  external 'WSaF\Calculator.dll' name 'RefreshCalc';
 
 procedure CloseCalc; stdcall;
-  external '\WSaF\Calculator.dll' name 'CloseCalc';
+  external 'WSaF\Calculator.dll' name 'CloseCalc';
 
 procedure CalculatorFormPos(x, y: integer); stdcall;
-  external '\WSaF\Calculator.dll' name 'FormPos';
+  external 'WSaF\Calculator.dll' name 'FormPos';
 ////////////////////////////////////////////////////////////////////////////////
 
 procedure TMainForm.E1Click(Sender: TObject);
@@ -232,19 +234,23 @@ var
   activeMemory: Boolean;
   activeFolder: Boolean;
   activeApp: Boolean;
+  activeCalendar: Boolean;
+  activeCalc: Boolean;
 begin
   //Путь к настройкам виджетов и главной формы
   pathINI := extractfilepath(application.ExeName) + '\Settings.ini';
   pathINIDateAndTime :=
-    extractfilepath(application.ExeName) + '\DateAndTimeSettings.ini';
+    extractfilepath(application.ExeName) +
+      '\WSaF\Settings\DateAndTimeSettings.ini';
   pathINICPUUsage :=
-    extractfilepath(application.ExeName) + '\CPUUsageSettings.ini';
+    extractfilepath(application.ExeName) +
+      '\WSaF\Settings\CPUUsageSettings.ini';
   pathINIPhiscalMemory := extractfilepath(application.ExeName) +
-    '\PhisicalMemorySettings.ini';
+    '\WSaF\Settings\PhisicalMemorySettings.ini';
   pathINIOpenFolder := extractfilepath(application.ExeName) +
-    '\OpenFolderSettings.ini';
+    '\WSaF\Settings\OpenFolderSettings.ini';
   pathINIOpenApp := extractfilepath(application.ExeName) +
-    '\OpenAppSettings.ini';
+    '\WSaF\Settings\OpenAppSettings.ini';
   ////////////////////////////////////////////////////////////////////////////////
 //Загрузка скина и виджетов
   skins.SkinDirectory := extractfilepath(application.ExeName) + '\Skins';
@@ -323,60 +329,7 @@ begin
     3: ShowFolder;
     4: ShowApp;
     5: ShowCalendar;
-  end;
-end;
-
-procedure TMainForm.selectWidgetMainFormClick(Sender: TObject);
-begin
-  case selectWidgetMainForm.Selected.AbsoluteIndex of
-    0:
-      begin
-        ActiveWidget.Enabled := True;
-        RefreshWidget.Enabled := true;
-        CloseWidget.Enabled := true;
-      end;
-    1:
-      begin
-        ActiveWidget.Enabled := True;
-        RefreshWidget.Enabled := true;
-        CloseWidget.Enabled := true;
-      end;
-    2:
-      begin
-        ActiveWidget.Enabled := True;
-        RefreshWidget.Enabled := true;
-        CloseWidget.Enabled := true;
-      end;
-    3:
-      begin
-        ActiveWidget.Enabled := True;
-        RefreshWidget.Enabled := true;
-        CloseWidget.Enabled := true;
-      end;
-    4:
-      begin
-        ActiveWidget.Enabled := True;
-        RefreshWidget.Enabled := true;
-        CloseWidget.Enabled := true;
-      end;
-    5:
-      begin
-        ActiveWidget.Enabled := True;
-        RefreshWidget.Enabled := true;
-        CloseWidget.Enabled := true;
-      end;
-  end;
-end;
-
-procedure TMainForm.CloseWidgetClick(Sender: TObject);
-begin
-  case selectWidgetMainForm.Selected.AbsoluteIndex of
-    0: CloseDateAndTime;
-    1: CloseCpuUsage;
-    2: ClosePhisicalMemory;
-    3: CloseFolder;
-    4: CloseApp;
-    5: CloseCalendar;
+    6: ShowCalc;
   end;
 end;
 
@@ -389,6 +342,20 @@ begin
     3: RefreshFolder;
     4: RefreshApp;
     5: RefreshCalendar;
+    6: RefreshCalc;
+  end;
+end;
+
+procedure TMainForm.CloseWidgetClick(Sender: TObject);
+begin
+  case selectWidgetMainForm.Selected.AbsoluteIndex of
+    0: CloseDateAndTime;
+    1: CloseCpuUsage;
+    2: ClosePhisicalMemory;
+    3: CloseFolder;
+    4: CloseApp;
+    5: CloseCalendar;
+    6: CloseCalc;
   end;
 end;
 
@@ -545,6 +512,12 @@ begin
     ShowApp
   else
     CloseApp;
+end;
+
+procedure TMainForm.FormActivate(Sender: TObject);
+begin
+  selectwidgetmainform.Selected:=selectWidgetMainForm.Items[0];
+  selectWidgetMainForm.SetFocus;
 end;
 
 end.

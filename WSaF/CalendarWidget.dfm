@@ -7,7 +7,7 @@ object CalendarForm: TCalendarForm
   Caption = 'CalendarForm'
   ClientHeight = 180
   ClientWidth = 180
-  Color = clPurple
+  Color = 15876263
   TransparentColorValue = clPurple
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -2140,7 +2140,7 @@ object CalendarForm: TCalendarForm
     Width = 170
     Height = 170
     Align = alCustom
-    Date = 43941.934010231480000000
+    Date = 43941.515786122680000000
     PopupMenu = PopupMenu
     TabOrder = 0
   end

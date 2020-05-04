@@ -46,7 +46,7 @@ implementation
 
 procedure TCpuUsageForm.FormCreate(Sender: TObject);
 begin
-  pathINI := extractfilepath(application.ExeName) + '\Settings\CPUUsageSettings.ini';
+  pathINI := extractfilepath(application.ExeName) + '\WSaF\Settings\CPUUsageSettings.ini';
 end;
 
 procedure TCpuUsageForm.N3Click(Sender: TObject);
@@ -54,7 +54,7 @@ var
   ans: PAnsiChar;
   dir: string;
 begin
-  dir := extractfilepath(application.ExeName) + '\Settings\CPUUsageSettings.ini';
+  dir := extractfilepath(application.ExeName) + '\WSaF\Settings\CPUUsageSettings.ini';
   ans := PAnsiChar(dir);
   ShellExecute(Handle, 'open',
     'c:\windows\notepad.exe',
