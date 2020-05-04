@@ -29,6 +29,8 @@ type
     N2: TMenuItem;
     N3: TMenuItem;
     N4: TMenuItem;
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -37,9 +39,29 @@ type
 
 var
   CalcForm: TCalcForm;
+  pathINI: string;
+  sIniFile: TIniFile;
 
 implementation
 
 {$R *.dfm}
 
+procedure TCalcForm.FormCreate(Sender: TObject);
+begin
+  pathINI := extractfilepath(application.ExeName) +
+    '\Settings\Calculator.ini';
+end;
+
+procedure TCalcForm.FormShow(Sender: TObject);
+begin
+  ShowWindow(Application.Handle, SW_HIDE);
+  if FileExists(pathINI) then
+  begin
+    sIniFile := TIniFile.Create(pathINI);
+    CalcForm.Top := sIniFile.ReadInteger('Position', 'Top', 0);
+    CalcForm.Left := sIniFile.ReadInteger('Position', 'Left', 0);
+  end;
+end;
+
 end.
+

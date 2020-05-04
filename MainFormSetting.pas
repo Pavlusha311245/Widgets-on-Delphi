@@ -7,8 +7,7 @@ uses
   Dialogs, ExtCtrls, sPanel, sSkinManager, ImgList, acAlphaImageList,
   ExtCtrlsX, ComCtrls, sTreeView, StdCtrls, sLabel, sEdit, sComboBox,
   Buttons, sBitBtn, Menus, sComboBoxes, IniFiles, TeeProcs, acArcControls,
-  PhisicalMemo, CpuUsageWidget, Registry,
-  sCalculator, sUpDown, IBExtract, ShellAPI;
+  sUpDown, Registry, sCalculator, IBExtract, ShellAPI;
 
 type
   TMainForm = class(TForm)
@@ -78,7 +77,8 @@ var
     pathINIOpenFolder,
     pathINIOpenApp,
     pathINICPUUsage: string;
-
+const
+  pathDLL = 'D:\';
 implementation
 
 uses

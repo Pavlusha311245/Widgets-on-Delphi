@@ -13,6 +13,9 @@ library Calculator;
 uses
   SysUtils,
   Classes,
+  Forms,
+  Windows,
+  IniFiles,
   CalculatorWidget in 'CalculatorWidget.pas' {CalcForm};
 
 {$R *.res}
@@ -63,7 +66,7 @@ begin
   isEmpy(CalcForm, empty);
   if empty = false then
   begin
-    CpuUsageForm.Destroy;
+    CalcForm.Destroy;
     sIniFile := TIniFile.Create(pathINI);
     sIniFile.WriteBool('State', 'Active', False);
     sIniFile.Free;
@@ -77,8 +80,8 @@ begin
   isEmpy(CalcForm, empty);
   if empty = false then
   begin
-    CpuUsageForm.Top := x;
-    CpuUsageForm.Left := y;
+    CalcForm.Top := x;
+    CalcForm.Left := y;
   end;
 end;
 exports ShowCalc, RefreshCalc, CloseCalc, FormPos;

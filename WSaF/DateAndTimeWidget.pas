@@ -4,8 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, acPNG, ExtCtrls, StdCtrls, IniFiles, Menus, ShellAPI,
-  MainFormSetting;
+  Dialogs, acPNG, ExtCtrls, StdCtrls, IniFiles, Menus, ShellAPI;
 
 type
   TDateAndTimeForm = class(TForm)
@@ -45,18 +44,20 @@ var
 implementation
 
 {$R *.dfm}
+
 function GMT: TTime;
-var TZ: _TIME_ZONE_INFORMATION;
-    dif: Integer;
-    h,m,s,ms: Word;
-    T: TTime;
+var
+  TZ: _TIME_ZONE_INFORMATION;
+  dif: Integer;
+  h, m, s, ms: Word;
+  T: TTime;
 begin
   T := Now;
-  DecodeTime(T,h,m,s,ms);
+  DecodeTime(T, h, m, s, ms);
   GetTimeZoneInformation(TZ);
   dif := TZ.Bias div 60;
-  h := h+dif+3;
-  Result := EncodeTime(h,m,s,ms);
+  h := h + dif + 3;
+  Result := EncodeTime(h, m, s, ms);
 end;
 
 procedure TDateAndTimeForm.DateAndTimeBackgroundMouseDown(Sender: TObject;
@@ -73,7 +74,8 @@ end;
 
 procedure TDateAndTimeForm.FormCreate(Sender: TObject);
 begin
-  pathINI := extractfilepath(application.ExeName) + '\Settings\DateAndTimeSettings.ini';
+  pathINI := extractfilepath(application.ExeName) +
+    '\Settings\DateAndTimeSettings.ini';
 end;
 
 procedure TDateAndTimeForm.FormShow(Sender: TObject);
@@ -108,7 +110,8 @@ var
   ans: PAnsiChar;
   dir: string;
 begin
-  dir := extractfilepath(application.ExeName) + '\Settings\DateAndTimeSettings.ini';
+  dir := extractfilepath(application.ExeName) +
+    '\Settings\DateAndTimeSettings.ini';
   ans := PAnsiChar(dir);
   ShellExecute(Handle, 'open',
     'c:\windows\notepad.exe',
