@@ -55,7 +55,7 @@ begin
   sIniFile := TIniFile.Create(pathINI);
   sIniFile.WriteBool('State', 'Active', false);
   sIniFile.Free;
-  AppForm.Destroy;
+  AppForm.Close;
 end;
 
 procedure TAppForm.AppBackgroundMouseDown(Sender: TObject;

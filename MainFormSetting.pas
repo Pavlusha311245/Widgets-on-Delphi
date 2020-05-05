@@ -41,6 +41,7 @@ type
     N8: TMenuItem;
     N9: TMenuItem;
     N10: TMenuItem;
+    N11: TMenuItem;
     procedure E1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure N3Click(Sender: TObject);
@@ -62,6 +63,8 @@ type
     procedure N8Click(Sender: TObject);
     procedure N9Click(Sender: TObject);
     procedure FormActivate(Sender: TObject);
+    procedure N11Click(Sender: TObject);
+    procedure N10Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -76,7 +79,9 @@ var
     pathINIDateAndTime,
     pathINIOpenFolder,
     pathINIOpenApp,
-    pathINICPUUsage: string;
+    pathINICPUUsage,
+    pathINICalc,
+    pathINICalendar: string;
 implementation
 
 uses
@@ -241,16 +246,20 @@ begin
   pathINI := extractfilepath(application.ExeName) + '\Settings.ini';
   pathINIDateAndTime :=
     extractfilepath(application.ExeName) +
-      '\WSaF\Settings\DateAndTimeSettings.ini';
+    '\WSaF\Settings\DateAndTimeSettings.ini';
   pathINICPUUsage :=
     extractfilepath(application.ExeName) +
-      '\WSaF\Settings\CPUUsageSettings.ini';
+    '\WSaF\Settings\CPUUsageSettings.ini';
   pathINIPhiscalMemory := extractfilepath(application.ExeName) +
     '\WSaF\Settings\PhisicalMemorySettings.ini';
   pathINIOpenFolder := extractfilepath(application.ExeName) +
     '\WSaF\Settings\OpenFolderSettings.ini';
   pathINIOpenApp := extractfilepath(application.ExeName) +
     '\WSaF\Settings\OpenAppSettings.ini';
+  pathINICalc := extractfilepath(application.ExeName) +
+    '\WSaF\Settings\CalculatorSettings.ini';
+  pathINICalendar := extractfilepath(application.ExeName) +
+    '\WSaF\Settings\CalendarSettings.ini';
   ////////////////////////////////////////////////////////////////////////////////
 //Загрузка скина и виджетов
   skins.SkinDirectory := extractfilepath(application.ExeName) + '\Skins';
@@ -303,6 +312,22 @@ begin
   end
   else
     showmessage('File not found!');
+  if FileExists(pathINICalendar) then
+  begin
+    sIniFile := TIniFile.Create(pathINICalendar);
+    activeCalendar := sIniFile.ReadBool('State', 'Active', false);
+    sIniFile.Free;
+  end
+  else
+    showmessage('File not found!');
+  if FileExists(pathINICalc) then
+  begin
+    sIniFile := TIniFile.Create(pathINICalc);
+    activeCalc := sIniFile.ReadBool('State', 'Active', false);
+    sIniFile.Free;
+  end
+  else
+    showmessage('File not found!');
   if activeDate = True then
     ShowDateAndTime;
   if activeCPU = True then
@@ -313,6 +338,10 @@ begin
     ShowFolder;
   if activeApp = true then
     ShowApp;
+  if activeCalendar = true then
+    ShowCalendar;
+  if activeCalc = true then
+    ShowCalc;
 end;
 
 procedure TMainForm.N3Click(Sender: TObject);
@@ -400,6 +429,14 @@ begin
         begin
           AppFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
         end;
+      5:
+        begin
+          CalendarFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+        end;
+      6:
+        begin
+          CalculatorFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+        end;
     end;
   end;
 end;
@@ -429,6 +466,14 @@ begin
       4:
         begin
           AppFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+        end;
+      5:
+        begin
+          CalendarFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+        end;
+      6:
+        begin
+          CalculatorFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
         end;
     end;
   end;
@@ -516,8 +561,40 @@ end;
 
 procedure TMainForm.FormActivate(Sender: TObject);
 begin
-  selectwidgetmainform.Selected:=selectWidgetMainForm.Items[0];
+  selectwidgetmainform.Selected := selectWidgetMainForm.Items[0];
   selectWidgetMainForm.SetFocus;
+end;
+
+procedure TMainForm.N11Click(Sender: TObject);
+var
+  active: boolean;
+begin
+  if FileExists(pathINICalc) then
+  begin
+    sIniFile := TIniFile.Create(pathINICalc);
+    active := sIniFile.ReadBool('State', 'Active', false);
+    sIniFile.Free;
+  end;
+  if active = False then
+    ShowApp
+  else
+    CloseApp;
+end;
+
+procedure TMainForm.N10Click(Sender: TObject);
+var
+  active: boolean;
+begin
+  if FileExists(pathINICalendar) then
+  begin
+    sIniFile := TIniFile.Create(pathINICalendar);
+    active := sIniFile.ReadBool('State', 'Active', false);
+    sIniFile.Free;
+  end;
+  if active = False then
+    ShowApp
+  else
+    CloseApp;
 end;
 
 end.

@@ -25,6 +25,7 @@ type
     procedure N3Click(Sender: TObject);
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -41,12 +42,16 @@ implementation
 
 procedure TCalendarForm.FormCreate(Sender: TObject);
 begin
-  pathINI := extractfilepath(application.ExeName) + '\WSaF\Settings\CalendarSettings.ini';
+  pathINI := extractfilepath(application.ExeName) +
+    '\WSaF\Settings\CalendarSettings.ini';
 end;
 
 procedure TCalendarForm.N1Click(Sender: TObject);
 begin
-  CalendarForm.Destroy;
+  sIniFile := TIniFile.Create(pathINI);
+  sIniFile.WriteBool('State', 'Active', false);
+  sIniFile.Free;
+  CalendarForm.Close;
 end;
 
 procedure TCalendarForm.TimerShowTimer(Sender: TObject);
@@ -62,7 +67,8 @@ var
   ans: PAnsiChar;
   dir: string;
 begin
-  dir := extractfilepath(application.ExeName) + '\WSaF\Settings\CalendarSettings.ini';
+  dir := extractfilepath(application.ExeName) +
+    '\WSaF\Settings\CalendarSettings.ini';
   ans := PAnsiChar(dir);
   ShellExecute(Handle, 'open',
     'c:\windows\notepad.exe',
@@ -102,6 +108,20 @@ procedure TCalendarForm.FormMouseDown(Sender: TObject;
 begin
   ReleaseCapture;
   CalendarForm.perform(WM_SysCommand, $F012, 0);
+end;
+
+procedure TCalendarForm.FormShow(Sender: TObject);
+begin
+  ShowWindow(Application.Handle, SW_HIDE);
+  if FileExists(pathINI) then
+  begin
+    sIniFile := TIniFile.Create(pathINI);
+    CalendarForm.Top := sIniFile.ReadInteger('Position', 'Top', 0);
+    CalendarForm.Left := sIniFile.ReadInteger('Position', 'Left', 0);
+    sIniFile.Free;
+  end
+  else
+    showmessage('File not found');
 end;
 
 end.

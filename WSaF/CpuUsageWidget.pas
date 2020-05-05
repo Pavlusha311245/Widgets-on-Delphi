@@ -102,7 +102,7 @@ begin
   sIniFile := TIniFile.Create(pathINI);
   sIniFile.WriteBool('State', 'Active', false);
   sIniFile.Free;
-  CpuUsageForm.Destroy;
+  CpuUsageForm.close;
 end;
 
 procedure TCpuUsageForm.WMMoving(var Msg: TWMMoving);

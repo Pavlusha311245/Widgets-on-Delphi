@@ -26518,6 +26518,11 @@ object MainForm: TMainForm
       end
       object N10: TMenuItem
         Caption = #1050#1072#1083#1077#1085#1076#1072#1088#1100
+        OnClick = N10Click
+      end
+      object N11: TMenuItem
+        Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088
+        OnClick = N11Click
       end
     end
     object E1: TMenuItem

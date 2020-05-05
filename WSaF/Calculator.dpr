@@ -47,7 +47,8 @@ begin
       sIniFile.WriteBool('State', 'Active', true);
       sIniFile.Free;
     end;
-  end;
+  end
+  else CalcForm.Show;
 end;
 
 procedure RefreshCalc; stdcall;
@@ -66,7 +67,7 @@ begin
   isEmpy(CalcForm, empty);
   if empty = false then
   begin
-    CalcForm.Destroy;
+    CalcForm.Close;
     sIniFile := TIniFile.Create(pathINI);
     sIniFile.WriteBool('State', 'Active', False);
     sIniFile.Free;

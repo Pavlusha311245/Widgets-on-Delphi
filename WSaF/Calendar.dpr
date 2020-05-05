@@ -48,7 +48,8 @@ begin
       sIniFile.WriteBool('State', 'Active', true);
       sIniFile.Free;
     end;
-  end;
+  end
+  else CalendarForm.Show;
 end;
 
 procedure RefreshCalendar; stdcall;
@@ -67,7 +68,8 @@ begin
   isEmpy(CalendarForm, empty);
   if empty = false then
   begin
-    CalendarForm.Destroy;
+    CalendarForm.Close;
+//    CalendarForm.Destroy;
     sIniFile := TIniFile.Create(pathINI);
     sIniFile.WriteBool('State', 'Active', False);
     sIniFile.Free;

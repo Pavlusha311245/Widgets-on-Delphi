@@ -2132,6 +2132,7 @@ object CalendarForm: TCalendarForm
   OldCreateOrder = False
   OnCreate = FormCreate
   OnMouseDown = FormMouseDown
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Calendar: TMonthCalendar
@@ -2140,7 +2141,7 @@ object CalendarForm: TCalendarForm
     Width = 170
     Height = 170
     Align = alCustom
-    Date = 43941.515786122680000000
+    Date = 43941.553779513890000000
     PopupMenu = PopupMenu
     TabOrder = 0
   end

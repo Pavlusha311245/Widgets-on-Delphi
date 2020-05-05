@@ -50,7 +50,8 @@ begin
       sIniFile.WriteBool('State', 'Active', true);
       sIniFile.Free;
     end;
-  end;
+  end
+  else CpuUsageForm.Show;
 end;
 
 procedure RefreshCpuUsage; stdcall;
@@ -69,7 +70,8 @@ begin
   isEmpy(CpuUsageForm, empty);
   if empty = false then
   begin
-    CpuUsageForm.Destroy;
+    CpuUsageForm.Close;
+//    CpuUsageForm.Destroy;
     sIniFile := TIniFile.Create(pathINI);
     sIniFile.WriteBool('State', 'Active', False);
     sIniFile.Free;

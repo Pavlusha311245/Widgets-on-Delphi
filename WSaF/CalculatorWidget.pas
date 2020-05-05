@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Menus, IniFiles;
+  Dialogs, StdCtrls, Menus, IniFiles, ExtCtrls, ShellAPI;
 
 type
   TCalcForm = class(TForm)
@@ -31,6 +31,7 @@ type
     N4: TMenuItem;
     btnclr: TButton;
     btnundo: TButton;
+    TimerShow: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
@@ -46,10 +47,14 @@ type
     procedure btn9Click(Sender: TObject);
     procedure btnclrClick(Sender: TObject);
     procedure btnundoClick(Sender: TObject);
+    procedure N1Click(Sender: TObject);
+    procedure N3Click(Sender: TObject);
+    procedure TimerShowTimer(Sender: TObject);
+    procedure WMEXITSIZEMOVE(var message: TMessage); message WM_EXITSIZEMOVE;
   private
     { Private declarations }
   public
-    { Public declarations }
+    procedure WMMoving(var Msg: TWMMoving); message WM_MOVING;
   end;
 
 var
@@ -64,7 +69,7 @@ implementation
 procedure TCalcForm.FormCreate(Sender: TObject);
 begin
   pathINI := extractfilepath(application.ExeName) +
-    '\Settings\Calculator.ini';
+    '\WSaF\Settings\CalculatorSettings.ini';
 end;
 
 procedure TCalcForm.FormShow(Sender: TObject);
@@ -137,8 +142,64 @@ end;
 
 procedure TCalcForm.btnundoClick(Sender: TObject);
 begin
-  edt1.Text:=copy(edt1.Text,1,length(edt1.Text)-1);
+  edt1.Text := copy(edt1.Text, 1, length(edt1.Text) - 1);
 end;
 
+procedure TCalcForm.N1Click(Sender: TObject);
+begin
+  sIniFile := TIniFile.Create(pathINI);
+  sIniFile.WriteBool('State', 'Active', false);
+  sIniFile.Free;
+  CalcForm.Close;
+end;
+
+procedure TCalcForm.N3Click(Sender: TObject);
+var
+  ans: PAnsiChar;
+  dir: string;
+begin
+  dir := extractfilepath(application.ExeName) +
+    '\WSaF\Settings\CaclulatorSettings.ini';
+  ans := PAnsiChar(dir);
+  ShellExecute(Handle, 'open',
+    'c:\windows\notepad.exe',
+    ans, nil,
+    SW_SHOWNORMAL);
+end;
+
+procedure TCalcForm.TimerShowTimer(Sender: TObject);
+begin
+  if AlphaBlendValue <> 255 then
+    AlphaBlendValue := AlphaBlendValue + 5
+  else
+    TimerShow.Enabled := false;
+end;
+
+procedure TCalcForm.WMEXITSIZEMOVE(var message: TMessage);
+begin
+  sIniFile := TIniFile.Create(pathINI);
+  sIniFile.WriteInteger('Position', 'Top', CalcForm.top);
+  sIniFile.WriteInteger('Position', 'Left', CalcForm.Left);
+  sIniFile.Free;
+end;
+
+procedure TCalcForm.WMMoving(var Msg: TWMMoving);
+var
+  workArea: TRect;
+begin
+  workArea := Screen.WorkareaRect;
+  with Msg.DragRect^ do
+  begin
+    if Left < workArea.Left then
+      OffsetRect(Msg.DragRect^, workArea.Left - Left, 0);
+    if Top < workArea.Top then
+      OffsetRect(Msg.DragRect^, 0, workArea.Top - Top);
+    if Right > workArea.Right then
+      OffsetRect(Msg.DragRect^, workArea.Right - Right, 0);
+    if Bottom > workArea.Bottom then
+      OffsetRect(Msg.DragRect^, 0, workArea.Bottom - Bottom);
+  end;
+  inherited;
+end;
 end.
 

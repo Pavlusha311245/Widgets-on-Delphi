@@ -40,7 +40,8 @@ begin
       sIniFile.WriteBool('State', 'Active', true);
       sIniFile.Free;
     end;
-  end;
+  end
+  else DateAndTimeForm.Show;
 end;
 
 procedure RefreshDateAndTime; stdcall;
@@ -59,7 +60,8 @@ begin
   isEmpy(DateAndTimeForm, empty);
   if empty = false then
   begin
-    DateAndTimeForm.Destroy;
+    DateAndTimeForm.Close;
+//    DateAndTimeForm.Destroy;
     sIniFile := TIniFile.Create(pathINI);
     sIniFile.WriteBool('State', 'Active', False);
     sIniFile.Free;

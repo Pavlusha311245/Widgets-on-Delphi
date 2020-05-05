@@ -116,7 +116,7 @@ begin
   sIniFile := TIniFile.Create(pathINI);
   sIniFile.WriteBool('State', 'Active', false);
   sIniFile.Free;
-  PhisicalMemoryForm.Destroy;
+  PhisicalMemoryForm.Close;
 end;
 
 procedure TPhisicalMemoryForm.FormCreate(Sender: TObject);

@@ -47,7 +47,8 @@ begin
       sIniFile.WriteBool('State', 'Active', true);
       sIniFile.Free;
     end;
-  end;
+  end
+  else FolderForm.Show;
 end;
 
 procedure RefreshFolder; stdcall;
@@ -66,7 +67,8 @@ begin
   isEmpy(FolderForm, empty);
   if empty = false then
   begin
-    FolderForm.Destroy;
+    FolderForm.Close;
+//    FolderForm.Destroy;
     sIniFile := TIniFile.Create(pathINI);
     sIniFile.WriteBool('State', 'Active', False);
     sIniFile.Free;

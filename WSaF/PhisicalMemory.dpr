@@ -48,7 +48,8 @@ begin
       sIniFile.WriteBool('State', 'Active', true);
       sIniFile.Free;
     end;
-  end;
+  end
+  else PhisicalMemoryForm.Show;
 
 end;
 
@@ -68,7 +69,8 @@ begin
   isEmpy(PhisicalMemoryForm, empty);
   if empty = false then
   begin
-    PhisicalMemoryForm.Destroy;
+    PhisicalMemoryForm.Close;
+//    PhisicalMemoryForm.Destroy;
     sIniFile := TIniFile.Create(pathINI);
     sIniFile.WriteBool('State', 'Active', false);
     sIniFile.Free;

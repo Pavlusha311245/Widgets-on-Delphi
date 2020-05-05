@@ -115,7 +115,7 @@ begin
   sIniFile := TIniFile.Create(pathINI);
   sIniFile.WriteBool('State', 'Active', false);
   sIniFile.Free;
-  FolderForm.Destroy;
+  FolderForm.Close;
 end;
 
 procedure TFolderForm.FolderFontgroundClick(Sender: TObject);

@@ -97,7 +97,7 @@ begin
   sIniFile := TIniFile.Create(pathINI);
   sIniFile.WriteBool('State', 'Active', false);
   sIniFile.Free;
-  DateAndTimeForm.Destroy;
+  DateAndTimeForm.Close;
 end;
 
 procedure TDateAndTimeForm.N3Click(Sender: TObject);

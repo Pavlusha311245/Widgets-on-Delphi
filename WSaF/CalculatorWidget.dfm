@@ -2286,15 +2286,22 @@ object CalcForm: TCalcForm
     end
     object N1: TMenuItem
       Caption = #1047#1072#1082#1088#1099#1090#1100' '#1074#1080#1076#1078#1077#1090
+      OnClick = N1Click
     end
     object N2: TMenuItem
       Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100' '#1074#1080#1076#1078#1077#1090
       object N3: TMenuItem
         Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+        OnClick = N3Click
       end
       object N4: TMenuItem
         Caption = #1054#1073#1085#1086#1074#1080#1090#1100
       end
     end
+  end
+  object TimerShow: TTimer
+    Interval = 5
+    OnTimer = TimerShowTimer
+    Left = 32
   end
 end
