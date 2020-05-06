@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Menus, IniFiles, ExtCtrls, ShellAPI;
+  Dialogs, StdCtrls, Menus, IniFiles, ExtCtrls, ShellAPI, acPNG;
 
 type
   TCalcForm = class(TForm)
@@ -32,28 +32,35 @@ type
     btnclr: TButton;
     btnundo: TButton;
     TimerShow: TTimer;
+    btnrez: TButton;
+    Background: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure btn0Click(Sender: TObject);
-    procedure btn2Click(Sender: TObject);
-    procedure btn3Click(Sender: TObject);
-    procedure btn4Click(Sender: TObject);
-    procedure btn5Click(Sender: TObject);
-    procedure btn6Click(Sender: TObject);
-    procedure btn7Click(Sender: TObject);
-    procedure btn8Click(Sender: TObject);
-    procedure btn9Click(Sender: TObject);
     procedure btnclrClick(Sender: TObject);
     procedure btnundoClick(Sender: TObject);
     procedure N1Click(Sender: TObject);
     procedure N3Click(Sender: TObject);
     procedure TimerShowTimer(Sender: TObject);
     procedure WMEXITSIZEMOVE(var message: TMessage); message WM_EXITSIZEMOVE;
+    procedure FormKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure btn1Click(Sender: TObject);
+    procedure btnplusClick(Sender: TObject);
+    procedure btnminusClick(Sender: TObject);
+    procedure btnmulClick(Sender: TObject);
+    procedure btndivClick(Sender: TObject);
+    procedure btnrezClick(Sender: TObject);
+    procedure BackgroundMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private declarations }
   public
+    stek1: double;
+    stek2: double;
+    operand: byte;
+    edit: boolean;
+    procedure Calculator(codekey: word);
+    procedure saveStek;
     procedure WMMoving(var Msg: TWMMoving); message WM_MOVING;
   end;
 
@@ -66,14 +73,111 @@ implementation
 
 {$R *.dfm}
 
+procedure TCalcForm.Calculator(codekey: word);
+var
+  x: integer;
+begin
+  case codekey of
+    8: { бакспейс }
+      begin
+        edt1.text := copy(edt1.text, 1, length(edt1.text) - 1);
+        saveStek;
+      end;
+    13: { Ёнтер }
+      begin
+        saveStek;
+        case operand of
+          1: {+ } stek2 := stek1 + stek2;
+          2: {- } stek2 := stek1 - stek2;
+          3: {* } stek2 := stek1 * stek2;
+          4: {/ } stek2 := stek1 / stek2;
+          0: exit;
+        end;
+        edt1.text := FormatFloat('0.0000', stek2);
+        edit := false;
+      end;
+    109: {-}
+      begin
+        saveStek;
+        stek1 := stek2;
+        operand := 2;
+        edit := false;
+      end;
+    107: {+}
+      begin
+        saveStek;
+        stek1 := stek2;
+        operand := 1;
+        edit := false;
+      end;
+    106: {*}
+      begin
+        saveStek;
+        stek1 := stek2;
+        operand := 3;
+        edit := false;
+      end;
+    111: {/}
+      begin
+        saveStek;
+        stek1 := stek2;
+        operand := 4;
+        edit := false;
+      end;
+    27: {esc C}
+      begin
+        operand := 0;
+        edt1.text := '0';
+      end;
+    901: { CE btn } edt1.text := copy(edt1.Text, 1, length(edt1.Text) - 1);
+  end;
+  if codekey in [48..57, 96..105] then
+  begin
+    if codekey < 96 then
+      codekey := codekey - 48
+    else
+      codekey := codekey - 96;
+    if (edt1.text = '0') or (not edit) then
+    begin
+      edt1.text := '';
+      edit := true;
+    end;
+    edt1.text := edt1.text + inttostr(codekey);
+  end;
+end;
+
+procedure TCalcForm.saveStek;
+begin
+  if (length(edt1.text) > 0) and (edt1.text[length(edt1.text)] = ',') then
+    edt1.text := copy(edt1.text, 1, length(edt1.text) - 1);
+  if not tryStrToFloat(edt1.text, stek2) then
+  begin
+    stek2 := 0;
+    edt1.text := '0';
+  end;
+end;
+
 procedure TCalcForm.FormCreate(Sender: TObject);
+const
+  ots = 3;
+var
+  i: integer;
 begin
   pathINI := extractfilepath(application.ExeName) +
     '\WSaF\Settings\CalculatorSettings.ini';
+  Background.Picture.LoadFromFile(extractfilepath(application.ExeName)
+    + '\Images\background_170_calc.png');
+  edit := true;
+  for i := 0 to self.ComponentCount - 1 do
+    if self.Components[i] is TButton then
+      TButton(self.Components[i]).OnKeyDown := self.FormKeyDown;
 end;
 
 procedure TCalcForm.FormShow(Sender: TObject);
+var
+  key: integer;
 begin
+  self.SetFocus;
   ShowWindow(Application.Handle, SW_HIDE);
   if FileExists(pathINI) then
   begin
@@ -83,66 +187,14 @@ begin
   end;
 end;
 
-procedure TCalcForm.FormMouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-begin
-  ReleaseCapture;
-  CalcForm.perform(WM_SysCommand, $F012, 0);
-end;
-
-procedure TCalcForm.btn0Click(Sender: TObject);
-begin
-  edt1.Text := edt1.Text + '1';
-end;
-
-procedure TCalcForm.btn2Click(Sender: TObject);
-begin
-  edt1.Text := edt1.Text + '2';
-end;
-
-procedure TCalcForm.btn3Click(Sender: TObject);
-begin
-  edt1.Text := edt1.Text + '3';
-end;
-
-procedure TCalcForm.btn4Click(Sender: TObject);
-begin
-  edt1.Text := edt1.Text + '4';
-end;
-
-procedure TCalcForm.btn5Click(Sender: TObject);
-begin
-  edt1.Text := edt1.Text + '5';
-end;
-
-procedure TCalcForm.btn6Click(Sender: TObject);
-begin
-  edt1.Text := edt1.Text + '6';
-end;
-
-procedure TCalcForm.btn7Click(Sender: TObject);
-begin
-  edt1.Text := edt1.Text + '7';
-end;
-
-procedure TCalcForm.btn8Click(Sender: TObject);
-begin
-  edt1.Text := edt1.Text + '8';
-end;
-
-procedure TCalcForm.btn9Click(Sender: TObject);
-begin
-  edt1.Text := edt1.Text + '9';
-end;
-
 procedure TCalcForm.btnclrClick(Sender: TObject);
 begin
-  edt1.Clear;
+  Calculator(27);
 end;
 
 procedure TCalcForm.btnundoClick(Sender: TObject);
 begin
-  edt1.Text := copy(edt1.Text, 1, length(edt1.Text) - 1);
+  Calculator(901);
 end;
 
 procedure TCalcForm.N1Click(Sender: TObject);
@@ -159,7 +211,7 @@ var
   dir: string;
 begin
   dir := extractfilepath(application.ExeName) +
-    '\WSaF\Settings\CaclulatorSettings.ini';
+    '\WSaF\Settings\CalculatorSettings.ini';
   ans := PAnsiChar(dir);
   ShellExecute(Handle, 'open',
     'c:\windows\notepad.exe',
@@ -201,5 +253,49 @@ begin
   end;
   inherited;
 end;
+
+procedure TCalcForm.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  self.Calculator(key);
+end;
+
+procedure TCalcForm.btn1Click(Sender: TObject);
+begin
+  Calculator(strtoint(TButton(Sender).caption) + 48);
+end;
+
+procedure TCalcForm.btnplusClick(Sender: TObject);
+begin
+  Calculator(107);
+end;
+
+procedure TCalcForm.btnminusClick(Sender: TObject);
+begin
+  Calculator(109);
+end;
+
+procedure TCalcForm.btnmulClick(Sender: TObject);
+begin
+  Calculator(106);
+end;
+
+procedure TCalcForm.btndivClick(Sender: TObject);
+begin
+  Calculator(111);
+end;
+
+procedure TCalcForm.btnrezClick(Sender: TObject);
+begin
+  Calculator(13);
+end;
+
+procedure TCalcForm.BackgroundMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  ReleaseCapture;
+  CalcForm.perform(WM_SysCommand, $F012, 0);
+end;
+
 end.
 

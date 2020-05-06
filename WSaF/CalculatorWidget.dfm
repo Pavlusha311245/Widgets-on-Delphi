@@ -1,11 +1,15 @@
 object CalcForm: TCalcForm
   Left = 1135
   Top = 401
+  AlphaBlend = True
+  AlphaBlendValue = 0
   BorderStyle = bsNone
   Caption = 'CalcForm'
   ClientHeight = 170
   ClientWidth = 120
-  Color = 15876263
+  Color = clNavy
+  TransparentColor = True
+  TransparentColorValue = clNavy
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -2128,159 +2132,185 @@ object CalcForm: TCalcForm
     FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
   OldCreateOrder = False
   OnCreate = FormCreate
-  OnMouseDown = FormMouseDown
+  OnKeyDown = FormKeyDown
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
+  object Background: TImage
+    Left = 0
+    Top = 0
+    Width = 120
+    Height = 170
+    Align = alClient
+    PopupMenu = PopupMenu
+    OnMouseDown = BackgroundMouseDown
+  end
   object btn1: TButton
-    Left = 10
+    Left = 18
     Top = 64
-    Width = 25
-    Height = 25
+    Width = 20
+    Height = 20
     Caption = '1'
     TabOrder = 0
+    OnClick = btn1Click
   end
   object btn2: TButton
     Left = 35
     Top = 64
-    Width = 25
-    Height = 25
+    Width = 20
+    Height = 20
     Caption = '2'
     TabOrder = 1
-    OnClick = btn2Click
+    OnClick = btn1Click
   end
   object btn3: TButton
-    Left = 60
+    Left = 52
     Top = 64
-    Width = 25
-    Height = 25
+    Width = 20
+    Height = 20
     Caption = '3'
     TabOrder = 2
-    OnClick = btn3Click
+    OnClick = btn1Click
   end
   object btn4: TButton
-    Left = 10
-    Top = 88
-    Width = 25
-    Height = 25
+    Left = 18
+    Top = 80
+    Width = 20
+    Height = 20
     Caption = '4'
     TabOrder = 3
-    OnClick = btn4Click
+    OnClick = btn1Click
   end
   object btn5: TButton
     Left = 35
-    Top = 88
-    Width = 25
-    Height = 25
+    Top = 80
+    Width = 20
+    Height = 20
     Caption = '5'
     TabOrder = 4
-    OnClick = btn5Click
+    OnClick = btn1Click
   end
   object btn6: TButton
-    Left = 60
-    Top = 88
-    Width = 25
-    Height = 25
+    Left = 52
+    Top = 80
+    Width = 20
+    Height = 20
     Caption = '6'
     TabOrder = 5
-    OnClick = btn6Click
+    OnClick = btn1Click
   end
   object btn7: TButton
-    Left = 10
-    Top = 112
-    Width = 25
-    Height = 25
+    Left = 18
+    Top = 96
+    Width = 20
+    Height = 20
     Caption = '7'
     TabOrder = 6
-    OnClick = btn7Click
+    OnClick = btn1Click
   end
   object btn8: TButton
     Left = 35
-    Top = 112
-    Width = 25
-    Height = 25
+    Top = 96
+    Width = 20
+    Height = 20
     Caption = '8'
     TabOrder = 8
-    OnClick = btn8Click
+    OnClick = btn1Click
   end
   object btn9: TButton
-    Left = 60
-    Top = 112
-    Width = 25
-    Height = 25
+    Left = 52
+    Top = 96
+    Width = 20
+    Height = 20
     Caption = '9'
     TabOrder = 9
-    OnClick = btn9Click
+    OnClick = btn1Click
   end
   object btn0: TButton
-    Left = 10
-    Top = 136
-    Width = 25
-    Height = 25
+    Left = 18
+    Top = 112
+    Width = 20
+    Height = 20
     Caption = '0'
     TabOrder = 10
-    OnClick = btn0Click
+    OnClick = btn1Click
   end
   object btnplus: TButton
     Left = 85
     Top = 64
-    Width = 25
-    Height = 25
+    Width = 23
+    Height = 23
     Caption = '+'
     TabOrder = 11
+    OnClick = btnplusClick
   end
   object btnminus: TButton
     Left = 85
     Top = 88
-    Width = 25
-    Height = 25
+    Width = 23
+    Height = 23
     Caption = '-'
     TabOrder = 12
+    OnClick = btnminusClick
   end
   object btnmul: TButton
     Left = 85
     Top = 112
-    Width = 25
-    Height = 25
-    Caption = 'X'
+    Width = 23
+    Height = 23
+    Caption = '*'
     TabOrder = 13
+    OnClick = btnmulClick
   end
   object btndiv: TButton
     Left = 85
     Top = 136
-    Width = 25
-    Height = 25
+    Width = 23
+    Height = 23
     Caption = '/'
     TabOrder = 14
+    OnClick = btndivClick
   end
   object edt1: TEdit
-    Left = 10
-    Top = 15
-    Width = 100
+    Left = 17
+    Top = 23
+    Width = 70
     Height = 21
-    MaxLength = 16
+    MaxLength = 8
     ReadOnly = True
     TabOrder = 7
+    Text = '0'
   end
   object btnclr: TButton
     Left = 35
-    Top = 136
-    Width = 25
-    Height = 25
-    Caption = 'CLR'
+    Top = 112
+    Width = 20
+    Height = 20
+    Caption = 'C'
     TabOrder = 15
     OnClick = btnclrClick
   end
   object btnundo: TButton
-    Left = 60
-    Top = 136
-    Width = 25
-    Height = 25
-    Caption = 'DEL'
+    Left = 52
+    Top = 112
+    Width = 20
+    Height = 20
+    Caption = 'CE'
     TabOrder = 16
     OnClick = btnundoClick
   end
+  object btnrez: TButton
+    Left = 25
+    Top = 136
+    Width = 40
+    Height = 15
+    Cursor = crHandPoint
+    Caption = 'Result'
+    TabOrder = 17
+    OnClick = btnrezClick
+  end
   object PopupMenu: TPopupMenu
+    Left = 96
     object W1: TMenuItem
       Caption = 'Widgets'
     end
@@ -2302,6 +2332,6 @@ object CalcForm: TCalcForm
   object TimerShow: TTimer
     Interval = 5
     OnTimer = TimerShowTimer
-    Left = 32
+    Left = 96
   end
 end

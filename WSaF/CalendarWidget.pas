@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExtCtrls, sPanel, sMonthCalendar, IniFiles, ComCtrls, Menus,
-  ShellAPI;
+  ShellAPI, acPNG;
 
 type
   TCalendarForm = class(TForm)
@@ -17,6 +17,7 @@ type
     N3: TMenuItem;
     N4: TMenuItem;
     TimerShow: TTimer;
+    Background: TImage;
     procedure FormCreate(Sender: TObject);
     procedure N1Click(Sender: TObject);
     procedure TimerShowTimer(Sender: TObject);
@@ -26,6 +27,8 @@ type
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure FormShow(Sender: TObject);
+    procedure BackgroundMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private declarations }
   public
@@ -113,6 +116,8 @@ end;
 procedure TCalendarForm.FormShow(Sender: TObject);
 begin
   ShowWindow(Application.Handle, SW_HIDE);
+  Background.Picture.LoadFromFile(extractfilepath(application.ExeName)
+    + '\Images\background_180.png');
   if FileExists(pathINI) then
   begin
     sIniFile := TIniFile.Create(pathINI);
@@ -122,6 +127,13 @@ begin
   end
   else
     showmessage('File not found');
+end;
+
+procedure TCalendarForm.BackgroundMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  ReleaseCapture;
+  CalendarForm.perform(WM_SysCommand, $F012, 0);
 end;
 
 end.

@@ -65,6 +65,7 @@ type
     procedure FormActivate(Sender: TObject);
     procedure N11Click(Sender: TObject);
     procedure N10Click(Sender: TObject);
+    
   private
     { Private declarations }
   public

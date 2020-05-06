@@ -125,12 +125,16 @@ begin
     '\WSaF\Settings\PhisicalMemorySettings.ini';
 end;
 
+procedure RetPos(x: Integer; y: integer); stdcall;
+  external 'PaFWF.dll' name 'RetPos';
+
 procedure TPhisicalMemoryForm.WMEXITSIZEMOVE(var message: TMessage);
 begin
   sIniFile := TIniFile.Create(pathINI);
   sIniFile.WriteInteger('Position', 'Top', PhisicalMemoryForm.top);
   sIniFile.WriteInteger('Position', 'Left', PhisicalMemoryForm.Left);
   sIniFile.Free;
+  RetPos(PhisicalMemoryForm.Left, PhisicalMemoryForm.Top);
 end;
 
 procedure TPhisicalMemoryForm.WMMoving(var Msg: TWMMoving);
