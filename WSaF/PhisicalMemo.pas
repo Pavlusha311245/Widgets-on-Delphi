@@ -134,7 +134,6 @@ begin
   sIniFile.WriteInteger('Position', 'Top', PhisicalMemoryForm.top);
   sIniFile.WriteInteger('Position', 'Left', PhisicalMemoryForm.Left);
   sIniFile.Free;
-  RetPos(PhisicalMemoryForm.Left, PhisicalMemoryForm.Top);
 end;
 
 procedure TPhisicalMemoryForm.WMMoving(var Msg: TWMMoving);

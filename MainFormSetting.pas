@@ -42,6 +42,14 @@ type
     N9: TMenuItem;
     N10: TMenuItem;
     N11: TMenuItem;
+    Athor: TLabel;
+    Version: TLabel;
+    Info: TLabel;
+    athorrez: TLabel;
+    verrez: TLabel;
+    inforez: TLabel;
+    sbtbtn1: TsBitBtn;
+    autorun: TCheckBox;
     procedure E1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure N3Click(Sender: TObject);
@@ -65,7 +73,10 @@ type
     procedure FormActivate(Sender: TObject);
     procedure N11Click(Sender: TObject);
     procedure N10Click(Sender: TObject);
-    
+    procedure sbtbtn1Click(Sender: TObject);
+    procedure autorunClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+
   private
     { Private declarations }
   public
@@ -242,6 +253,7 @@ var
   activeApp: Boolean;
   activeCalendar: Boolean;
   activeCalc: Boolean;
+  activeautorun: Boolean;
 begin
   //Путь к настройкам виджетов и главной формы
   pathINI := extractfilepath(application.ExeName) + '\Settings.ini';
@@ -268,6 +280,17 @@ begin
   begin
     sIniFile := TIniFile.Create(pathINI);
     skins.SkinName := siniFile.ReadString('Main', 'Skin', '');
+    activeautorun := siniFile.ReadBool('Main', 'Autorun', false);
+    if activeautorun = True then
+    begin
+      autorun.Checked := True;
+      AddStart;
+    end
+    else
+    begin
+      autorun.Checked := false;
+      DelStart;
+    end;
     sIniFile.Free;
   end
   else
@@ -596,6 +619,35 @@ begin
     ShowApp
   else
     CloseApp;
+end;
+
+procedure TMainForm.sbtbtn1Click(Sender: TObject);
+begin
+  if settingPanelMainForm.Visible = True then
+  begin
+    settingPanelMainForm.Visible := False;
+    sbtbtn1.caption := 'Скрыть';
+  end
+  else
+  begin
+    settingPanelMainForm.Visible := True;
+    sbtbtn1.Caption := 'Показать';
+  end;
+end;
+
+procedure TMainForm.autorunClick(Sender: TObject);
+begin
+  if autorun.Checked = True then
+    AddStart
+  else
+    DelStart;
+end;
+
+procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  siniFile := TInifile.Create(pathINI);
+  siniFile.writeBool('Main', 'Autorun', autorun.Checked);
+  siniFile.Free;
 end;
 
 end.

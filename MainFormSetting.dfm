@@ -1,6 +1,6 @@
 object MainForm: TMainForm
-  Left = 429
-  Top = 191
+  Left = 347
+  Top = 198
   BorderIcons = [biMinimize, biHelp]
   BorderStyle = bsSingle
   Caption = #1043#1083#1072#1074#1085#1086#1077' '#1084#1077#1085#1102
@@ -2129,6 +2129,7 @@ object MainForm: TMainForm
     FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
   OldCreateOrder = False
   OnActivate = FormActivate
+  OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
@@ -2143,6 +2144,90 @@ object MainForm: TMainForm
     PaintData.Color2.Color = 16722943
     PaintData.Color2.UseSkinColor = False
     PaintData.CustomGradient = '-65408;0;13;-32513;65;1;-32513;100;13;C'
+    object Athor: TLabel
+      Left = 225
+      Top = 100
+      Width = 54
+      Height = 21
+      Caption = #1040#1074#1090#1086#1088':'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Times New Roman'
+      Font.Style = []
+      ParentFont = False
+      Transparent = True
+    end
+    object Version: TLabel
+      Left = 225
+      Top = 130
+      Width = 62
+      Height = 21
+      Caption = #1042#1077#1088#1089#1080#1103':'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Times New Roman'
+      Font.Style = []
+      ParentFont = False
+      Transparent = True
+    end
+    object Info: TLabel
+      Left = 225
+      Top = 160
+      Width = 83
+      Height = 21
+      Caption = #1054#1087#1080#1089#1072#1085#1080#1077':'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Times New Roman'
+      Font.Style = []
+      ParentFont = False
+      Transparent = True
+    end
+    object athorrez: TLabel
+      Left = 320
+      Top = 100
+      Width = 15
+      Height = 21
+      Caption = '...'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Times New Roman'
+      Font.Style = []
+      ParentFont = False
+      Transparent = True
+    end
+    object verrez: TLabel
+      Left = 320
+      Top = 130
+      Width = 15
+      Height = 21
+      Caption = '...'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Times New Roman'
+      Font.Style = []
+      ParentFont = False
+      Transparent = True
+    end
+    object inforez: TLabel
+      Left = 320
+      Top = 160
+      Width = 15
+      Height = 21
+      Caption = '...'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Times New Roman'
+      Font.Style = []
+      ParentFont = False
+      Transparent = True
+    end
     object ActiveWidget: TsBitBtn
       Left = 596
       Top = 20
@@ -2230,7 +2315,7 @@ object MainForm: TMainForm
       Left = 1
       Top = 1
       Width = 200
-      Height = 398
+      Height = 498
       Align = alLeft
       AutoExpand = True
       BorderStyle = bsNone
@@ -2260,15 +2345,16 @@ object MainForm: TMainForm
       SkinData.CustomColor = True
     end
     object settingPanelMainForm: TsPanel
-      Left = 1
-      Top = 399
-      Width = 798
+      Left = 0
+      Top = 402
+      Width = 802
       Height = 100
-      SkinData.SkinSection = 'TRANSPARENT'
-      Align = alBottom
+      Align = alCustom
       BorderStyle = bsSingle
       DoubleBuffered = False
+      SideShadow.Blend = 255
       TabOrder = 4
+      Visible = False
       object lbl1: TsLabel
         Left = 8
         Top = 16
@@ -2337,7 +2423,7 @@ object MainForm: TMainForm
       end
       object sbtbtn4: TsBitBtn
         Left = 752
-        Top = 56
+        Top = 32
         Width = 30
         Height = 30
         Caption = #1047#1072#1082#1088#1099#1090#1100
@@ -2365,9 +2451,18 @@ object MainForm: TMainForm
         Associate = edt3
         TabOrder = 5
       end
+      object autorun: TCheckBox
+        Left = 312
+        Top = 16
+        Width = 97
+        Height = 17
+        Caption = #1040#1074#1090#1086#1079#1072#1087#1091#1089#1082
+        TabOrder = 6
+        OnClick = autorunClick
+      end
     end
     object sknslctr1: TsSkinSelector
-      Left = 224
+      Left = 225
       Top = 24
       Width = 145
       Height = 22
@@ -2375,6 +2470,15 @@ object MainForm: TMainForm
       SkinData.CustomColor = True
       ItemHeight = 16
       TabOrder = 5
+    end
+    object sbtbtn1: TsBitBtn
+      Left = 0
+      Top = 475
+      Width = 75
+      Height = 25
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100
+      TabOrder = 6
+      OnClick = sbtbtn1Click
     end
   end
   object skins: TsSkinManager

@@ -2143,6 +2143,7 @@ object CpuUsageForm: TCpuUsageForm
     Height = 120
     Align = alClient
     Center = True
+    Proportional = True
     Transparent = True
     OnMouseDown = CpuUsagebackgroundMouseDown
   end

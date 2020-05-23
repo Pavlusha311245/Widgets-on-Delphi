@@ -48,8 +48,7 @@ begin
       sIniFile.WriteBool('State', 'Active', true);
       sIniFile.Free;
     end;
-  end
-  else AppForm.Show;
+  end;
 end;
 
 procedure RefreshApp; stdcall;
@@ -68,8 +67,8 @@ begin
   isEmpy(AppForm, empty);
   if empty = false then
   begin
-    AppForm.Close;  
-//    AppForm.Destroy;
+//    AppForm.Close;  
+    AppForm.Destroy;
     sIniFile := TIniFile.Create(pathINI);
     sIniFile.WriteBool('State', 'Active', False);
     sIniFile.Free;

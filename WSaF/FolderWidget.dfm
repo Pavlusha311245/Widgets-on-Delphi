@@ -2143,6 +2143,7 @@ object FolderForm: TFolderForm
     Align = alClient
     Center = True
     PopupMenu = PopupMenu
+    Proportional = True
     Transparent = True
     OnMouseDown = FolderBackgroundMouseDown
   end

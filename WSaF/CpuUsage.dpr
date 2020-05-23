@@ -70,8 +70,8 @@ begin
   isEmpy(CpuUsageForm, empty);
   if empty = false then
   begin
-    CpuUsageForm.Close;
-//    CpuUsageForm.Destroy;
+//    CpuUsageForm.Close;
+    CpuUsageForm.Destroy;
     sIniFile := TIniFile.Create(pathINI);
     sIniFile.WriteBool('State', 'Active', False);
     sIniFile.Free;

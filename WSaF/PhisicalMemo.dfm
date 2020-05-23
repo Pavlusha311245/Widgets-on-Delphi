@@ -2144,6 +2144,7 @@ object PhisicalMemoryForm: TPhisicalMemoryForm
     Align = alClient
     Center = True
     PopupMenu = PopupMenu
+    Proportional = True
     Transparent = True
     OnMouseDown = PhisicalMemoryBackgroundMouseDown
   end
