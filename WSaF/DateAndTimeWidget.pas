@@ -18,6 +18,7 @@ type
     Time: TLabel;
     DateAndTimeBackground: TImage;
     TimerShow: TTimer;
+    Date: TLabel;
     procedure DateAndTimeBackgroundMouseDown(Sender: TObject; Button:
       TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -70,6 +71,7 @@ end;
 procedure TDateAndTimeForm.TimePickerNowTimer(Sender: TObject);
 begin
   Time.Caption := TimeToStr(GMT);
+  date.Caption := DateToStr(now);
 end;
 
 procedure TDateAndTimeForm.FormCreate(Sender: TObject);

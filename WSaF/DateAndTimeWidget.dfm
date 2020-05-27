@@ -2151,7 +2151,7 @@ object DateAndTimeForm: TDateAndTimeForm
   end
   object Time: TLabel
     Left = 18
-    Top = 45
+    Top = 37
     Width = 84
     Height = 27
     Alignment = taCenter
@@ -2159,13 +2159,30 @@ object DateAndTimeForm: TDateAndTimeForm
     Caption = '00:00:00'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWhite
-    Font.Height = -24
+    Font.Height = -19
     Font.Name = 'Times New Roman'
-    Font.Style = []
+    Font.Style = [fsBold]
     ParentFont = False
     Transparent = True
     Layout = tlCenter
     OnMouseDown = TimeMouseDown
+  end
+  object Date: TLabel
+    Left = 20
+    Top = 62
+    Width = 80
+    Height = 20
+    Alignment = taCenter
+    AutoSize = False
+    Caption = '12.12.2020'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWhite
+    Font.Height = -15
+    Font.Name = 'Times New Roman'
+    Font.Style = [fsBold]
+    ParentFont = False
+    Transparent = True
+    Layout = tlCenter
   end
   object TimePickerNow: TTimer
     OnTimer = TimePickerNowTimer

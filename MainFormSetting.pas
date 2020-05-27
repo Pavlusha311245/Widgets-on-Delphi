@@ -78,6 +78,7 @@ type
     procedure autorunClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure N12Click(Sender: TObject);
+    procedure selectWidgetMainFormClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -628,12 +629,12 @@ begin
   if settingPanelMainForm.Visible = True then
   begin
     settingPanelMainForm.Visible := False;
-    sbtbtn1.caption := 'Скрыть';
+    sbtbtn1.caption := 'Показать';
   end
   else
   begin
     settingPanelMainForm.Visible := True;
-    sbtbtn1.Caption := 'Показать';
+    sbtbtn1.Caption := 'Скрыть';
   end;
 end;
 
@@ -659,6 +660,117 @@ begin
   begin
     settingPanelMainForm.Visible := True;
     sbtbtn1.caption := 'Скрыть';
+  end;
+end;
+
+procedure TMainForm.selectWidgetMainFormClick(Sender: TObject);
+begin
+  case selectWidgetMainForm.Selected.AbsoluteIndex of
+    0:
+      begin
+        if FileExists(pathINIDateAndTime) then
+        begin
+          sIniFile := TIniFile.Create(pathINIDateAndTime);
+          athorrez.Caption := siniFile.ReadString('metadata', 'Athor',
+            'unknown');
+          verrez.Caption := siniFile.ReadString('metadata', 'version',
+            'unknown');
+          inforez.Caption := siniFile.ReadString('metadata', 'Info', 'unknown');
+          sIniFile.Free;
+        end
+        else
+          showmessage('File not found!');
+      end;
+    1:
+      begin
+        if FileExists(pathINICPUUsage) then
+        begin
+          sIniFile := TIniFile.Create(pathINICPUUsage);
+          athorrez.Caption := siniFile.ReadString('metadata', 'Athor',
+            'unknown');
+          verrez.Caption := siniFile.ReadString('metadata', 'version',
+            'unknown');
+          inforez.Caption := siniFile.ReadString('metadata', 'Info', 'unknown');
+          sIniFile.Free;
+        end
+        else
+          showmessage('File not found!');
+      end;
+    2:
+      begin
+        if FileExists(pathINIPhiscalMemory) then
+        begin
+          sIniFile := TIniFile.Create(pathINIPhiscalMemory);
+          athorrez.Caption := siniFile.ReadString('metadata', 'Athor',
+            'unknown');
+          verrez.Caption := siniFile.ReadString('metadata', 'version',
+            'unknown');
+          inforez.Caption := siniFile.ReadString('metadata', 'Info', 'unknown');
+          sIniFile.Free;
+        end
+        else
+          showmessage('File not found!');
+      end;
+    3:
+      begin
+        if FileExists(pathINIOpenFolder) then
+        begin
+          sIniFile := TIniFile.Create(pathINIOpenFolder);
+          athorrez.Caption := siniFile.ReadString('metadata', 'Athor',
+            'unknown');
+          verrez.Caption := siniFile.ReadString('metadata', 'version',
+            'unknown');
+          inforez.Caption := siniFile.ReadString('metadata', 'Info', 'unknown');
+          sIniFile.Free;
+        end
+        else
+          showmessage('File not found!');
+      end;
+    4:
+      begin
+        if FileExists(pathINIOpenApp) then
+        begin
+          sIniFile := TIniFile.Create(pathINIOpenApp);
+          athorrez.Caption := siniFile.ReadString('metadata', 'Athor',
+            'unknown');
+          verrez.Caption := siniFile.ReadString('metadata', 'version',
+            'unknown');
+          inforez.Caption := siniFile.ReadString('metadata', 'Info', 'unknown');
+          sIniFile.Free;
+        end
+        else
+          showmessage('File not found!');
+      end;
+    5:
+      begin
+        if FileExists(pathINICalendar) then
+        begin
+          sIniFile := TIniFile.Create(pathINICalendar);
+          athorrez.Caption := siniFile.ReadString('metadata', 'Athor',
+            'unknown');
+          verrez.Caption := siniFile.ReadString('metadata', 'version',
+            'unknown');
+          inforez.Caption := siniFile.ReadString('metadata', 'Info', 'unknown');
+          sIniFile.Free;
+        end
+        else
+          showmessage('File not found!');
+      end;
+    6:
+      begin
+        if FileExists(pathINICalc) then
+        begin
+          sIniFile := TIniFile.Create(pathINICalc);
+          athorrez.Caption := siniFile.ReadString('metadata', 'Athor',
+            'unknown');
+          verrez.Caption := siniFile.ReadString('metadata', 'version',
+            'unknown');
+          inforez.Caption := siniFile.ReadString('metadata', 'Info', 'unknown');
+          sIniFile.Free;
+        end
+        else
+          showmessage('File not found!');
+      end;
   end;
 end;
 

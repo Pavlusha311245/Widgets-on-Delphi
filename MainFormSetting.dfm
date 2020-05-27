@@ -2332,6 +2332,7 @@ object MainForm: TMainForm
       ReadOnly = True
       ShowLines = False
       TabOrder = 3
+      OnClick = selectWidgetMainFormClick
       Items.Data = {
         07000000250000000500000000000000FFFFFFFFFFFFFFFF0000000000000000
         0CC4E0F2E020E820E2F0E5ECFF220000000800000000000000FFFFFFFFFFFFFF
