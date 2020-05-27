@@ -2142,7 +2142,9 @@ object CalcForm: TCalcForm
     Width = 120
     Height = 170
     Align = alClient
+    Center = True
     PopupMenu = PopupMenu
+    Proportional = True
     OnMouseDown = BackgroundMouseDown
   end
   object btn1: TButton

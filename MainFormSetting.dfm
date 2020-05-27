@@ -26595,6 +26595,10 @@ object MainForm: TMainForm
       Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077
       OnClick = N1Click
     end
+    object N12: TMenuItem
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
+      OnClick = N12Click
+    end
     object N2: TMenuItem
       Caption = #1055#1086#1084#1086#1097#1100
     end

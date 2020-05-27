@@ -50,6 +50,7 @@ type
     inforez: TLabel;
     sbtbtn1: TsBitBtn;
     autorun: TCheckBox;
+    N12: TMenuItem;
     procedure E1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure N3Click(Sender: TObject);
@@ -76,6 +77,7 @@ type
     procedure sbtbtn1Click(Sender: TObject);
     procedure autorunClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure N12Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -648,6 +650,16 @@ begin
   siniFile := TInifile.Create(pathINI);
   siniFile.writeBool('Main', 'Autorun', autorun.Checked);
   siniFile.Free;
+end;
+
+procedure TMainForm.N12Click(Sender: TObject);
+begin
+  mainform.Show;
+  if settingPanelMainForm.Visible = False then
+  begin
+    settingPanelMainForm.Visible := True;
+    sbtbtn1.caption := 'Скрыть';
+  end;
 end;
 
 end.

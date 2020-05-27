@@ -93,7 +93,7 @@ begin
           4: {/ } stek2 := stek1 / stek2;
           0: exit;
         end;
-        edt1.text := FormatFloat('0.0000', stek2);
+        edt1.text := FormatFloat('0.00', stek2);
         edit := false;
       end;
     109: {-}
