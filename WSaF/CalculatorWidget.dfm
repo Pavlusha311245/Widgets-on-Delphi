@@ -2153,6 +2153,12 @@ object CalcForm: TCalcForm
     Width = 20
     Height = 20
     Caption = '1'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 0
     OnClick = btn1Click
   end
@@ -2162,6 +2168,12 @@ object CalcForm: TCalcForm
     Width = 20
     Height = 20
     Caption = '2'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 1
     OnClick = btn1Click
   end
@@ -2171,6 +2183,12 @@ object CalcForm: TCalcForm
     Width = 20
     Height = 20
     Caption = '3'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 2
     OnClick = btn1Click
   end
@@ -2180,6 +2198,12 @@ object CalcForm: TCalcForm
     Width = 20
     Height = 20
     Caption = '4'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 3
     OnClick = btn1Click
   end
@@ -2189,6 +2213,12 @@ object CalcForm: TCalcForm
     Width = 20
     Height = 20
     Caption = '5'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 4
     OnClick = btn1Click
   end
@@ -2198,6 +2228,12 @@ object CalcForm: TCalcForm
     Width = 20
     Height = 20
     Caption = '6'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 5
     OnClick = btn1Click
   end
@@ -2207,6 +2243,12 @@ object CalcForm: TCalcForm
     Width = 20
     Height = 20
     Caption = '7'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 6
     OnClick = btn1Click
   end
@@ -2216,6 +2258,12 @@ object CalcForm: TCalcForm
     Width = 20
     Height = 20
     Caption = '8'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 8
     OnClick = btn1Click
   end
@@ -2225,6 +2273,12 @@ object CalcForm: TCalcForm
     Width = 20
     Height = 20
     Caption = '9'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 9
     OnClick = btn1Click
   end
@@ -2234,6 +2288,12 @@ object CalcForm: TCalcForm
     Width = 20
     Height = 20
     Caption = '0'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 10
     OnClick = btn1Click
   end
@@ -2243,6 +2303,12 @@ object CalcForm: TCalcForm
     Width = 23
     Height = 23
     Caption = '+'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 11
     OnClick = btnplusClick
   end
@@ -2252,6 +2318,12 @@ object CalcForm: TCalcForm
     Width = 23
     Height = 23
     Caption = '-'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 12
     OnClick = btnminusClick
   end
@@ -2261,6 +2333,12 @@ object CalcForm: TCalcForm
     Width = 23
     Height = 23
     Caption = '*'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 13
     OnClick = btnmulClick
   end
@@ -2270,6 +2348,12 @@ object CalcForm: TCalcForm
     Width = 23
     Height = 23
     Caption = '/'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 14
     OnClick = btndivClick
   end
@@ -2289,6 +2373,12 @@ object CalcForm: TCalcForm
     Width = 20
     Height = 20
     Caption = 'C'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 15
     OnClick = btnclrClick
   end
@@ -2298,6 +2388,12 @@ object CalcForm: TCalcForm
     Width = 20
     Height = 20
     Caption = 'CE'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 16
     OnClick = btnundoClick
   end
@@ -2308,6 +2404,12 @@ object CalcForm: TCalcForm
     Height = 15
     Cursor = crHandPoint
     Caption = 'Result'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 17
     OnClick = btnrezClick
   end

@@ -19,16 +19,21 @@ uses
   FolderWidget in 'FolderWidget.pas' {FolderForm};
 
 {$R *.res}
+
 procedure isEmpy(Obj: TObject; var empty: boolean);
 var
   v: TClass;
 begin
-  try
-    v := Obj.ClassParent;
-    empty := false;
-  except
-    empty := true;
-  end;
+  //  try
+  //    v := Obj.ClassParent;
+  //    empty := false;
+  //  except
+  //    empty := true;
+  //  end;
+  if Obj <> nil then
+    empty := false
+  else
+    empty := True;
 end;
 
 procedure ShowFolder; stdcall;
@@ -66,7 +71,7 @@ begin
   isEmpy(FolderForm, empty);
   if empty = false then
   begin
-//    FolderForm.Close;
+    //    FolderForm.Close;
     FolderForm.Destroy;
     sIniFile := TIniFile.Create(pathINI);
     sIniFile.WriteBool('State', 'Active', False);

@@ -2151,7 +2151,7 @@ object PhisicalMemoryForm: TPhisicalMemoryForm
   object DiskNumber1: TLabel
     Left = 73
     Top = 22
-    Width = 93
+    Width = 96
     Height = 19
     Alignment = taCenter
     Caption = 'C: 000/000 Gb'
@@ -2159,7 +2159,7 @@ object PhisicalMemoryForm: TPhisicalMemoryForm
     Font.Color = clWhite
     Font.Height = -16
     Font.Name = 'Times New Roman'
-    Font.Style = []
+    Font.Style = [fsBold]
     ParentFont = False
     Transparent = True
     Layout = tlCenter
@@ -2168,7 +2168,7 @@ object PhisicalMemoryForm: TPhisicalMemoryForm
   object DiskNumber2: TLabel
     Left = 73
     Top = 62
-    Width = 93
+    Width = 97
     Height = 19
     Alignment = taCenter
     Caption = 'D: 000/000 Gb'
@@ -2176,7 +2176,7 @@ object PhisicalMemoryForm: TPhisicalMemoryForm
     Font.Color = clWhite
     Font.Height = -16
     Font.Name = 'Times New Roman'
-    Font.Style = []
+    Font.Style = [fsBold]
     ParentFont = False
     Transparent = True
     Layout = tlCenter

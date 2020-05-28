@@ -792,9 +792,7 @@ end;
 
 procedure TMainForm.sbtbtn2Click(Sender: TObject);
 begin
-if activeZoom=true then
-Zoom.Hide
-else Zoom.Execute();
+Zoom.Execute();
 end;
 
 end.

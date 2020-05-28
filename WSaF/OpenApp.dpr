@@ -24,12 +24,16 @@ procedure isEmpy(Obj: TObject; var empty: boolean);
 var
   v: TClass;
 begin
-  try
-    v := Obj.ClassParent;
-    empty := false;
-  except
-    empty := true;
-  end;
+  //  try
+  //    v := Obj.ClassParent;
+  //    empty := false;
+  //  except
+  //    empty := true;
+  //  end;
+  if Obj <> nil then
+    empty := false
+  else
+    empty := True;
 end;
 
 procedure ShowApp; stdcall;
@@ -67,7 +71,7 @@ begin
   isEmpy(AppForm, empty);
   if empty = false then
   begin
-//    AppForm.Close;  
+    //    AppForm.Close;
     AppForm.Destroy;
     sIniFile := TIniFile.Create(pathINI);
     sIniFile.WriteBool('State', 'Active', False);

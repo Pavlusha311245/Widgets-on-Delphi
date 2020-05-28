@@ -24,12 +24,16 @@ procedure isEmpy(Obj: TObject; var empty: boolean);
 var
   v: TClass;
 begin
-  try
-    v := Obj.ClassParent;
-    empty := false;
-  except
-    empty := true;
-  end;
+  //  try
+  //    v := Obj.ClassParent;
+  //    empty := false;
+  //  except
+  //    empty := true;
+  //  end;
+  if Obj <> nil then
+    empty := false
+  else
+    empty := True;
 end;
 
 procedure ShowPhisicalMemory; stdcall;
@@ -68,7 +72,7 @@ begin
   isEmpy(PhisicalMemoryForm, empty);
   if empty = false then
   begin
-//    PhisicalMemoryForm.Close;
+    //    PhisicalMemoryForm.Close;
     PhisicalMemoryForm.Destroy;
     sIniFile := TIniFile.Create(pathINI);
     sIniFile.WriteBool('State', 'Active', false);
