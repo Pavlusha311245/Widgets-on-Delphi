@@ -48,7 +48,8 @@ implementation
 
 procedure TFolderForm.FormCreate(Sender: TObject);
 begin
-  pathINI := extractfilepath(application.ExeName) + '\WSaF\Settings\OpenFolderSettings.ini';
+  pathINI := extractfilepath(application.ExeName) +
+    '\WSaF\Settings\OpenFolderSettings.ini';
 end;
 
 procedure TFolderForm.FormShow(Sender: TObject);
@@ -100,12 +101,24 @@ end;
 procedure TFolderForm.N3Click(Sender: TObject);
 var
   ans: PAnsiChar;
+  editor: PAnsiChar;
   dir: string;
+  pathINIMainApp: string;
 begin
-  dir := extractfilepath(application.ExeName) + '\WSaF\Settings\OpenFolderSettings.ini';
+  dir := extractfilepath(application.ExeName) +
+    '\WSaF\Settings\OpenFolderSettings.ini';
   ans := PAnsiChar(dir);
+  pathINIMainApp := extractfilepath(application.ExeName) + '\Settings.ini';
+  if FileExists(pathINIMainApp) then
+  begin
+    sIniFile := TIniFile.Create(pathINIMainApp);
+    editor := PAnsiChar(sIniFile.readstring('Main', 'Editor', ''));
+    sIniFile.Free;
+  end
+  else
+    showmessage('File not found!');
   ShellExecute(Handle, 'open',
-    'c:\windows\notepad.exe',
+    editor,
     ans, nil,
     SW_SHOWNORMAL);
 end;
@@ -147,13 +160,14 @@ begin
 end;
 
 procedure TFolderForm.N5Click(Sender: TObject);
-var SelectedDirName:string;
+var
+  SelectedDirName: string;
 begin
- SelectDirectory('Выберите каталог','',SelectedDirName);
- sIniFile:=TIniFile.Create(pathINI);
- sIniFile.WriteString('Folder','Path',SelectedDirName);
- sIniFile.Free;
- FolderForm.FolderFontground.Hint:=SelectedDirName;
+  SelectDirectory('Выберите каталог', '', SelectedDirName);
+  sIniFile := TIniFile.Create(pathINI);
+  sIniFile.WriteString('Folder', 'Path', SelectedDirName);
+  sIniFile.Free;
+  FolderForm.FolderFontground.Hint := SelectedDirName;
 end;
 
 end.

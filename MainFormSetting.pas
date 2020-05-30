@@ -53,6 +53,9 @@ type
     sfltbtns1: TsFloatButtons;
     Zoom: TsMagnifier;
     sbtbtn2: TsBitBtn;
+    editor: TsBitBtn;
+    editorlbl: TLabel;
+    EditorStd: TOpenDialog;
     procedure E1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure N3Click(Sender: TObject);
@@ -84,6 +87,7 @@ type
     procedure sfltbtns1Items0Click(Sender: TObject);
     procedure sfltbtns1Items1Click(Sender: TObject);
     procedure sbtbtn2Click(Sender: TObject);
+    procedure editorClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -782,19 +786,46 @@ end;
 
 procedure TMainForm.sfltbtns1Items0Click(Sender: TObject);
 begin
-MainForm.Visible:=false;
+  MainForm.Visible := false;
 end;
 
 procedure TMainForm.sfltbtns1Items1Click(Sender: TObject);
 begin
-Application.Minimize;
+  Application.Minimize;
 end;
 
 procedure TMainForm.sbtbtn2Click(Sender: TObject);
 begin
-if activeZoom=true then
-Zoom.Hide
-else Zoom.Execute();
+  Zoom.Execute();
+end;
+
+procedure TMainForm.editorClick(Sender: TObject);
+var
+  iconexe: TIcon;
+  iconpath: string;
+  i: TIcon;
+  b: TBitmap;
+begin
+  if EditorStd.Execute then
+    if FileExists(pathINI) then
+    begin
+      siniFile := TIniFile.Create(pathINI);
+      siniFile.WriteString('Main', 'Editor', EditorStd.FileName);
+      iconpath := EditorStd.FileName;
+      i := tIcon.Create;
+      b := tbitmap.Create;
+      i.Handle := ExtractIcon(HInstance, PAnsiChar(iconpath), 0);
+      b.Width := i.Width;
+      b.Height := i.Height;
+      b.Canvas.Draw(0, 0, i);
+      b.SaveToFile(extractfilepath(application.ExeName)
+        + '\Images\EditorIcon.bmp');
+      editor.Glyph.LoadFromFile(extractfilepath(application.ExeName)
+        + '\Images\EditorIcon.bmp');
+      i := nil;
+      b := nil;
+      siniFile.Free;
+    end;
 end;
 
 end.

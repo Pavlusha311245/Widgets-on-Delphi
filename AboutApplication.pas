@@ -8,7 +8,6 @@ uses
 
 type
   TAbout = class(TForm)
-    lbl1: TTntLabel;
     lbl2: TTntLabel;
     lbl3: TTntLabel;
   private

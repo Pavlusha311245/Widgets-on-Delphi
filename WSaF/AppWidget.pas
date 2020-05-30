@@ -47,7 +47,8 @@ implementation
 
 procedure TAppForm.FormCreate(Sender: TObject);
 begin
-  pathINI := extractfilepath(application.ExeName) + '\WSaF\Settings\OpenAppSettings.ini';
+  pathINI := extractfilepath(application.ExeName) +
+    '\WSaF\Settings\OpenAppSettings.ini';
 end;
 
 procedure TAppForm.N1Click(Sender: TObject);
@@ -151,12 +152,24 @@ end;
 procedure TAppForm.N3Click(Sender: TObject);
 var
   ans: PAnsiChar;
+  editor: PAnsiChar;
   dir: string;
+  pathINIMainApp: string;
 begin
-  dir := extractfilepath(application.ExeName) + '\WSaF\Settings\OpenAppSettings.ini';
+  dir := extractfilepath(application.ExeName) +
+    '\WSaF\Settings\OpenAppSettings.ini';
   ans := PAnsiChar(dir);
+  pathINIMainApp := extractfilepath(application.ExeName) + '\Settings.ini';
+  if FileExists(pathINIMainApp) then
+  begin
+    sIniFile := TIniFile.Create(pathINIMainApp);
+    editor := PAnsiChar(sIniFile.readstring('Main', 'Editor', ''));
+    sIniFile.Free;
+  end
+  else
+    showmessage('File not found!');
   ShellExecute(Handle, 'open',
-    'c:\windows\notepad.exe',
+    editor,
     ans, nil,
     SW_SHOWNORMAL);
 end;
@@ -176,14 +189,15 @@ end;
 
 procedure TAppForm.N5Click(Sender: TObject);
 begin
-  if DialogPathApp.Execute then begin
-    sIniFile:=TIniFile.Create(pathINI);
-    sIniFile.WriteString('App','Path',DialogPathApp.FileName);
+  if DialogPathApp.Execute then
+  begin
+    sIniFile := TIniFile.Create(pathINI);
+    sIniFile.WriteString('App', 'Path', DialogPathApp.FileName);
     sIniFile.Free;
   end;
   N4Click(AppForm);
-  AppFontground.Enabled:=false;
-  AppFontground.Enabled:=true;
+  AppFontground.Enabled := false;
+  AppFontground.Enabled := true;
 end;
 
 end.

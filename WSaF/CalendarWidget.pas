@@ -68,13 +68,24 @@ end;
 procedure TCalendarForm.N3Click(Sender: TObject);
 var
   ans: PAnsiChar;
+  editor: PAnsiChar;
   dir: string;
+  pathINIMainApp: string;
 begin
   dir := extractfilepath(application.ExeName) +
     '\WSaF\Settings\CalendarSettings.ini';
   ans := PAnsiChar(dir);
+  pathINIMainApp := extractfilepath(application.ExeName) + '\Settings.ini';
+  if FileExists(pathINIMainApp) then
+  begin
+    sIniFile := TIniFile.Create(pathINIMainApp);
+    editor := PAnsiChar(sIniFile.readstring('Main', 'Editor', ''));
+    sIniFile.Free;
+  end
+  else
+    showmessage('File not found!');
   ShellExecute(Handle, 'open',
-    'c:\windows\notepad.exe',
+    editor,
     ans, nil,
     SW_SHOWNORMAL);
 end;
