@@ -37,21 +37,15 @@ begin
 end;
 
 procedure ShowFolder; stdcall;
-var
-  empty: boolean;
 begin
-  isEmpy(FolderForm, empty);
-  if empty = true then
+  Application.CreateHandle;
+  FolderForm := TFolderForm.Create(Application);
+  FolderForm.Show;
+  if FileExists(pathINI) then
   begin
-    Application.CreateHandle;
-    FolderForm := TFolderForm.Create(Application);
-    FolderForm.Show;
-    if FileExists(pathINI) then
-    begin
-      sIniFile := TIniFile.Create(pathINI);
-      sIniFile.WriteBool('State', 'Active', true);
-      sIniFile.Free;
-    end;
+    sIniFile := TIniFile.Create(pathINI);
+    sIniFile.WriteBool('State', 'Active', true);
+    sIniFile.Free;
   end;
 end;
 

@@ -16,35 +16,29 @@ procedure isEmpy(Obj: TObject; var empty: boolean);
 var
   v: TClass;
 begin
-//  try
-//    v := Obj.ClassParent;
-//    empty := false;
-//  except
-//    empty := true;
-//  end;
+  //  try
+  //    v := Obj.ClassParent;
+  //    empty := false;
+  //  except
+  //    empty := true;
+  //  end;
   if Obj <> nil then
-  empty:=false
-  else empty:=True;
+    empty := false
+  else
+    empty := True;
 end;
 
 procedure ShowCpuUsage; stdcall;
-var
-  empty: boolean;
 begin
-  isEmpy(CpuUsageForm, empty);
-  if empty = true then
+  Application.CreateHandle;
+  CpuUsageForm := TCpuUsageForm.Create(Application);
+  CpuUsageForm.Show;
+  if FileExists(pathINI) then
   begin
-    Application.CreateHandle;
-    CpuUsageForm := TCpuUsageForm.Create(Application);
-    CpuUsageForm.Show;
-    if FileExists(pathINI) then
-    begin
-      sIniFile := TIniFile.Create(pathINI);
-      sIniFile.WriteBool('State', 'Active', true);
-      sIniFile.Free;
-    end;
-  end
-  else CpuUsageForm.Show;
+    sIniFile := TIniFile.Create(pathINI);
+    sIniFile.WriteBool('State', 'Active', true);
+    sIniFile.Free;
+  end;
 end;
 
 procedure RefreshCpuUsage; stdcall;
@@ -63,7 +57,7 @@ begin
   isEmpy(CpuUsageForm, empty);
   if empty = false then
   begin
-//    CpuUsageForm.Close;
+    //    CpuUsageForm.Close;
     CpuUsageForm.Destroy;
     sIniFile := TIniFile.Create(pathINI);
     sIniFile.WriteBool('State', 'Active', False);

@@ -27,21 +27,15 @@ begin
 end;
 
 procedure ShowCalc; stdcall;
-var
-  empty: boolean;
 begin
-  isEmpy(CalcForm, empty);
-  if empty = true then
+  Application.CreateHandle;
+  CalcForm := TCalcForm.Create(Application);
+  CalcForm.Show;
+  if FileExists(pathINI) then
   begin
-    Application.CreateHandle;
-    CalcForm := TCalcForm.Create(Application);
-    CalcForm.Show;
-    if FileExists(pathINI) then
-    begin
-      sIniFile := TIniFile.Create(pathINI);
-      sIniFile.WriteBool('State', 'Active', true);
-      sIniFile.Free;
-    end;
+    sIniFile := TIniFile.Create(pathINI);
+    sIniFile.WriteBool('State', 'Active', true);
+    sIniFile.Free;
   end;
 end;
 

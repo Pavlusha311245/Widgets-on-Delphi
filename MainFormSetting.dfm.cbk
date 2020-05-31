@@ -27023,6 +27023,7 @@ object MainForm: TMainForm
         Height = 25
         OffsetX = -20
         Margin = 0
+        Style = fbsTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
@@ -27039,6 +27040,7 @@ object MainForm: TMainForm
         Height = 25
         OffsetX = -50
         Margin = 0
+        Style = fbsTransparent
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11

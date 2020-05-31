@@ -9,9 +9,6 @@ uses
 
 {$R *.res}
 
-//procedure isEmpy(Form: TObject; var empty: boolean); stdcall;
-// external 'PaFWF.dll' name 'isEmpy';
-
 procedure isEmpy(Obj: TObject; var empty: boolean);
 var
   v: TClass;
@@ -32,9 +29,9 @@ procedure ShowDateAndTime; stdcall;
 var
   empty: boolean;
 begin
-  isEmpy(DateAndTimeForm, empty);
-  if empty = true then
-  begin
+//  isEmpy(DateAndTimeForm, empty);
+//  if empty = true then
+//  begin
     Application.CreateHandle;
     DateAndTimeForm := TDateAndTimeForm.Create(Application);
     DateAndTimeForm.Show;
@@ -44,7 +41,7 @@ begin
       sIniFile.WriteBool('State', 'Active', true);
       sIniFile.Free;
     end;
-  end;
+//  end;
 end;
 
 procedure RefreshDateAndTime; stdcall;

@@ -37,21 +37,15 @@ begin
 end;
 
 procedure ShowApp; stdcall;
-var
-  empty: boolean;
 begin
-  isEmpy(AppForm, empty);
-  if empty = true then
+  Application.CreateHandle;
+  AppForm := TAppForm.Create(Application);
+  AppForm.Show;
+  if FileExists(pathINI) then
   begin
-    Application.CreateHandle;
-    AppForm := TAppForm.Create(Application);
-    AppForm.Show;
-    if FileExists(pathINI) then
-    begin
-      sIniFile := TIniFile.Create(pathINI);
-      sIniFile.WriteBool('State', 'Active', true);
-      sIniFile.Free;
-    end;
+    sIniFile := TIniFile.Create(pathINI);
+    sIniFile.WriteBool('State', 'Active', true);
+    sIniFile.Free;
   end;
 end;
 

@@ -37,21 +37,15 @@ begin
 end;
 
 procedure ShowCalendar; stdcall;
-var
-  empty: boolean;
 begin
-  isEmpy(CalendarForm, empty);
-  if empty = true then
+  Application.CreateHandle;
+  CalendarForm := TCalendarForm.Create(Application);
+  CalendarForm.Show;
+  if FileExists(pathINI) then
   begin
-    Application.CreateHandle;
-    CalendarForm := TCalendarForm.Create(Application);
-    CalendarForm.Show;
-    if FileExists(pathINI) then
-    begin
-      sIniFile := TIniFile.Create(pathINI);
-      sIniFile.WriteBool('State', 'Active', true);
-      sIniFile.Free;
-    end;
+    sIniFile := TIniFile.Create(pathINI);
+    sIniFile.WriteBool('State', 'Active', true);
+    sIniFile.Free;
   end;
 end;
 
