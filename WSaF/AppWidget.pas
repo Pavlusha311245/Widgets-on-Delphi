@@ -19,6 +19,7 @@ type
     AppFontground: TImage;
     N5: TMenuItem;
     DialogPathApp: TOpenDialog;
+    N6: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure N1Click(Sender: TObject);
     procedure AppBackgroundMouseDown(Sender: TObject; Button: TMouseButton;
@@ -31,6 +32,7 @@ type
     procedure N3Click(Sender: TObject);
     procedure AppFontgroundClick(Sender: TObject);
     procedure N5Click(Sender: TObject);
+    procedure N6Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -198,6 +200,20 @@ begin
   N4Click(AppForm);
   AppFontground.Enabled := false;
   AppFontground.Enabled := true;
+end;
+
+procedure TAppForm.N6Click(Sender: TObject);
+begin
+if N6.Checked = True then
+  begin
+    N6.Checked := False;
+      AppForm.FormStyle := fsNormal;
+  end
+  else
+  begin
+    n6.Checked := True;
+      AppForm.FormStyle := fsStayOnTop;
+  end;
 end;
 
 end.

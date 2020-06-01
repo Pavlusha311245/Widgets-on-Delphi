@@ -18,6 +18,7 @@ type
     N4: TMenuItem;
     TimerShow: TTimer;
     Background: TImage;
+    N5: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure N1Click(Sender: TObject);
     procedure TimerShowTimer(Sender: TObject);
@@ -29,6 +30,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure BackgroundMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure N5Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -145,6 +147,20 @@ procedure TCalendarForm.BackgroundMouseDown(Sender: TObject;
 begin
   ReleaseCapture;
   CalendarForm.perform(WM_SysCommand, $F012, 0);
+end;
+
+procedure TCalendarForm.N5Click(Sender: TObject);
+begin
+  if N5.Checked = True then
+  begin
+    N5.Checked := False;
+      CalendarForm.FormStyle := fsNormal;
+  end
+  else
+  begin
+    N5.Checked := True;
+      CalendarForm.FormStyle := fsStayOnTop;
+  end;
 end;
 
 end.

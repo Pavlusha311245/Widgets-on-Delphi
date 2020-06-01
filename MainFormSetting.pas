@@ -7,7 +7,8 @@ uses
   Dialogs, ExtCtrls, sPanel, sSkinManager, ImgList, acAlphaImageList,
   ExtCtrlsX, ComCtrls, sTreeView, StdCtrls, sLabel, sEdit, sComboBox,
   Buttons, sBitBtn, Menus, sComboBoxes, IniFiles, TeeProcs, acArcControls,
-  sUpDown, Registry, sCalculator, IBExtract, ShellAPI, acFloatCtrls, acMagn;
+  sUpDown, Registry, sCalculator, IBExtract, ShellAPI, acFloatCtrls, acMagn,
+  sSpeedButton, sColorSelect;
 
 type
   TMainForm = class(TForm)
@@ -56,6 +57,10 @@ type
     editor: TsBitBtn;
     editorlbl: TLabel;
     EditorStd: TOpenDialog;
+    Selcol1: TsColorSelect;
+    Selcol2: TsColorSelect;
+    Selcolaccess: TsBitBtn;
+    Selcolpanel: TsPanel;
     procedure E1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure N3Click(Sender: TObject);
@@ -89,7 +94,7 @@ type
     procedure ShowZoomClick(Sender: TObject);
     procedure editorClick(Sender: TObject);
     procedure selectWidgetMainFormDblClick(Sender: TObject);
-    procedure FormDblClick(Sender: TObject);
+    procedure SelcolaccessClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -297,6 +302,11 @@ begin
   begin
     sIniFile := TIniFile.Create(pathINI);
     skins.SkinName := siniFile.ReadString('Main', 'Skin', '');
+    Selcol1.ColorValue:=siniFile.ReadInteger('Color','Color1',0000000);
+    Selcol2.ColorValue:=siniFile.ReadInteger('Color','Color2',0000000);
+    gradientMainForm.PaintData.Color1.Color:=siniFile.ReadInteger('Color','Color1',0000000);
+    gradientMainForm.PaintData.Color2.Color:=siniFile.ReadInteger('Color','Color2',0000000);
+    selectWidgetMainForm.Color:=siniFile.ReadInteger('Color','Color1',0000000);
     activeautorun := siniFile.ReadBool('Main', 'Autorun', false);
     if activeautorun = True then
     begin
@@ -1105,87 +1115,16 @@ begin
     CloseCalc;
 end;
 
-procedure TMainForm.FormDblClick(Sender: TObject);
+procedure TMainForm.SelcolaccessClick(Sender: TObject);
 begin
-  case selectWidgetMainForm.Selected.AbsoluteIndex of
-    0:
-      begin
-        if FileExists(pathINIDateAndTime) then
-        begin
-          sIniFile := TIniFile.Create(pathINIDateAndTime);
-
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-    1:
-      begin
-        if FileExists(pathINICPUUsage) then
-        begin
-          sIniFile := TIniFile.Create(pathINICPUUsage);
-
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-    2:
-      begin
-        if FileExists(pathINIPhiscalMemory) then
-        begin
-          sIniFile := TIniFile.Create(pathINIPhiscalMemory);
-
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-    3:
-      begin
-        if FileExists(pathINIOpenFolder) then
-        begin
-          sIniFile := TIniFile.Create(pathINIOpenFolder);
-
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-    4:
-      begin
-        if FileExists(pathINIOpenApp) then
-        begin
-          sIniFile := TIniFile.Create(pathINIOpenApp);
-
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-    5:
-      begin
-        if FileExists(pathINICalendar) then
-        begin
-          sIniFile := TIniFile.Create(pathINICalendar);
-
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-    6:
-      begin
-        if FileExists(pathINICalc) then
-        begin
-          sIniFile := TIniFile.Create(pathINICalc);
-
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-  end;
+  siniFile := TIniFile.Create(pathINI);
+  siniFile.WriteInteger('Color', 'Color1', Selcol1.ColorValue);
+  siniFile.WriteInteger('Color', 'Color2', Selcol2.ColorValue);
+  siniFile.Free;
+  gradientMainForm.PaintData.Color1.Color := Selcol1.ColorValue;
+  gradientMainForm.PaintData.Color2.Color := Selcol2.ColorValue;
+  selectWidgetMainForm.Color:=Selcol1.ColorValue;
 end;
+
 end.
 

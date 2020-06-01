@@ -19,6 +19,7 @@ type
     DateAndTimeBackground: TImage;
     TimerShow: TTimer;
     Date: TLabel;
+    N4: TMenuItem;
     procedure DateAndTimeBackgroundMouseDown(Sender: TObject; Button:
       TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -33,6 +34,7 @@ type
     procedure TimeMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure TimerShowTimer(Sender: TObject);
+    procedure N4Click(Sender: TObject);
   private
   public
     { Public declarations }
@@ -172,6 +174,20 @@ begin
     AlphaBlendValue := AlphaBlendValue + 5
   else
     TimerShow.Enabled := false;
+end;
+
+procedure TDateAndTimeForm.N4Click(Sender: TObject);
+begin
+if N4.Checked = True then
+  begin
+    N4.Checked := False;
+      DateAndTimeForm.FormStyle := fsNormal;
+  end
+  else
+  begin
+    n4.Checked := True;
+      DateAndTimeForm.FormStyle := fsStayOnTop;
+  end;
 end;
 
 end.

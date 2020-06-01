@@ -24,6 +24,7 @@ type
     TimerC: TTimer;
     TimerD: TTimer;
     TimerShow: TTimer;
+    N5: TMenuItem;
     procedure PhisicalMemoryBackgroundMouseDown(Sender: TObject; Button:
       TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -37,6 +38,7 @@ type
     procedure TimerCTimer(Sender: TObject);
     procedure TimerDTimer(Sender: TObject);
     procedure TimerShowTimer(Sender: TObject);
+    procedure N5Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -219,6 +221,20 @@ begin
     TimerShow.Enabled := false;
     TimerC.Enabled := true;
     TimerD.Enabled := true;
+  end;
+end;
+
+procedure TPhisicalMemoryForm.N5Click(Sender: TObject);
+begin
+if N5.Checked = True then
+  begin
+    N5.Checked := False;
+      PhisicalMemoryForm.FormStyle := fsNormal;
+  end
+  else
+  begin
+    n5.Checked := True;
+      PhisicalMemoryForm.FormStyle := fsStayOnTop;
   end;
 end;
 

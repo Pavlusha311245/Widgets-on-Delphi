@@ -19,6 +19,7 @@ type
     LabelCPU: TLabel;
     LabelPercentCpuUsage: TLabel;
     TimerShow: TTimer;
+    g1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure N3Click(Sender: TObject);
     procedure CpuUsagebackgroundMouseDown(Sender: TObject;
@@ -30,6 +31,7 @@ type
     procedure TimerTimer(Sender: TObject);
     procedure N1Click(Sender: TObject);
     procedure TimerShowTimer(Sender: TObject);
+    procedure g1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -151,6 +153,20 @@ begin
     AlphaBlendValue := AlphaBlendValue + 5
   else
     TimerShow.Enabled := false;
+end;
+
+procedure TCpuUsageForm.g1Click(Sender: TObject);
+begin
+if g1.Checked = True then
+  begin
+    g1.Checked := False;
+      CpuUsageForm.FormStyle := fsNormal;
+  end
+  else
+  begin
+    g1.Checked := True;
+      CpuUsageForm.FormStyle := fsStayOnTop;
+  end;
 end;
 
 end.
