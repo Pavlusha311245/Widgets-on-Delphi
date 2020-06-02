@@ -1,6 +1,6 @@
 object PhisicalMemoryForm: TPhisicalMemoryForm
-  Left = 354
-  Top = 165
+  Left = 491
+  Top = 241
   AlphaBlend = True
   AlphaBlendValue = 0
   Anchors = [akLeft, akTop, akRight, akBottom]
@@ -2202,7 +2202,7 @@ object PhisicalMemoryForm: TPhisicalMemoryForm
     OnTimer = TimerMesuareDiskSizeTimer
   end
   object PopupMenu: TPopupMenu
-    Left = 40
+    Left = 32
     object W1: TMenuItem
       Caption = 'Widgets'
     end
@@ -2235,7 +2235,7 @@ object PhisicalMemoryForm: TPhisicalMemoryForm
     Enabled = False
     Interval = 25
     OnTimer = TimerDTimer
-    Left = 40
+    Left = 32
     Top = 48
   end
   object TimerShow: TTimer

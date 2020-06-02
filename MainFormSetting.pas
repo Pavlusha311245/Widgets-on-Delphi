@@ -8,7 +8,7 @@ uses
   ExtCtrlsX, ComCtrls, sTreeView, StdCtrls, sLabel, sEdit, sComboBox,
   Buttons, sBitBtn, Menus, sComboBoxes, IniFiles, TeeProcs, acArcControls,
   sUpDown, Registry, sCalculator, IBExtract, ShellAPI, acFloatCtrls, acMagn,
-  sSpeedButton, sColorSelect;
+  sSpeedButton, sColorSelect, sPageControl;
 
 type
   TMainForm = class(TForm)
@@ -61,6 +61,13 @@ type
     Selcol2: TsColorSelect;
     Selcolaccess: TsBitBtn;
     Selcolpanel: TsPanel;
+    spgcntrl1: TsPageControl;
+    stbsht1: TsTabSheet;
+    stbsht2: TsTabSheet;
+    Timer: TTimer;
+    ActiveWidgLbl: TsLabel;
+    StopWidgLbl: TsLabel;
+    RefreshWidgLbl: TsLabel;
     procedure E1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure N3Click(Sender: TObject);
@@ -93,8 +100,8 @@ type
     procedure sfltbtns1Items1Click(Sender: TObject);
     procedure ShowZoomClick(Sender: TObject);
     procedure editorClick(Sender: TObject);
-    procedure selectWidgetMainFormDblClick(Sender: TObject);
     procedure SelcolaccessClick(Sender: TObject);
+    procedure TimerTimer(Sender: TObject);
 
   private
     { Private declarations }
@@ -302,11 +309,14 @@ begin
   begin
     sIniFile := TIniFile.Create(pathINI);
     skins.SkinName := siniFile.ReadString('Main', 'Skin', '');
-    Selcol1.ColorValue:=siniFile.ReadInteger('Color','Color1',0000000);
-    Selcol2.ColorValue:=siniFile.ReadInteger('Color','Color2',0000000);
-    gradientMainForm.PaintData.Color1.Color:=siniFile.ReadInteger('Color','Color1',0000000);
-    gradientMainForm.PaintData.Color2.Color:=siniFile.ReadInteger('Color','Color2',0000000);
-    selectWidgetMainForm.Color:=siniFile.ReadInteger('Color','Color1',0000000);
+    Selcol1.ColorValue := siniFile.ReadInteger('Color', 'Color1', 0000000);
+    Selcol2.ColorValue := siniFile.ReadInteger('Color', 'Color2', 0000000);
+    gradientMainForm.PaintData.Color1.Color := siniFile.ReadInteger('Color',
+      'Color1', 0000000);
+    gradientMainForm.PaintData.Color2.Color := siniFile.ReadInteger('Color',
+      'Color2', 0000000);
+    selectWidgetMainForm.Color := siniFile.ReadInteger('Color', 'Color1',
+      0000000);
     activeautorun := siniFile.ReadBool('Main', 'Autorun', false);
     if activeautorun = True then
     begin
@@ -411,7 +421,10 @@ begin
           if siniFile.ReadBool('State', 'Active', false) = False then
             ShowDateAndTime
           else
-            ShowMessage('Виджет уже запущен');
+          begin
+            ActiveWidgLbl.Caption := 'Виджет уже запущен';
+            timer.Enabled := true;
+          end;
           siniFile.Free;
         end;
       end;
@@ -423,7 +436,10 @@ begin
           if siniFile.ReadBool('State', 'Active', false) = False then
             ShowCpuUsage
           else
-            ShowMessage('Виджет уже запущен');
+          begin
+            ActiveWidgLbl.Caption := 'Виджет уже запущен';
+            timer.Enabled := true;
+          end;
           siniFile.Free;
         end;
       end;
@@ -435,7 +451,10 @@ begin
           if siniFile.ReadBool('State', 'Active', false) = False then
             ShowPhisicalMemory
           else
-            ShowMessage('Виджет уже запущен');
+          begin
+            ActiveWidgLbl.Caption := 'Виджет уже запущен';
+            timer.Enabled := true;
+          end;
           siniFile.Free;
         end;
       end;
@@ -447,7 +466,10 @@ begin
           if siniFile.ReadBool('State', 'Active', false) = False then
             ShowFolder
           else
-            ShowMessage('Виджет уже запущен');
+          begin
+            ActiveWidgLbl.Caption := 'Виджет уже запущен';
+            timer.Enabled := true;
+          end;
           siniFile.Free;
         end;
       end;
@@ -459,7 +481,10 @@ begin
           if siniFile.ReadBool('State', 'Active', false) = False then
             ShowApp
           else
-            ShowMessage('Виджет уже запущен');
+          begin
+            ActiveWidgLbl.Caption := 'Виджет уже запущен';
+            timer.Enabled := true;
+          end;
           siniFile.Free;
         end;
       end;
@@ -471,7 +496,10 @@ begin
           if siniFile.ReadBool('State', 'Active', false) = False then
             ShowCalendar
           else
-            ShowMessage('Виджет уже запущен');
+          begin
+            ActiveWidgLbl.Caption := 'Виджет уже запущен';
+            timer.Enabled := true;
+          end;
           siniFile.Free;
         end;
       end;
@@ -483,7 +511,10 @@ begin
           if siniFile.ReadBool('State', 'Active', false) = False then
             ShowCalc
           else
-            ShowMessage('Виджет уже запущен');
+          begin
+            ActiveWidgLbl.Caption := 'Виджет уже запущен';
+            timer.Enabled := true;
+          end;
           siniFile.Free;
         end;
       end;
@@ -514,7 +545,10 @@ begin
           if siniFile.ReadBool('State', 'Active', false) = True then
             CloseDateAndTime
           else
-            ShowMessage('Виджет уже закрыт');
+          begin
+            StopWidgLbl.Caption := 'Виджет закрыт';
+            timer.Enabled := true;
+          end;
           siniFile.Free;
         end;
       end;
@@ -526,7 +560,10 @@ begin
           if siniFile.ReadBool('State', 'Active', false) = True then
             CloseCpuUsage
           else
-            ShowMessage('Виджет уже закрыт');
+          begin
+            StopWidgLbl.Caption := 'Виджет закрыт';
+            timer.Enabled := true;
+          end;
           siniFile.Free;
         end;
       end;
@@ -538,7 +575,10 @@ begin
           if siniFile.ReadBool('State', 'Active', false) = True then
             ClosePhisicalMemory
           else
-            ShowMessage('Виджет уже закрыт');
+          begin
+            StopWidgLbl.Caption := 'Виджет закрыт';
+            timer.Enabled := true;
+          end;
           siniFile.Free;
         end;
       end;
@@ -550,7 +590,10 @@ begin
           if siniFile.ReadBool('State', 'Active', false) = True then
             CloseFolder
           else
-            ShowMessage('Виджет уже закрыт');
+          begin
+            StopWidgLbl.Caption := 'Виджет закрыт';
+            timer.Enabled := true;
+          end;
           siniFile.Free;
         end;
       end;
@@ -562,7 +605,10 @@ begin
           if siniFile.ReadBool('State', 'Active', false) = True then
             CloseApp
           else
-            ShowMessage('Виджет уже закрыт');
+          begin
+            StopWidgLbl.Caption := 'Виджет закрыт';
+            timer.Enabled := true;
+          end;
           siniFile.Free;
         end;
       end;
@@ -574,7 +620,10 @@ begin
           if siniFile.ReadBool('State', 'Active', false) = True then
             CloseCalendar
           else
-            ShowMessage('Виджет уже закрыт');
+          begin
+            StopWidgLbl.Caption := 'Виджет закрыт';
+            timer.Enabled := true;
+          end;
           siniFile.Free;
         end;
       end;
@@ -586,7 +635,10 @@ begin
           if siniFile.ReadBool('State', 'Active', false) = True then
             CloseCalc
           else
-            ShowMessage('Виджет уже закрыт');
+          begin
+            StopWidgLbl.Caption := 'Виджет закрыт';
+            timer.Enabled := true;
+          end;
           siniFile.Free;
         end;
       end;
@@ -996,125 +1048,6 @@ begin
     end;
 end;
 
-procedure TMainForm.selectWidgetMainFormDblClick(Sender: TObject);
-var
-  activeDate: Boolean;
-  activeCPU: Boolean;
-  activeMemory: Boolean;
-  activeFolder: Boolean;
-  activeApp: Boolean;
-  activeCalendar: Boolean;
-  activeCalc: Boolean;
-begin
-  case selectWidgetMainForm.Selected.AbsoluteIndex of
-    0:
-      begin
-        if FileExists(pathINIDateAndTime) then
-        begin
-          sIniFile := TIniFile.Create(pathINIDateAndTime);
-          activeDate := siniFile.ReadBool('State', 'Active', false);
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-    1:
-      begin
-        if FileExists(pathINICPUUsage) then
-        begin
-          sIniFile := TIniFile.Create(pathINICPUUsage);
-          activeCPU := siniFile.ReadBool('State', 'Active', false);
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-    2:
-      begin
-        if FileExists(pathINIPhiscalMemory) then
-        begin
-          sIniFile := TIniFile.Create(pathINIPhiscalMemory);
-          activeMemory := siniFile.ReadBool('State', 'Active', false);
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-    3:
-      begin
-        if FileExists(pathINIOpenFolder) then
-        begin
-          sIniFile := TIniFile.Create(pathINIOpenFolder);
-          activeFolder := siniFile.ReadBool('State', 'Active', false);
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-    4:
-      begin
-        if FileExists(pathINIOpenApp) then
-        begin
-          sIniFile := TIniFile.Create(pathINIOpenApp);
-          activeApp := siniFile.ReadBool('State', 'Active', false);
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-    5:
-      begin
-        if FileExists(pathINICalendar) then
-        begin
-          sIniFile := TIniFile.Create(pathINICalendar);
-          activeCalendar := siniFile.ReadBool('State', 'Active', false);
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-    6:
-      begin
-        if FileExists(pathINICalc) then
-        begin
-          sIniFile := TIniFile.Create(pathINICalc);
-          activeCalc := siniFile.ReadBool('State', 'Active', false);
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-  end;
-  if activeDate = False then
-    ShowDateAndTime
-  else
-    CloseDateAndTime;
-  if activeCPU = False then
-    ShowCpuUsage
-  else
-    CloseCpuUsage;
-  if activeMemory = False then
-    ShowPhisicalMemory
-  else
-    ClosePhisicalMemory;
-  if activeFolder = False then
-    ShowFolder
-  else
-    CloseFolder;
-  if activeApp = False then
-    ShowApp
-  else
-    CloseApp;
-  if activeCalendar = False then
-    ShowCalendar
-  else
-    CloseCalendar;
-  if activeCalc = False then
-    ShowCalc
-  else
-    CloseCalc;
-end;
-
 procedure TMainForm.SelcolaccessClick(Sender: TObject);
 begin
   siniFile := TIniFile.Create(pathINI);
@@ -1123,7 +1056,17 @@ begin
   siniFile.Free;
   gradientMainForm.PaintData.Color1.Color := Selcol1.ColorValue;
   gradientMainForm.PaintData.Color2.Color := Selcol2.ColorValue;
-  selectWidgetMainForm.Color:=Selcol1.ColorValue;
+  selectWidgetMainForm.Color := Selcol1.ColorValue;
+end;
+
+procedure TMainForm.TimerTimer(Sender: TObject);
+begin
+  ActiveWidgLbl.Caption := '';
+  StopWidgLbl.Caption := '';
+  RefreshWidgLbl.Caption := '';
+  if (ActiveWidgLbl.Caption = '') and (StopWidgLbl.Caption = '') and
+    (RefreshWidgLbl.Caption = '') then
+    timer.Enabled := false;
 end;
 
 end.
