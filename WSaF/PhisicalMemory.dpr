@@ -21,15 +21,7 @@ uses
 {$R *.res}
 
 procedure isEmpy(Obj: TObject; var empty: boolean);
-var
-  v: TClass;
 begin
-  //  try
-  //    v := Obj.ClassParent;
-  //    empty := false;
-  //  except
-  //    empty := true;
-  //  end;
   if Obj <> nil then
     empty := false
   else

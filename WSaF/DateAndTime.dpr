@@ -10,15 +10,7 @@ uses
 {$R *.res}
 
 procedure isEmpy(Obj: TObject; var empty: boolean);
-var
-  v: TClass;
 begin
-  //  try
-  //    v := Obj.ClassParent;
-  //    empty := false;
-  //  except
-  //    empty := true;
-  //  end;
   if Obj <> nil then
     empty := false
   else
@@ -26,22 +18,16 @@ begin
 end;
 
 procedure ShowDateAndTime; stdcall;
-var
-  empty: boolean;
 begin
-//  isEmpy(DateAndTimeForm, empty);
-//  if empty = true then
-//  begin
-    Application.CreateHandle;
-    DateAndTimeForm := TDateAndTimeForm.Create(Application);
-    DateAndTimeForm.Show;
-    if FileExists(pathINI) then
-    begin
-      sIniFile := TIniFile.Create(pathINI);
-      sIniFile.WriteBool('State', 'Active', true);
-      sIniFile.Free;
-    end;
-//  end;
+  Application.CreateHandle;
+  DateAndTimeForm := TDateAndTimeForm.Create(Application);
+  DateAndTimeForm.Show;
+  if FileExists(pathINI) then
+  begin
+    sIniFile := TIniFile.Create(pathINI);
+    sIniFile.WriteBool('State', 'Active', true);
+    sIniFile.Free;
+  end;
 end;
 
 procedure RefreshDateAndTime; stdcall;
@@ -54,18 +40,11 @@ begin
 end;
 
 procedure CloseDateAndTime; stdcall;
-var
-  empty: Boolean;
 begin
-  isEmpy(DateAndTimeForm, empty);
-  if empty = false then
-  begin
-    //    DateAndTimeForm.Close;
-    DateAndTimeForm.Destroy;
-    sIniFile := TIniFile.Create(pathINI);
-    sIniFile.WriteBool('State', 'Active', False);
-    sIniFile.Free;
-  end;
+  DateAndTimeForm.Destroy;
+  sIniFile := TIniFile.Create(pathINI);
+  sIniFile.WriteBool('State', 'Active', False);
+  sIniFile.Free;
 end;
 
 procedure FormPos(x, y: integer); stdcall;

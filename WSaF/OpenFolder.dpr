@@ -21,15 +21,7 @@ uses
 {$R *.res}
 
 procedure isEmpy(Obj: TObject; var empty: boolean);
-var
-  v: TClass;
 begin
-  //  try
-  //    v := Obj.ClassParent;
-  //    empty := false;
-  //  except
-  //    empty := true;
-  //  end;
   if Obj <> nil then
     empty := false
   else
@@ -50,27 +42,17 @@ begin
 end;
 
 procedure RefreshFolder; stdcall;
-var
-  empty: boolean;
 begin
-  isEmpy(FolderForm, empty);
-  if empty = false then
-    FolderForm.Refresh;
+  folderform.close;
+  folderform.show;
 end;
 
 procedure CloseFolder; stdcall;
-var
-  empty: Boolean;
 begin
-  isEmpy(FolderForm, empty);
-  if empty = false then
-  begin
-    //    FolderForm.Close;
-    FolderForm.Destroy;
-    sIniFile := TIniFile.Create(pathINI);
-    sIniFile.WriteBool('State', 'Active', False);
-    sIniFile.Free;
-  end;
+  FolderForm.Destroy;
+  sIniFile := TIniFile.Create(pathINI);
+  sIniFile.WriteBool('State', 'Active', False);
+  sIniFile.Free;
 end;
 
 procedure FormPos(x, y: integer); stdcall;

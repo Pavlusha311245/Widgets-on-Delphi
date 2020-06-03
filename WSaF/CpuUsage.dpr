@@ -13,15 +13,7 @@ uses
 {$R *.res}
 
 procedure isEmpy(Obj: TObject; var empty: boolean);
-var
-  v: TClass;
 begin
-  //  try
-  //    v := Obj.ClassParent;
-  //    empty := false;
-  //  except
-  //    empty := true;
-  //  end;
   if Obj <> nil then
     empty := false
   else
@@ -42,27 +34,17 @@ begin
 end;
 
 procedure RefreshCpuUsage; stdcall;
-var
-  empty: boolean;
 begin
-  isEmpy(CpuUsageForm, empty);
-  if empty = false then
-    CpuUsageForm.Refresh;
+  CpuUsageForm.close;
+  cpuusageform.show;
 end;
 
 procedure CloseCpuUsage; stdcall;
-var
-  empty: Boolean;
 begin
-  isEmpy(CpuUsageForm, empty);
-  if empty = false then
-  begin
-    //    CpuUsageForm.Close;
-    CpuUsageForm.Destroy;
-    sIniFile := TIniFile.Create(pathINI);
-    sIniFile.WriteBool('State', 'Active', False);
-    sIniFile.Free;
-  end;
+  CpuUsageForm.Destroy;
+  sIniFile := TIniFile.Create(pathINI);
+  sIniFile.WriteBool('State', 'Active', False);
+  sIniFile.Free;
 end;
 
 procedure FormPos(x, y: integer); stdcall;

@@ -12,17 +12,16 @@ uses
 
 type
   TMainForm = class(TForm)
-    gradientMainForm: TsGradientPanel;
+    gradient: TsGradientPanel;
     skins: TsSkinManager;
     tray: TTrayIcon;
-    imagesMainForm: TsAlphaImageList;
-    TrayPopup: TPopupMenu;
+    images: TsAlphaImageList;
+    trayPopup: TPopupMenu;
     E1: TMenuItem;
     ActiveWidget: TsBitBtn;
     RefreshWidget: TsBitBtn;
-    CloseWidget: TsBitBtn;
-    selectWidgetMainForm: TsTreeView;
-    settingPanelMainForm: TsPanel;
+    selectWidget: TsTreeView;
+    settingPanel: TsPanel;
     lbl1: TsLabel;
     lbl3: TsLabel;
     edt1: TsEdit;
@@ -51,12 +50,12 @@ type
     ShowSetting: TsBitBtn;
     autorun: TCheckBox;
     N12: TMenuItem;
-    sfltbtns1: TsFloatButtons;
+    topBtn: TsFloatButtons;
     Zoom: TsMagnifier;
     ShowZoom: TsBitBtn;
     editor: TsBitBtn;
     editorlbl: TLabel;
-    EditorStd: TOpenDialog;
+    editorStd: TOpenDialog;
     Selcol1: TsColorSelect;
     Selcol2: TsColorSelect;
     Selcolaccess: TsBitBtn;
@@ -66,14 +65,12 @@ type
     stbsht2: TsTabSheet;
     Timer: TTimer;
     ActiveWidgLbl: TsLabel;
-    StopWidgLbl: TsLabel;
-    RefreshWidgLbl: TsLabel;
+    UpdateWidget: TTimer;
+    EditWidget: TsBitBtn;
     procedure E1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure N3Click(Sender: TObject);
     procedure ActiveWidgetClick(Sender: TObject);
-    procedure CloseWidgetClick(Sender: TObject);
-    procedure RefreshWidgetClick(Sender: TObject);
     procedure trayDblClick(Sender: TObject);
     procedure sbtbtn4Click(Sender: TObject);
     procedure N1Click(Sender: TObject);
@@ -95,14 +92,20 @@ type
     procedure autorunClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure N12Click(Sender: TObject);
-    procedure selectWidgetMainFormClick(Sender: TObject);
+    procedure selectWidgetClick(Sender: TObject);
     procedure sfltbtns1Items0Click(Sender: TObject);
     procedure sfltbtns1Items1Click(Sender: TObject);
     procedure ShowZoomClick(Sender: TObject);
     procedure editorClick(Sender: TObject);
     procedure SelcolaccessClick(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
-
+    procedure UpdateWidgetTimer(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure FormHide(Sender: TObject);
+    procedure RefreshWidgetClick(Sender: TObject);
+    procedure CheckWidget(path: string);
+    procedure LoadingMetadata(path: string);
+    function isPopupWidgetActive(path: string):boolean;
   private
     { Private declarations }
   public
@@ -127,10 +130,6 @@ uses
   AboutApplication;
 
 {$R *.dfm}
-//procedure pathDLL(var path:string);
-//begin
-//  path:=extractfilepath(application.ExeName)+path;
-//end;
 ////////////////////////////////////////////////////////////////////////////////
 //DLL DateAndTime
 
@@ -239,7 +238,6 @@ begin
   siniFile.WriteString('Main', 'Skin', skins.SkinName);
   siniFile.Free;
   MainForm.Close;
-  ////////////////////////////////////////////////////////////////////////////////
 end;
 
 procedure TMainForm.AddStart;
@@ -254,7 +252,6 @@ begin
   reg.writestring(Application.Title, Application.ExeName);
   reg.closekey;
   reg.free;
-  ////////////////////////////////////////////////////////////////////////////////
 end;
 
 procedure TMainForm.DelStart;
@@ -301,7 +298,7 @@ begin
   pathINICalendar := extractfilepath(application.ExeName) +
     '\WSaF\Settings\CalendarSettings.ini';
   ////////////////////////////////////////////////////////////////////////////////
-//Загрузка скина и виджетов
+  //Загрузка основных настроек
   skins.SkinDirectory := extractfilepath(application.ExeName) + '\Skins';
   editor.Glyph.LoadFromFile(extractfilepath(application.ExeName)
     + '\Images\EditorIcon.bmp');
@@ -311,11 +308,11 @@ begin
     skins.SkinName := siniFile.ReadString('Main', 'Skin', '');
     Selcol1.ColorValue := siniFile.ReadInteger('Color', 'Color1', 0000000);
     Selcol2.ColorValue := siniFile.ReadInteger('Color', 'Color2', 0000000);
-    gradientMainForm.PaintData.Color1.Color := siniFile.ReadInteger('Color',
+    gradient.PaintData.Color1.Color := siniFile.ReadInteger('Color',
       'Color1', 0000000);
-    gradientMainForm.PaintData.Color2.Color := siniFile.ReadInteger('Color',
+    gradient.PaintData.Color2.Color := siniFile.ReadInteger('Color',
       'Color2', 0000000);
-    selectWidgetMainForm.Color := siniFile.ReadInteger('Color', 'Color1',
+    selectWidget.Color := siniFile.ReadInteger('Color', 'Color1',
       0000000);
     activeautorun := siniFile.ReadBool('Main', 'Autorun', false);
     if activeautorun = True then
@@ -336,7 +333,8 @@ begin
   if FileExists(pathINIDateAndTime) then
   begin
     sIniFile := TIniFile.Create(pathINIDateAndTime);
-    activeDate := sIniFile.ReadBool('State', 'Active', false);
+    if sIniFile.ReadBool('State', 'Active', false) = True then
+      ShowDateAndTime;
     sIniFile.Free;
   end
   else
@@ -344,7 +342,8 @@ begin
   if FileExists(pathINICPUUsage) then
   begin
     sIniFile := TIniFile.Create(pathINICPUUsage);
-    activeCPU := sIniFile.ReadBool('State', 'Active', false);
+    if sIniFile.ReadBool('State', 'Active', false) = True then
+      ShowCpuUsage;
     sIniFile.Free;
   end
   else
@@ -352,7 +351,8 @@ begin
   if FileExists(pathINIPhiscalMemory) then
   begin
     sIniFile := TIniFile.Create(pathINIPhiscalMemory);
-    activeMemory := sIniFile.ReadBool('State', 'Active', false);
+    if sIniFile.ReadBool('State', 'Active', false) = True then
+      ShowPhisicalMemory;
     sIniFile.Free;
   end
   else
@@ -360,7 +360,8 @@ begin
   if FileExists(pathINIOpenFolder) then
   begin
     sIniFile := TIniFile.Create(pathINIOpenFolder);
-    activeFolder := sIniFile.ReadBool('State', 'Active', false);
+    if sIniFile.ReadBool('State', 'Active', false) = True then
+      ShowFolder;
     sIniFile.Free;
   end
   else
@@ -368,7 +369,8 @@ begin
   if FileExists(pathINIOpenApp) then
   begin
     sIniFile := TIniFile.Create(pathINIOpenApp);
-    activeApp := sIniFile.ReadBool('State', 'Active', false);
+    if sIniFile.ReadBool('State', 'Active', false) = True then
+      ShowApp;
     sIniFile.Free;
   end
   else
@@ -376,7 +378,8 @@ begin
   if FileExists(pathINICalendar) then
   begin
     sIniFile := TIniFile.Create(pathINICalendar);
-    activeCalendar := sIniFile.ReadBool('State', 'Active', false);
+    if sIniFile.ReadBool('State', 'Active', false) = True then
+      ShowCalendar;
     sIniFile.Free;
   end
   else
@@ -384,25 +387,12 @@ begin
   if FileExists(pathINICalc) then
   begin
     sIniFile := TIniFile.Create(pathINICalc);
-    activeCalc := sIniFile.ReadBool('State', 'Active', false);
+    if sIniFile.ReadBool('State', 'Active', false) = True then
+      ShowCalc;
     sIniFile.Free;
   end
   else
     showmessage('File not found!');
-  if activeDate = True then
-    ShowDateAndTime;
-  if activeCPU = True then
-    ShowCpuUsage;
-  if activeMemory = True then
-    ShowPhisicalMemory;
-  if activeFolder = True then
-    ShowFolder;
-  if activeApp = true then
-    ShowApp;
-  if activeCalendar = true then
-    ShowCalendar;
-  if activeCalc = true then
-    ShowCalc;
 end;
 
 procedure TMainForm.N3Click(Sender: TObject);
@@ -412,17 +402,22 @@ end;
 
 procedure TMainForm.ActiveWidgetClick(Sender: TObject);
 begin
-  case selectWidgetMainForm.Selected.AbsoluteIndex of
+  case selectWidget.Selected.AbsoluteIndex of
     0:
       begin
         if FileExists(pathINIDateAndTime) then
         begin
           siniFile := TIniFile.Create(pathINIDateAndTime);
           if siniFile.ReadBool('State', 'Active', false) = False then
-            ShowDateAndTime
+          begin
+            ShowDateAndTime;
+            ActiveWidgLbl.Caption := 'Виджет запущен';
+            timer.Enabled := true;
+          end
           else
           begin
-            ActiveWidgLbl.Caption := 'Виджет уже запущен';
+            CloseDateAndTime;
+            ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
           end;
           siniFile.Free;
@@ -434,10 +429,15 @@ begin
         begin
           siniFile := TIniFile.Create(pathINICPUUsage);
           if siniFile.ReadBool('State', 'Active', false) = False then
-            ShowCpuUsage
+          begin
+            ShowCpuUsage;
+            ActiveWidgLbl.Caption := 'Виджет запущен';
+            timer.Enabled := true;
+          end
           else
           begin
-            ActiveWidgLbl.Caption := 'Виджет уже запущен';
+            CloseCpuUsage;
+            ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
           end;
           siniFile.Free;
@@ -449,10 +449,15 @@ begin
         begin
           siniFile := TIniFile.Create(pathINIPhiscalMemory);
           if siniFile.ReadBool('State', 'Active', false) = False then
-            ShowPhisicalMemory
+          begin
+            ShowPhisicalMemory;
+            ActiveWidgLbl.Caption := 'Виджет запущен';
+            timer.Enabled := true;
+          end
           else
           begin
-            ActiveWidgLbl.Caption := 'Виджет уже запущен';
+            ClosePhisicalMemory;
+            ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
           end;
           siniFile.Free;
@@ -464,10 +469,15 @@ begin
         begin
           siniFile := TIniFile.Create(pathINIOpenFolder);
           if siniFile.ReadBool('State', 'Active', false) = False then
-            ShowFolder
+          begin
+            ShowFolder;
+            ActiveWidgLbl.Caption := 'Виджет запущен';
+            timer.Enabled := true;
+          end
           else
           begin
-            ActiveWidgLbl.Caption := 'Виджет уже запущен';
+            CloseFolder;
+            ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
           end;
           siniFile.Free;
@@ -479,10 +489,15 @@ begin
         begin
           siniFile := TIniFile.Create(pathINIOpenApp);
           if siniFile.ReadBool('State', 'Active', false) = False then
-            ShowApp
+          begin
+            ShowApp;
+            ActiveWidgLbl.Caption := 'Виджет запущен';
+            timer.Enabled := true;
+          end
           else
           begin
-            ActiveWidgLbl.Caption := 'Виджет уже запущен';
+            CloseApp;
+            ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
           end;
           siniFile.Free;
@@ -494,10 +509,15 @@ begin
         begin
           siniFile := TIniFile.Create(pathINICalendar);
           if siniFile.ReadBool('State', 'Active', false) = False then
-            ShowCalendar
+          begin
+            ShowCalendar;
+            ActiveWidgLbl.Caption := 'Виджет запущен';
+            timer.Enabled := true;
+          end
           else
           begin
-            ActiveWidgLbl.Caption := 'Виджет уже запущен';
+            CloseCalendar;
+            ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
           end;
           siniFile.Free;
@@ -509,134 +529,15 @@ begin
         begin
           siniFile := TIniFile.Create(pathINICalc);
           if siniFile.ReadBool('State', 'Active', false) = False then
-            ShowCalc
-          else
           begin
-            ActiveWidgLbl.Caption := 'Виджет уже запущен';
+            ShowCalc;
+            ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
-          end;
-          siniFile.Free;
-        end;
-      end;
-  end;
-end;
-
-procedure TMainForm.RefreshWidgetClick(Sender: TObject);
-begin
-  case selectWidgetMainForm.Selected.AbsoluteIndex of
-    0: RefreshDateAndTime;
-    1: RefreshCpuUsage;
-    2: RefreshPhisicalMemory;
-    3: RefreshFolder;
-    4: RefreshApp;
-    5: RefreshCalendar;
-    6: RefreshCalc;
-  end;
-end;
-
-procedure TMainForm.CloseWidgetClick(Sender: TObject);
-begin
-  case selectWidgetMainForm.Selected.AbsoluteIndex of
-    0:
-      begin
-        if FileExists(pathINIDateAndTime) then
-        begin
-          siniFile := TIniFile.Create(pathINIDateAndTime);
-          if siniFile.ReadBool('State', 'Active', false) = True then
-            CloseDateAndTime
+          end
           else
           begin
-            StopWidgLbl.Caption := 'Виджет закрыт';
-            timer.Enabled := true;
-          end;
-          siniFile.Free;
-        end;
-      end;
-    1:
-      begin
-        if FileExists(pathINICPUUsage) then
-        begin
-          siniFile := TIniFile.Create(pathINICPUUsage);
-          if siniFile.ReadBool('State', 'Active', false) = True then
-            CloseCpuUsage
-          else
-          begin
-            StopWidgLbl.Caption := 'Виджет закрыт';
-            timer.Enabled := true;
-          end;
-          siniFile.Free;
-        end;
-      end;
-    2:
-      begin
-        if FileExists(pathINIPhiscalMemory) then
-        begin
-          siniFile := TIniFile.Create(pathINIPhiscalMemory);
-          if siniFile.ReadBool('State', 'Active', false) = True then
-            ClosePhisicalMemory
-          else
-          begin
-            StopWidgLbl.Caption := 'Виджет закрыт';
-            timer.Enabled := true;
-          end;
-          siniFile.Free;
-        end;
-      end;
-    3:
-      begin
-        if FileExists(pathINIOpenFolder) then
-        begin
-          siniFile := TIniFile.Create(pathINIOpenFolder);
-          if siniFile.ReadBool('State', 'Active', false) = True then
-            CloseFolder
-          else
-          begin
-            StopWidgLbl.Caption := 'Виджет закрыт';
-            timer.Enabled := true;
-          end;
-          siniFile.Free;
-        end;
-      end;
-    4:
-      begin
-        if FileExists(pathINIOpenApp) then
-        begin
-          siniFile := TIniFile.Create(pathINIOpenApp);
-          if siniFile.ReadBool('State', 'Active', false) = True then
-            CloseApp
-          else
-          begin
-            StopWidgLbl.Caption := 'Виджет закрыт';
-            timer.Enabled := true;
-          end;
-          siniFile.Free;
-        end;
-      end;
-    5:
-      begin
-        if FileExists(pathINICalendar) then
-        begin
-          siniFile := TIniFile.Create(pathINICalendar);
-          if siniFile.ReadBool('State', 'Active', false) = True then
-            CloseCalendar
-          else
-          begin
-            StopWidgLbl.Caption := 'Виджет закрыт';
-            timer.Enabled := true;
-          end;
-          siniFile.Free;
-        end;
-      end;
-    6:
-      begin
-        if FileExists(pathINICalc) then
-        begin
-          siniFile := TIniFile.Create(pathINICalc);
-          if siniFile.ReadBool('State', 'Active', false) = True then
-            CloseCalc
-          else
-          begin
-            StopWidgLbl.Caption := 'Виджет закрыт';
+            CloseCalc;
+            ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
           end;
           siniFile.Free;
@@ -663,37 +564,17 @@ end;
 procedure TMainForm.edt1KeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+  //изменение координат виджета по оси X
   if Key = 13 then
   begin
-    case selectWidgetMainForm.Selected.AbsoluteIndex of
-      0:
-        begin
-          DateFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
-        end;
-      1:
-        begin
-          CpuFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
-        end;
-      2:
-        begin
-          MemoryFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
-        end;
-      3:
-        begin
-          FolderFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
-        end;
-      4:
-        begin
-          AppFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
-        end;
-      5:
-        begin
-          CalendarFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
-        end;
-      6:
-        begin
-          CalculatorFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
-        end;
+    case selectWidget.Selected.AbsoluteIndex of
+      0: DateFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+      1: CpuFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+      2: MemoryFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+      3: FolderFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+      4: AppFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+      5: CalendarFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+      6: CalculatorFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
     end;
   end;
 end;
@@ -701,169 +582,102 @@ end;
 procedure TMainForm.edt3KeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+  //изменение координат виджета по оси Y
   if Key = 13 then
   begin
-    case selectWidgetMainForm.Selected.AbsoluteIndex of
-      0:
-        begin
-          DateFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
-        end;
-      1:
-        begin
-          CpuFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
-        end;
-      2:
-        begin
-          MemoryFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
-        end;
-      3:
-        begin
-          FolderFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
-        end;
-      4:
-        begin
-          AppFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
-        end;
-      5:
-        begin
-          CalendarFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
-        end;
-      6:
-        begin
-          CalculatorFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
-        end;
+    case selectWidget.Selected.AbsoluteIndex of
+      0: DateFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+      1: CpuFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+      2: MemoryFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+      3: FolderFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+      4: AppFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+      5: CalendarFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
+      6: CalculatorFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text));
     end;
   end;
 end;
 
-procedure TMainForm.N5Click(Sender: TObject);
-var
-  active: Boolean;
+function TMainForm.isPopupWidgetActive(path: string): boolean;
 begin
-  if FileExists(pathINIDateAndTime) then
+  if FileExists(path) then
   begin
-    sIniFile := TIniFile.Create(pathINIDateAndTime);
-    active := sIniFile.ReadBool('State', 'Active', false);
+    sIniFile := TIniFile.Create(path);
+    result := sIniFile.ReadBool('State', 'Active', false);
     sIniFile.Free;
   end;
-  if active = False then
+end;
+
+procedure TMainForm.N5Click(Sender: TObject);
+begin
+  if isPopupWidgetActive(pathINIDateAndTime) = False then
     ShowDateAndTime
   else
     CloseDateAndTime;
 end;
 
 procedure TMainForm.N6Click(Sender: TObject);
-var
-  active: boolean;
 begin
-  if FileExists(pathINICPUUsage) then
-  begin
-    sIniFile := TIniFile.Create(pathINICPUUsage);
-    active := sIniFile.ReadBool('State', 'Active', false);
-    sIniFile.Free;
-  end;
-  if active = False then
+  if isPopupWidgetActive(pathINICPUUsage) = False then
     ShowCpuUsage
   else
     CloseCpuUsage;
 end;
 
 procedure TMainForm.N7Click(Sender: TObject);
-var
-  active: boolean;
 begin
-  if FileExists(pathINIPhiscalMemory) then
-  begin
-    sIniFile := TIniFile.Create(pathINIPhiscalMemory);
-    active := sIniFile.ReadBool('State', 'Active', false);
-    sIniFile.Free;
-  end;
-  if active = False then
+  if isPopupWidgetActive(pathINIPhiscalMemory) = False then
     ShowPhisicalMemory
   else
     ClosePhisicalMemory;
 end;
 
 procedure TMainForm.N8Click(Sender: TObject);
-var
-  active: boolean;
 begin
-  if FileExists(pathINIOpenFolder) then
-  begin
-    sIniFile := TIniFile.Create(pathINIOpenFolder);
-    active := sIniFile.ReadBool('State', 'Active', false);
-    sIniFile.Free;
-  end;
-  if active = False then
+  if isPopupWidgetActive(pathINIOpenFolder) = False then
     ShowFolder
   else
     CloseFolder;
 end;
 
 procedure TMainForm.N9Click(Sender: TObject);
-var
-  active: boolean;
 begin
-  if FileExists(pathINIOpenApp) then
-  begin
-    sIniFile := TIniFile.Create(pathINIOpenApp);
-    active := sIniFile.ReadBool('State', 'Active', false);
-    sIniFile.Free;
-  end;
-  if active = False then
-    ShowApp
-  else
-    CloseApp;
-end;
-
-procedure TMainForm.FormActivate(Sender: TObject);
-begin
-  selectwidgetmainform.Selected := selectWidgetMainForm.Items[0];
-  selectWidgetMainForm.SetFocus;
-end;
-
-procedure TMainForm.N11Click(Sender: TObject);
-var
-  active: boolean;
-begin
-  if FileExists(pathINICalc) then
-  begin
-    sIniFile := TIniFile.Create(pathINICalc);
-    active := sIniFile.ReadBool('State', 'Active', false);
-    sIniFile.Free;
-  end;
-  if active = False then
+  if isPopupWidgetActive(pathINIOpenApp) = False then
     ShowApp
   else
     CloseApp;
 end;
 
 procedure TMainForm.N10Click(Sender: TObject);
-var
-  active: boolean;
 begin
-  if FileExists(pathINICalendar) then
-  begin
-    sIniFile := TIniFile.Create(pathINICalendar);
-    active := sIniFile.ReadBool('State', 'Active', false);
-    sIniFile.Free;
-  end;
-  if active = False then
-    ShowApp
+  if isPopupWidgetActive(pathINICalendar) = False then
+    ShowCalendar
   else
-    CloseApp;
+    CloseCalendar;
+end;
+
+procedure TMainForm.N11Click(Sender: TObject);
+begin
+  if isPopupWidgetActive(pathINICalc) = False then
+    ShowCalc
+  else
+    CloseCalc;
+end;
+
+procedure TMainForm.FormActivate(Sender: TObject);
+begin
+  selectwidget.Selected := selectWidget.Items[0];
 end;
 
 procedure TMainForm.ShowSettingClick(Sender: TObject);
 begin
-  if settingPanelMainForm.Visible = True then
+  if settingPanel.Visible = True then
   begin
-    settingPanelMainForm.Visible := False;
+    settingPanel.Visible := False;
     ShowSetting.caption := 'Показать';
   end
   else
   begin
-    settingPanelMainForm.Visible := True;
+    settingPanel.Visible := True;
     ShowSetting.Caption := 'Скрыть';
   end;
 end;
@@ -886,121 +700,39 @@ end;
 procedure TMainForm.N12Click(Sender: TObject);
 begin
   mainform.Show;
-  if settingPanelMainForm.Visible = False then
+  if settingPanel.Visible = False then
   begin
-    settingPanelMainForm.Visible := True;
+    settingPanel.Visible := True;
     ShowSetting.caption := 'Скрыть';
   end;
 end;
 
-procedure TMainForm.selectWidgetMainFormClick(Sender: TObject);
+procedure TMainForm.LoadingMetadata(path: string);
 begin
-  case selectWidgetMainForm.Selected.AbsoluteIndex of
-    0:
-      begin
-        if FileExists(pathINIDateAndTime) then
-        begin
-          sIniFile := TIniFile.Create(pathINIDateAndTime);
-          athorrez.Caption := siniFile.ReadString('metadata', 'Athor',
-            'unknown');
-          verrez.Caption := siniFile.ReadString('metadata', 'version',
-            'unknown');
-          inforez.Caption := siniFile.ReadString('metadata', 'Info', 'unknown');
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-    1:
-      begin
-        if FileExists(pathINICPUUsage) then
-        begin
-          sIniFile := TIniFile.Create(pathINICPUUsage);
-          athorrez.Caption := siniFile.ReadString('metadata', 'Athor',
-            'unknown');
-          verrez.Caption := siniFile.ReadString('metadata', 'version',
-            'unknown');
-          inforez.Caption := siniFile.ReadString('metadata', 'Info', 'unknown');
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-    2:
-      begin
-        if FileExists(pathINIPhiscalMemory) then
-        begin
-          sIniFile := TIniFile.Create(pathINIPhiscalMemory);
-          athorrez.Caption := siniFile.ReadString('metadata', 'Athor',
-            'unknown');
-          verrez.Caption := siniFile.ReadString('metadata', 'version',
-            'unknown');
-          inforez.Caption := siniFile.ReadString('metadata', 'Info', 'unknown');
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-    3:
-      begin
-        if FileExists(pathINIOpenFolder) then
-        begin
-          sIniFile := TIniFile.Create(pathINIOpenFolder);
-          athorrez.Caption := siniFile.ReadString('metadata', 'Athor',
-            'unknown');
-          verrez.Caption := siniFile.ReadString('metadata', 'version',
-            'unknown');
-          inforez.Caption := siniFile.ReadString('metadata', 'Info', 'unknown');
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-    4:
-      begin
-        if FileExists(pathINIOpenApp) then
-        begin
-          sIniFile := TIniFile.Create(pathINIOpenApp);
-          athorrez.Caption := siniFile.ReadString('metadata', 'Athor',
-            'unknown');
-          verrez.Caption := siniFile.ReadString('metadata', 'version',
-            'unknown');
-          inforez.Caption := siniFile.ReadString('metadata', 'Info', 'unknown');
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-    5:
-      begin
-        if FileExists(pathINICalendar) then
-        begin
-          sIniFile := TIniFile.Create(pathINICalendar);
-          athorrez.Caption := siniFile.ReadString('metadata', 'Athor',
-            'unknown');
-          verrez.Caption := siniFile.ReadString('metadata', 'version',
-            'unknown');
-          inforez.Caption := siniFile.ReadString('metadata', 'Info', 'unknown');
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
-    6:
-      begin
-        if FileExists(pathINICalc) then
-        begin
-          sIniFile := TIniFile.Create(pathINICalc);
-          athorrez.Caption := siniFile.ReadString('metadata', 'Athor',
-            'unknown');
-          verrez.Caption := siniFile.ReadString('metadata', 'version',
-            'unknown');
-          inforez.Caption := siniFile.ReadString('metadata', 'Info', 'unknown');
-          sIniFile.Free;
-        end
-        else
-          showmessage('File not found!');
-      end;
+  if FileExists(path) then
+  begin
+    sIniFile := TIniFile.Create(path);
+    athorrez.Caption := siniFile.ReadString('metadata', 'Athor',
+      'unknown');
+    verrez.Caption := siniFile.ReadString('metadata', 'version',
+      'unknown');
+    inforez.Caption := siniFile.ReadString('metadata', 'Info', 'unknown');
+    sIniFile.Free;
+  end
+  else
+    showmessage('File not found!');
+end;
+
+procedure TMainForm.selectWidgetClick(Sender: TObject);
+begin
+  case selectWidget.Selected.AbsoluteIndex of
+    0: LoadingMetadata(pathINIDateAndTime);
+    1: LoadingMetadata(pathINICPUUsage);
+    2: LoadingMetadata(pathINIPhiscalMemory);
+    3: LoadingMetadata(pathINIOpenFolder);
+    4: LoadingMetadata(pathINIOpenApp);
+    5: LoadingMetadata(pathINICalendar);
+    6: LoadingMetadata(pathINICalc);
   end;
 end;
 
@@ -1054,19 +786,81 @@ begin
   siniFile.WriteInteger('Color', 'Color1', Selcol1.ColorValue);
   siniFile.WriteInteger('Color', 'Color2', Selcol2.ColorValue);
   siniFile.Free;
-  gradientMainForm.PaintData.Color1.Color := Selcol1.ColorValue;
-  gradientMainForm.PaintData.Color2.Color := Selcol2.ColorValue;
-  selectWidgetMainForm.Color := Selcol1.ColorValue;
+  gradient.PaintData.Color1.Color := Selcol1.ColorValue;
+  gradient.PaintData.Color2.Color := Selcol2.ColorValue;
+  selectWidget.Color := Selcol1.ColorValue;
 end;
 
 procedure TMainForm.TimerTimer(Sender: TObject);
 begin
   ActiveWidgLbl.Caption := '';
-  StopWidgLbl.Caption := '';
-  RefreshWidgLbl.Caption := '';
-  if (ActiveWidgLbl.Caption = '') and (StopWidgLbl.Caption = '') and
-    (RefreshWidgLbl.Caption = '') then
+  if (ActiveWidgLbl.Caption = '') then
     timer.Enabled := false;
+end;
+
+procedure TMainForm.CheckWidget(path: string);
+begin
+  if FileExists(path) then
+  begin
+    sIniFile := TIniFile.Create(path);
+    if siniFile.ReadBool('State', 'Active', false) = True then
+    begin
+      RefreshWidget.Enabled := True;
+      ActiveWidget.Kind := bkAbort;
+      ActiveWidget.Caption := 'Закрыть виджет';
+    end
+    else
+    begin
+      RefreshWidget.Enabled := False;
+      ActiveWidget.Kind := bkYes;
+      ActiveWidget.Caption := 'Активировать виджет';
+    end;
+    sIniFile.Free;
+  end
+  else
+    showmessage('File not found!');
+end;
+
+procedure TMainForm.UpdateWidgetTimer(Sender: TObject);
+begin
+  if selectWidget.Selected.AbsoluteIndex <> -1 then
+  begin
+    case selectWidget.Selected.AbsoluteIndex of
+      0: CheckWidget(pathINIDateAndTime);
+      1: CheckWidget(pathINICPUUsage);
+      2: CheckWidget(pathINIPhiscalMemory);
+      3: CheckWidget(pathINIOpenFolder);
+      4: CheckWidget(pathINIOpenApp);
+      5: CheckWidget(pathINICalendar);
+      6: CheckWidget(pathINICalc);
+    end;
+  end;
+end;
+
+procedure TMainForm.FormShow(Sender: TObject);
+begin
+  UpdateWidget.Enabled := true;
+end;
+
+procedure TMainForm.FormHide(Sender: TObject);
+begin
+  UpdateWidget.Enabled := false;
+end;
+
+procedure TMainForm.RefreshWidgetClick(Sender: TObject);
+begin
+  case selectwidget.Selected.AbsoluteIndex of
+    0: RefreshDateAndTime;
+    1: RefreshCpuUsage;
+    2: RefreshPhisicalMemory;
+    3: RefreshFolder;
+    4: RefreshApp;
+    5: RefreshCalendar;
+    6: RefreshCalc;
+  end;
+end;
+
+end.
 end;
 
 end.

@@ -11,15 +11,7 @@ uses
 {$R *.res}
 
 procedure isEmpy(Obj: TObject; var empty: boolean);
-var
-  v: TClass;
 begin
-  //  try
-  //    v := Obj.ClassParent;
-  //    empty := false;
-  //  except
-  //    empty := true;
-  //  end;
   if Obj <> nil then
     empty := false
   else
@@ -40,26 +32,17 @@ begin
 end;
 
 procedure RefreshCalc; stdcall;
-var
-  empty: boolean;
 begin
-  isEmpy(CalcForm, empty);
-  if empty = false then
-    CalcForm.Refresh;
+  calcform.close;
+  calcform.show;
 end;
 
 procedure CloseCalc; stdcall;
-var
-  empty: Boolean;
 begin
-  isEmpy(CalcForm, empty);
-  if empty = false then
-  begin
-    CalcForm.Destroy;
-    sIniFile := TIniFile.Create(pathINI);
-    sIniFile.WriteBool('State', 'Active', False);
-    sIniFile.Free;
-  end;
+  CalcForm.Destroy;
+  sIniFile := TIniFile.Create(pathINI);
+  sIniFile.WriteBool('State', 'Active', False);
+  sIniFile.Free;
 end;
 
 procedure FormPos(x, y: integer); stdcall;
