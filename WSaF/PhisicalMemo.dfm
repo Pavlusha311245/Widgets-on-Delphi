@@ -2222,19 +2222,18 @@ object PhisicalMemoryForm: TPhisicalMemoryForm
       end
       object N4: TMenuItem
         Caption = #1054#1073#1085#1086#1074#1080#1090#1100
+        OnClick = N4Click
       end
     end
   end
-  object TimerC: TTimer
-    Enabled = False
+  object TimerDisk1: TTimer
     Interval = 25
-    OnTimer = TimerCTimer
+    OnTimer = TimerDisk1Timer
     Top = 48
   end
-  object TimerD: TTimer
-    Enabled = False
+  object TimerDisk2: TTimer
     Interval = 25
-    OnTimer = TimerDTimer
+    OnTimer = TimerDisk2Timer
     Left = 32
     Top = 48
   end

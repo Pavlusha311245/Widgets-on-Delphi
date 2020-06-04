@@ -21,8 +21,8 @@ type
     DiskNumber2: TLabel;
     ProgressDisk1: TProgressBar;
     ProgressDisk2: TProgressBar;
-    TimerC: TTimer;
-    TimerD: TTimer;
+    TimerDisk1: TTimer;
+    TimerDisk2: TTimer;
     TimerShow: TTimer;
     N5: TMenuItem;
     procedure PhisicalMemoryBackgroundMouseDown(Sender: TObject; Button:
@@ -35,10 +35,11 @@ type
     procedure WMEXITSIZEMOVE(var message: TMessage); message WM_EXITSIZEMOVE;
 
     procedure N3Click(Sender: TObject);
-    procedure TimerCTimer(Sender: TObject);
-    procedure TimerDTimer(Sender: TObject);
+    procedure TimerDisk1Timer(Sender: TObject);
+    procedure TimerDisk2Timer(Sender: TObject);
     procedure TimerShowTimer(Sender: TObject);
     procedure N5Click(Sender: TObject);
+    procedure N4Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -66,7 +67,9 @@ begin
 end;
 
 procedure TPhisicalMemoryForm.FormShow(Sender: TObject);
-
+var
+  letter_disk1: string;
+  letter_disk2: string;
 begin
   ShowWindow(Application.Handle, SW_HIDE);
   PhisicalMemoryBackground.Picture.LoadFromFile(extractfilepath(application.ExeName) + '\Images\background_240.png');
@@ -75,41 +78,124 @@ begin
     sIniFile := TIniFile.Create(pathINI);
     PhisicalMemoryForm.Top := sIniFile.ReadInteger('Position', 'Top', 0);
     PhisicalMemoryForm.Left := sIniFile.ReadInteger('Position', 'Left', 0);
+    letter_disk1 := sIniFile.ReadString('Disk', 'Disk1', '');
+    letter_disk2 := sIniFile.ReadString('Disk', 'Disk2', '');
     sIniFile.Free;
   end
   else
     showmessage('File not found');
+  DiskNumber1.Caption := letter_disk1 + ': 000/000 Gb';
+  DiskNumber2.Caption := letter_disk2 + ': 000/000 Gb';
 end;
+const
+  alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 procedure TPhisicalMemoryForm.TimerMesuareDiskSizeTimer(Sender: TObject);
 var
-  sizeC, sizeD: integer;
+  Disk1, Disk2, number_disk1, number_disk2, i: integer;
+  letter_disk1, letter_disk2: string;
 begin
-  sizeD := Trunc((((DiskSize(4)
-    div BtoGb) - (DiskFree(4)
-    div BtoGb)) / (DiskSize(4)
-    div BtoGb)) * 100);
-  sizeC := Trunc((((DiskSize(3)
-    div BtoGb) - (DiskFree(3)
-    div BtoGb)) / (DiskSize(3)
-    div BtoGb)) * 100);
-  if ProgressDisk1.Position = sizeC then
+  number_disk1 := 0;
+  number_disk2 := 0;
+  if FileExists(pathINI) then
   begin
-    DiskNumber1.Caption := 'C: ' + IntToStr((DiskSize(3) div BtoGb) -
-      (DiskFree(3)
-      div BtoGb)) + '/' + IntToStr(DiskSize(3) div BtoGb) + ' Gb';
-    ProgressDisk1.Position := Trunc(100 - (((DiskFree(3) div BtoGb) /
-      (DiskSize(3) div
-      BtoGb)) * 100));
+    sIniFile := TIniFile.Create(pathINI);
+    letter_disk1 := sIniFile.ReadString('Disk', 'Disk1', '');
+    letter_disk2 := sIniFile.ReadString('Disk', 'Disk2', '');
+    sIniFile.Free;
   end;
-  if ProgressDisk2.Position = sizeD then
+  if (letter_disk1 = '') or (letter_disk1 = ' ') or (Length(letter_disk1) > 2)
+    then
   begin
-    DiskNumber2.Caption := 'D: ' + IntToStr((DiskSize(4) div BtoGb) -
-      (DiskFree(4)
-      div BtoGb)) + '/' + IntToStr(DiskSize(4) div BtoGb) + ' Gb';
-    ProgressDisk2.Position := Trunc(100 - (((DiskFree(4) div BtoGb) /
-      (DiskSize(4) div
-      BtoGb)) * 100));
+    DiskNumber1.Caption := 'Error';
+    DiskNumber1.Font.Color := clRed;
+    ProgressDisk1.Position := 0;
+  end
+  else
+  begin
+    DiskNumber1.Font.Color := clWhite;
+    for i := 1 to Length(alphabet) do
+    begin
+      if alphabet[i] = letter_disk1 then
+        number_disk1 := i;
+    end;
+    //Занятое дисковое пространство
+    if DiskSize(number_disk1) >= 0 then
+    begin
+      Disk1 := Trunc((((DiskSize(number_disk1)
+        div BtoGb) - (DiskFree(number_disk1)
+        div BtoGb)) / (DiskSize(number_disk1)
+        div BtoGb)) * 100);
+      if ProgressDisk1.Position = Disk1 then
+      begin
+        DiskNumber1.Caption := letter_disk1 + ': ' +
+          IntToStr((DiskSize(number_disk1)
+          div BtoGb) -
+          (DiskFree(number_disk1)
+          div BtoGb)) + '/' + IntToStr(DiskSize(number_disk1) div BtoGb) +
+          ' Gb';
+        ProgressDisk1.Position := Trunc(100 - (((DiskFree(number_disk1) div
+          BtoGb)
+          /
+          (DiskSize(number_disk1) div
+          BtoGb)) * 100));
+      end
+      else if TimerDisk1.Enabled = False then
+        N4Click(PhisicalMemoryForm);
+    end
+    else
+    begin
+      DiskNumber1.Caption := 'Error';
+      DiskNumber1.Font.Color := clRed;
+      ProgressDisk1.Position := 0;
+    end;
+  end;
+
+  if (letter_disk1 = '') or (letter_disk1 = ' ') or (Length(letter_disk1) > 2)
+    then
+  begin
+    ProgressDisk2.Position := 0;
+    DiskNumber2.Caption := 'Error';
+    DiskNumber2.Font.Color := clRed;
+  end
+  else
+  begin
+    DiskNumber2.Font.Color := clWhite;
+    for i := 1 to Length(alphabet) do
+    begin
+      if alphabet[i] = letter_disk2 then
+        number_disk2 := i;
+    end;
+    if DiskSize(number_disk2) >= 0 then
+    begin
+      //Занятое дисковое пространство
+      Disk2 := Trunc((((DiskSize(number_disk2)
+        div BtoGb) - (DiskFree(number_disk2)
+        div BtoGb)) / (DiskSize(number_disk2)
+        div BtoGb)) * 100);
+      if ProgressDisk2.Position = Disk2 then
+      begin
+        DiskNumber2.Caption := letter_disk2 + ': ' +
+          IntToStr((DiskSize(number_disk2)
+          div BtoGb) -
+          (DiskFree(number_disk2)
+          div BtoGb)) + '/' + IntToStr(DiskSize(number_disk2) div BtoGb) +
+          ' Gb';
+        ProgressDisk2.Position := Trunc(100 - (((DiskFree(number_disk2) div
+          BtoGb)
+          /
+          (DiskSize(number_disk2) div
+          BtoGb)) * 100));
+      end
+      else if TimerDisk2.Enabled = False then
+        N4Click(PhisicalMemoryForm);
+    end
+    else
+    begin
+      DiskNumber2.Caption := 'Error';
+      DiskNumber2.Font.Color := clRed;
+      ProgressDisk2.Position := 0;
+    end;
   end;
 end;
 
@@ -182,34 +268,94 @@ begin
     SW_SHOWNORMAL);
 end;
 
-procedure TPhisicalMemoryForm.TimerCTimer(Sender: TObject);
+procedure TPhisicalMemoryForm.TimerDisk1Timer(Sender: TObject);
 var
-  sizeC: integer;
+  Disk1, number_disk, i: Integer;
+  letter_disk, alphabet: string;
 begin
-  sizeC := Trunc((((DiskSize(3)
-    div BtoGb) - (DiskFree(3)
-    div BtoGb)) / (DiskSize(3)
-    div BtoGb)) * 100);
-
-  if ProgressDisk1.Position <> sizeC then
-    ProgressDisk1.Position := ProgressDisk1.Position + 1
+  alphabet := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  number_disk := 0;
+  if FileExists(pathINI) then
+  begin
+    sIniFile := TIniFile.Create(pathINI);
+    letter_disk := sIniFile.ReadString('Disk', 'Disk1', '');
+    sIniFile.Free;
+  end;
+  if (letter_disk = '') or (letter_disk = ' ') or (Length(letter_disk) > 2) then
+  begin
+    DiskNumber1.Caption := 'Error';
+    DiskNumber1.Font.Color := clRed;
+  end
   else
-    TimerC.Enabled := False;
-
+  begin
+    for i := 1 to Length(alphabet) do
+    begin
+      if alphabet[i] = letter_disk then
+        number_disk := i;
+    end;
+    if DiskSize(number_disk) >= 0 then
+    begin
+      Disk1 := Trunc((((DiskSize(number_disk)
+        div BtoGb) - (DiskFree(number_disk)
+        div BtoGb)) / (DiskSize(number_disk)
+        div BtoGb)) * 100);
+      if ProgressDisk1.Position <> Disk1 then
+        ProgressDisk1.Position := ProgressDisk1.Position + 1
+      else
+        TimerDisk1.Enabled := False;
+    end
+    else
+    begin
+      DiskNumber1.Caption := 'Error';
+      DiskNumber1.Font.Color := clRed;
+      ProgressDisk1.Position := 0;
+    end;
+  end;
 end;
 
-procedure TPhisicalMemoryForm.TimerDTimer(Sender: TObject);
+procedure TPhisicalMemoryForm.TimerDisk2Timer(Sender: TObject);
 var
-  sizeD: Integer;
+  Disk2, number_disk, i: Integer;
+  letter_disk, alphabet: string;
 begin
-  sizeD := Trunc((((DiskSize(4)
-    div BtoGb) - (DiskFree(4)
-    div BtoGb)) / (DiskSize(4)
-    div BtoGb)) * 100);
-  if ProgressDisk2.Position <> sizeD then
-    ProgressDisk2.Position := ProgressDisk2.Position + 1
+  alphabet := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  number_disk := 0;
+  if FileExists(pathINI) then
+  begin
+    sIniFile := TIniFile.Create(pathINI);
+    letter_disk := sIniFile.ReadString('Disk', 'Disk2', '');
+    sIniFile.Free;
+  end;
+  if (letter_disk = '') or (letter_disk = ' ') or (Length(letter_disk) > 2) then
+  begin
+    DiskNumber2.Caption := 'Error';
+    DiskNumber2.Font.Color := clRed;
+  end
   else
-    TimerD.Enabled := False;
+  begin
+    for i := 1 to Length(alphabet) do
+    begin
+      if alphabet[i] = letter_disk then
+        number_disk := i;
+    end;
+    if DiskSize(number_disk) >= 0 then
+    begin
+      Disk2 := Trunc((((DiskSize(number_disk)
+        div BtoGb) - (DiskFree(number_disk)
+        div BtoGb)) / (DiskSize(number_disk)
+        div BtoGb)) * 100);
+      if ProgressDisk2.Position <> Disk2 then
+        ProgressDisk2.Position := ProgressDisk2.Position + 1
+      else
+        TimerDisk2.Enabled := False;
+    end
+    else
+    begin
+      DiskNumber2.Caption := 'Error';
+      DiskNumber2.Font.Color := clRed;
+      ProgressDisk2.Position := 0;
+    end;
+  end;
 end;
 
 procedure TPhisicalMemoryForm.TimerShowTimer(Sender: TObject);
@@ -219,23 +365,45 @@ begin
   else
   begin
     TimerShow.Enabled := false;
-    TimerC.Enabled := true;
-    TimerD.Enabled := true;
+    TimerDisk1.Enabled := true;
+    TimerDisk2.Enabled := true;
   end;
 end;
 
 procedure TPhisicalMemoryForm.N5Click(Sender: TObject);
 begin
-if N5.Checked = True then
+  if N5.Checked = True then
   begin
     N5.Checked := False;
-      PhisicalMemoryForm.FormStyle := fsNormal;
+    PhisicalMemoryForm.FormStyle := fsNormal;
   end
   else
   begin
     n5.Checked := True;
-      PhisicalMemoryForm.FormStyle := fsStayOnTop;
+    PhisicalMemoryForm.FormStyle := fsStayOnTop;
   end;
+end;
+
+procedure TPhisicalMemoryForm.N4Click(Sender: TObject);
+var
+  letter_disk1: string;
+  letter_disk2: string;
+begin
+  if FileExists(pathINI) then
+  begin
+    sIniFile := TIniFile.Create(pathINI);
+    letter_disk1 := sIniFile.ReadString('Disk', 'Disk1', '');
+    letter_disk2 := sIniFile.ReadString('Disk', 'Disk2', '');
+    sIniFile.Free;
+  end;
+  PhisicalMemoryForm.DiskNumber1.Caption := letter_disk1 + ': 000/000 Gb';
+  PhisicalMemoryForm.DiskNumber2.Caption := letter_disk2 + ': 000/000 Gb';
+  PhisicalMemoryForm.TimerMesuareDiskSize.Enabled := false;
+  PhisicalMemoryForm.ProgressDisk1.Position := 0;
+  PhisicalMemoryForm.ProgressDisk2.Position := 0;
+  PhisicalMemoryForm.TimerDisk1.Enabled := True;
+  PhisicalMemoryForm.TimerDisk2.Enabled := True;
+  PhisicalMemoryForm.TimerMesuareDiskSize.Enabled := true;
 end;
 
 end.
