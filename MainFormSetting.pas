@@ -8,7 +8,7 @@ uses
   ExtCtrlsX, ComCtrls, sTreeView, StdCtrls, sLabel, sEdit, sComboBox,
   Buttons, sBitBtn, Menus, sComboBoxes, IniFiles, TeeProcs, acArcControls,
   sUpDown, Registry, sCalculator, IBExtract, ShellAPI, acFloatCtrls, acMagn,
-  sSpeedButton, sColorSelect, sPageControl;
+  sSpeedButton, sColorSelect, sPageControl, TntStdCtrls;
 
 type
   TMainForm = class(TForm)
@@ -41,12 +41,9 @@ type
     N9: TMenuItem;
     N10: TMenuItem;
     N11: TMenuItem;
-    Athor: TLabel;
+    Author: TLabel;
     Version: TLabel;
     Info: TLabel;
-    athorrez: TLabel;
-    verrez: TLabel;
-    inforez: TLabel;
     ShowSetting: TsBitBtn;
     autorun: TCheckBox;
     N12: TMenuItem;
@@ -67,6 +64,10 @@ type
     ActiveWidgLbl: TsLabel;
     UpdateWidget: TTimer;
     EditWidget: TsBitBtn;
+    inforez: TTntLabel;
+    verrez: TTntLabel;
+    authorrez: TTntLabel;
+    num_of_widgets: TsArcGauge;
     procedure E1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure N3Click(Sender: TObject);
@@ -105,7 +106,10 @@ type
     procedure RefreshWidgetClick(Sender: TObject);
     procedure CheckWidget(path: string);
     procedure LoadingMetadata(path: string);
-    function isPopupWidgetActive(path: string):boolean;
+    function isPopupWidgetActive(path: string): boolean;
+    procedure EditWidgetClick(Sender: TObject);
+    procedure OpenWidgetSetting(path: string);
+    procedure gradientClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -330,11 +334,17 @@ begin
   else
     showmessage('*.ini File not found!');
   skins.Active := True;
+  num_of_widgets.Progress:=0;
   if FileExists(pathINIDateAndTime) then
   begin
     sIniFile := TIniFile.Create(pathINIDateAndTime);
-    if sIniFile.ReadBool('State', 'Active', false) = True then
-      ShowDateAndTime;
+    if sIniFile.ReadBool('State', 'Active', false) = True then begin
+    ShowDateAndTime;
+    num_of_widgets.Progress:=num_of_widgets.Progress+1;
+    end;
+    authorrez.Caption := siniFile.ReadString('Metadata', 'Author', '');
+    verrez.Caption := siniFile.ReadString('Metadata', 'Version', '');
+    inforez.Caption := siniFile.ReadString('Metadata', 'Info', '');
     sIniFile.Free;
   end
   else
@@ -343,7 +353,10 @@ begin
   begin
     sIniFile := TIniFile.Create(pathINICPUUsage);
     if sIniFile.ReadBool('State', 'Active', false) = True then
+    begin
       ShowCpuUsage;
+      num_of_widgets.Progress := num_of_widgets.Progress + 1;
+    end;
     sIniFile.Free;
   end
   else
@@ -352,7 +365,10 @@ begin
   begin
     sIniFile := TIniFile.Create(pathINIPhiscalMemory);
     if sIniFile.ReadBool('State', 'Active', false) = True then
+    begin
       ShowPhisicalMemory;
+      num_of_widgets.Progress := num_of_widgets.Progress + 1;
+    end;
     sIniFile.Free;
   end
   else
@@ -361,7 +377,10 @@ begin
   begin
     sIniFile := TIniFile.Create(pathINIOpenFolder);
     if sIniFile.ReadBool('State', 'Active', false) = True then
+    begin
       ShowFolder;
+      num_of_widgets.Progress := num_of_widgets.Progress + 1;
+    end;
     sIniFile.Free;
   end
   else
@@ -370,7 +389,10 @@ begin
   begin
     sIniFile := TIniFile.Create(pathINIOpenApp);
     if sIniFile.ReadBool('State', 'Active', false) = True then
+    begin
       ShowApp;
+      num_of_widgets.Progress := num_of_widgets.Progress + 1;
+    end;
     sIniFile.Free;
   end
   else
@@ -379,7 +401,10 @@ begin
   begin
     sIniFile := TIniFile.Create(pathINICalendar);
     if sIniFile.ReadBool('State', 'Active', false) = True then
+    begin
       ShowCalendar;
+      num_of_widgets.Progress := num_of_widgets.Progress + 1;
+    end;
     sIniFile.Free;
   end
   else
@@ -388,7 +413,10 @@ begin
   begin
     sIniFile := TIniFile.Create(pathINICalc);
     if sIniFile.ReadBool('State', 'Active', false) = True then
+    begin
       ShowCalc;
+      num_of_widgets.Progress := num_of_widgets.Progress + 1;
+    end;
     sIniFile.Free;
   end
   else
@@ -413,12 +441,14 @@ begin
             ShowDateAndTime;
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
+            num_of_widgets.Progress := num_of_widgets.Progress + 1;
           end
           else
           begin
             CloseDateAndTime;
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
+            num_of_widgets.Progress := num_of_widgets.Progress - 1;
           end;
           siniFile.Free;
         end;
@@ -433,12 +463,14 @@ begin
             ShowCpuUsage;
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
+            num_of_widgets.Progress := num_of_widgets.Progress + 1;
           end
           else
           begin
             CloseCpuUsage;
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
+            num_of_widgets.Progress := num_of_widgets.Progress - 1;
           end;
           siniFile.Free;
         end;
@@ -453,12 +485,14 @@ begin
             ShowPhisicalMemory;
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
+            num_of_widgets.Progress := num_of_widgets.Progress + 1;
           end
           else
           begin
             ClosePhisicalMemory;
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
+            num_of_widgets.Progress := num_of_widgets.Progress - 1;
           end;
           siniFile.Free;
         end;
@@ -473,12 +507,14 @@ begin
             ShowFolder;
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
+            num_of_widgets.Progress := num_of_widgets.Progress + 1;
           end
           else
           begin
             CloseFolder;
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
+            num_of_widgets.Progress := num_of_widgets.Progress - 1;
           end;
           siniFile.Free;
         end;
@@ -493,12 +529,14 @@ begin
             ShowApp;
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
+            num_of_widgets.Progress := num_of_widgets.Progress + 1;
           end
           else
           begin
             CloseApp;
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
+            num_of_widgets.Progress := num_of_widgets.Progress - 1;
           end;
           siniFile.Free;
         end;
@@ -513,12 +551,14 @@ begin
             ShowCalendar;
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
+            num_of_widgets.Progress := num_of_widgets.Progress + 1;
           end
           else
           begin
             CloseCalendar;
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
+            num_of_widgets.Progress := num_of_widgets.Progress - 1;
           end;
           siniFile.Free;
         end;
@@ -533,12 +573,14 @@ begin
             ShowCalc;
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
+            num_of_widgets.Progress := num_of_widgets.Progress + 1;
           end
           else
           begin
             CloseCalc;
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
+            num_of_widgets.Progress := num_of_widgets.Progress - 1;
           end;
           siniFile.Free;
         end;
@@ -712,7 +754,7 @@ begin
   if FileExists(path) then
   begin
     sIniFile := TIniFile.Create(path);
-    athorrez.Caption := siniFile.ReadString('metadata', 'Athor',
+    authorrez.Caption := siniFile.ReadString('metadata', 'Author',
       'unknown');
     verrez.Caption := siniFile.ReadString('metadata', 'version',
       'unknown');
@@ -725,6 +767,8 @@ end;
 
 procedure TMainForm.selectWidgetClick(Sender: TObject);
 begin
+  settingPanel.Visible := false;
+  ShowSetting.Caption := 'Показать';
   case selectWidget.Selected.AbsoluteIndex of
     0: LoadingMetadata(pathINIDateAndTime);
     1: LoadingMetadata(pathINICPUUsage);
@@ -860,7 +904,43 @@ begin
   end;
 end;
 
-end.
+procedure TMainForm.OpenWidgetSetting(path: string);
+var
+  ans: PAnsiChar;
+  editor: PAnsiChar;
+begin
+  ans := PAnsiChar(path);
+  if FileExists(pathINI) then
+  begin
+    sIniFile := TIniFile.Create(pathINI);
+    editor := PAnsiChar(sIniFile.readstring('Main', 'Editor', ''));
+    sIniFile.Free;
+  end
+  else
+    showmessage('File not found!');
+  ShellExecute(Handle, 'open',
+    editor,
+    ans, nil,
+    SW_SHOWNORMAL);
+end;
+
+procedure TMainForm.EditWidgetClick(Sender: TObject);
+begin
+  case selectWidget.Selected.AbsoluteIndex of
+    0: OpenWidgetSetting(pathINIDateAndTime);
+    1: OpenWidgetSetting(pathINICPUUsage);
+    2: OpenWidgetSetting(pathINIPhiscalMemory);
+    3: OpenWidgetSetting(pathINIOpenFolder);
+    4: OpenWidgetSetting(pathINIOpenApp);
+    5: OpenWidgetSetting(pathINICalendar);
+    6: OpenWidgetSetting(pathINICalc);
+  end;
+end;
+
+procedure TMainForm.gradientClick(Sender: TObject);
+begin
+  settingPanel.Visible := false;
+  ShowSetting.Caption := 'Показать';
 end;
 
 end.

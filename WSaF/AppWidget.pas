@@ -204,15 +204,15 @@ end;
 
 procedure TAppForm.N6Click(Sender: TObject);
 begin
-if N6.Checked = True then
+  if N6.Checked = True then
   begin
     N6.Checked := False;
-      AppForm.FormStyle := fsNormal;
+    AppForm.FormStyle := fsNormal;
   end
   else
   begin
     n6.Checked := True;
-      AppForm.FormStyle := fsStayOnTop;
+    AppForm.FormStyle := fsStayOnTop;
   end;
 end;
 

@@ -4,8 +4,8 @@ object MainForm: TMainForm
   BorderIcons = [biMinimize, biHelp]
   BorderStyle = bsSingle
   Caption = #1043#1083#1072#1074#1085#1086#1077' '#1084#1077#1085#1102
-  ClientHeight = 500
-  ClientWidth = 797
+  ClientHeight = 450
+  ClientWidth = 791
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -2138,10 +2138,11 @@ object MainForm: TMainForm
   object gradient: TsGradientPanel
     Left = 0
     Top = 0
-    Width = 797
-    Height = 500
+    Width = 791
+    Height = 450
     Align = alClient
     TabOrder = 0
+    OnClick = gradientClick
     PaintData.IsVertical = False
     PaintData.Color1.Color = clPurple
     PaintData.Color2.Color = 16722943
@@ -2150,11 +2151,11 @@ object MainForm: TMainForm
       Left = 1
       Top = 1
       Width = 200
-      Height = 498
+      Height = 448
       Align = alLeft
       AutoExpand = True
       BorderStyle = bsNone
-      Color = clBtnFace
+      Color = clPurple
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -2163,7 +2164,6 @@ object MainForm: TMainForm
       Images = images
       Indent = 19
       MultiSelectStyle = [msControlSelect, msShiftSelect]
-      ParentColor = True
       ParentFont = False
       ReadOnly = True
       ShowLines = False
@@ -2184,7 +2184,7 @@ object MainForm: TMainForm
     end
     object settingPanel: TsPanel
       Left = 0
-      Top = 402
+      Top = 354
       Width = 801
       Height = 100
       Align = alCustom
@@ -2415,7 +2415,7 @@ object MainForm: TMainForm
     end
     object ShowSetting: TsBitBtn
       Left = 0
-      Top = 475
+      Top = 427
       Width = 75
       Height = 25
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100
@@ -2423,8 +2423,8 @@ object MainForm: TMainForm
       OnClick = ShowSettingClick
     end
     object ShowZoom: TsBitBtn
-      Left = 768
-      Top = 472
+      Left = 760
+      Top = 416
       Width = 25
       Height = 25
       TabOrder = 3
@@ -2547,84 +2547,82 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 2
+          OnClick = EditWidgetClick
           ImageIndex = 2
           Images = images
+        end
+        object num_of_widgets: TsArcGauge
+          Left = 540
+          Top = 79
+          Width = 25
+          Height = 25
+          Hint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1079#1072#1087#1091#1097#1077#1085#1099#1093' '#1074#1080#1076#1078#1077#1090#1086#1074
+          ParentShowHint = False
+          ShowHint = True
+          Max = 7
+          LineWidth = 4
+          Text = 'num_of_widgets'
         end
       end
       object stbsht2: TsTabSheet
         Caption = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103
-        object athorrez: TLabel
-          Left = 100
-          Top = 10
-          Width = 15
-          Height = 21
-          Caption = '...'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -19
-          Font.Name = 'Times New Roman'
-          Font.Style = []
-          ParentFont = False
-          Transparent = True
-        end
         object Info: TLabel
           Left = 10
           Top = 70
-          Width = 83
-          Height = 21
+          Width = 92
+          Height = 22
           Caption = #1054#1087#1080#1089#1072#1085#1080#1077':'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -19
           Font.Name = 'Times New Roman'
-          Font.Style = []
+          Font.Style = [fsBold]
           ParentFont = False
           Transparent = True
         end
-        object inforez: TLabel
-          Left = 100
-          Top = 70
-          Width = 15
-          Height = 21
-          Caption = '...'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -19
-          Font.Name = 'Times New Roman'
-          Font.Style = []
-          ParentFont = False
-          Transparent = True
-        end
-        object Athor: TLabel
+        object Author: TLabel
           Left = 10
           Top = 10
-          Width = 54
-          Height = 21
+          Width = 57
+          Height = 22
           Caption = #1040#1074#1090#1086#1088':'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -19
           Font.Name = 'Times New Roman'
-          Font.Style = []
+          Font.Style = [fsBold]
           ParentFont = False
           Transparent = True
         end
         object Version: TLabel
           Left = 10
           Top = 40
-          Width = 62
-          Height = 21
+          Width = 67
+          Height = 22
           Caption = #1042#1077#1088#1089#1080#1103':'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -19
+          Font.Name = 'Times New Roman'
+          Font.Style = [fsBold]
+          ParentFont = False
+          Transparent = True
+        end
+        object inforez: TTntLabel
+          Left = 110
+          Top = 70
+          Width = 15
+          Height = 21
+          Caption = '...'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -19
           Font.Name = 'Times New Roman'
           Font.Style = []
           ParentFont = False
-          Transparent = True
         end
-        object verrez: TLabel
-          Left = 100
+        object verrez: TTntLabel
+          Left = 110
           Top = 40
           Width = 15
           Height = 21
@@ -2635,7 +2633,19 @@ object MainForm: TMainForm
           Font.Name = 'Times New Roman'
           Font.Style = []
           ParentFont = False
-          Transparent = True
+        end
+        object authorrez: TTntLabel
+          Left = 110
+          Top = 10
+          Width = 15
+          Height = 21
+          Caption = '...'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -19
+          Font.Name = 'Times New Roman'
+          Font.Style = []
+          ParentFont = False
         end
       end
     end
@@ -2676,8 +2686,8 @@ object MainForm: TMainForm
     ThirdParty.ThirdScrollBar = 'TScrollBar'#13#10
     ThirdParty.ThirdStaticText = 'TStaticText'#13#10
     ThirdParty.ThirdNativePaint = ' '#13#10
-    Left = 304
-    Top = 320
+    Left = 552
+    Top = 144
   end
   object tray: TTrayIcon
     Hint = 'Widget'
@@ -4800,8 +4810,8 @@ object MainForm: TMainForm
     PopupMenu = trayPopup
     Visible = True
     OnDblClick = trayDblClick
-    Left = 272
-    Top = 320
+    Left = 520
+    Top = 144
   end
   object images: TsAlphaImageList
     Items = <
@@ -23369,13 +23379,13 @@ object MainForm: TMainForm
           6164732F35362F75766E647353322F313637342F636F6C6C617073655F313131
           3132392E706E672AE739B80000000049454E44AE426082}
       end>
-    Left = 240
-    Top = 320
+    Left = 488
+    Top = 144
     Bitmap = {}
   end
   object trayPopup: TPopupMenu
-    Left = 336
-    Top = 320
+    Left = 584
+    Top = 144
     object N3: TMenuItem
       Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1080#1077
       Default = True
@@ -23466,30 +23476,30 @@ object MainForm: TMainForm
         ImageIndex = 15
         OnClick = sfltbtns1Items1Click
       end>
-    Left = 368
-    Top = 321
+    Left = 616
+    Top = 145
   end
   object Zoom: TsMagnifier
     Style = amsLens
-    Left = 400
-    Top = 320
+    Left = 648
+    Top = 144
   end
   object editorStd: TOpenDialog
     Filter = #1058#1077#1082#1089#1090#1086#1074#1099#1081' '#1088#1077#1076#1072#1082#1090#1086#1088'|*.exe'
-    Left = 432
-    Top = 320
+    Left = 680
+    Top = 144
   end
   object Timer: TTimer
     Enabled = False
     OnTimer = TimerTimer
-    Left = 464
-    Top = 320
+    Left = 712
+    Top = 144
   end
   object UpdateWidget: TTimer
     Enabled = False
     Interval = 1
     OnTimer = UpdateWidgetTimer
-    Left = 496
-    Top = 320
+    Left = 744
+    Top = 144
   end
 end
