@@ -2163,6 +2163,7 @@ object PhisicalMemoryForm: TPhisicalMemoryForm
     ParentFont = False
     Transparent = True
     Layout = tlCenter
+    OnDblClick = DiskNumber1DblClick
     OnMouseDown = PhisicalMemoryBackgroundMouseDown
   end
   object DiskNumber2: TLabel
@@ -2180,6 +2181,7 @@ object PhisicalMemoryForm: TPhisicalMemoryForm
     ParentFont = False
     Transparent = True
     Layout = tlCenter
+    OnDblClick = DiskNumber2DblClick
     OnMouseDown = PhisicalMemoryBackgroundMouseDown
   end
   object ProgressDisk1: TProgressBar
@@ -2197,6 +2199,82 @@ object PhisicalMemoryForm: TPhisicalMemoryForm
     Height = 9
     TabOrder = 1
     OnMouseDown = PhisicalMemoryBackgroundMouseDown
+  end
+  object Seldisk1: TComboBox
+    Left = 75
+    Top = 22
+    Width = 100
+    Height = 21
+    ItemHeight = 13
+    TabOrder = 2
+    Visible = False
+    OnChange = Seldisk1Change
+    OnKeyDown = Seldisk1KeyDown
+    Items.Strings = (
+      'A'
+      'B'
+      'C'
+      'D'
+      'E'
+      'F'
+      'G'
+      'H'
+      'I'
+      'J'
+      'K'
+      'L'
+      'M'
+      'N'
+      'O'
+      'P'
+      'Q'
+      'R'
+      'S'
+      'T'
+      'U'
+      'V'
+      'W'
+      'X'
+      'Y'
+      'Z')
+  end
+  object Seldisk2: TComboBox
+    Left = 75
+    Top = 62
+    Width = 100
+    Height = 21
+    ItemHeight = 13
+    TabOrder = 3
+    Visible = False
+    OnChange = Seldisk2Change
+    OnKeyDown = Seldisk2KeyDown
+    Items.Strings = (
+      'A'
+      'B'
+      'C'
+      'D'
+      'E'
+      'F'
+      'G'
+      'H'
+      'I'
+      'J'
+      'K'
+      'L'
+      'M'
+      'N'
+      'O'
+      'P'
+      'Q'
+      'R'
+      'S'
+      'T'
+      'U'
+      'V'
+      'W'
+      'X'
+      'Y'
+      'Z')
   end
   object TimerMesuareDiskSize: TTimer
     OnTimer = TimerMesuareDiskSizeTimer
@@ -2216,6 +2294,14 @@ object PhisicalMemoryForm: TPhisicalMemoryForm
     end
     object N1: TMenuItem
       Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100' '#1074#1080#1076#1078#1077#1090
+      object B1: TMenuItem
+        Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1080#1089#1082' 1'
+        OnClick = DiskNumber1DblClick
+      end
+      object N6: TMenuItem
+        Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1080#1089#1082' 2'
+        OnClick = DiskNumber2DblClick
+      end
       object N3: TMenuItem
         Caption = #1048#1079#1084#1077#1085#1080#1090#1100
         OnClick = N3Click

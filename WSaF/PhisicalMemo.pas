@@ -25,6 +25,10 @@ type
     TimerDisk2: TTimer;
     TimerShow: TTimer;
     N5: TMenuItem;
+    Seldisk1: TComboBox;
+    Seldisk2: TComboBox;
+    B1: TMenuItem;
+    N6: TMenuItem;
     procedure PhisicalMemoryBackgroundMouseDown(Sender: TObject; Button:
       TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -40,6 +44,14 @@ type
     procedure TimerShowTimer(Sender: TObject);
     procedure N5Click(Sender: TObject);
     procedure N4Click(Sender: TObject);
+    procedure Seldisk1Change(Sender: TObject);
+    procedure DiskNumber1DblClick(Sender: TObject);
+    procedure DiskNumber2DblClick(Sender: TObject);
+    procedure Seldisk2Change(Sender: TObject);
+    procedure Seldisk1KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure Seldisk2KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
 
   private
     { Private declarations }
@@ -104,6 +116,7 @@ begin
     letter_disk2 := sIniFile.ReadString('Disk', 'Disk2', '');
     sIniFile.Free;
   end;
+  //Диск 1
   if (letter_disk1 = '') or (letter_disk1 = ' ') or (Length(letter_disk1) > 2)
     then
   begin
@@ -141,7 +154,11 @@ begin
           BtoGb)) * 100));
       end
       else if TimerDisk1.Enabled = False then
-        N4Click(PhisicalMemoryForm);
+      begin
+        DiskNumber1.Caption := letter_disk1 + ': 000/000 Gb';
+        ProgressDisk1.Position := 0;
+        TimerDisk1.Enabled := true;
+      end;
     end
     else
     begin
@@ -150,7 +167,7 @@ begin
       ProgressDisk1.Position := 0;
     end;
   end;
-
+  //диск 2
   if (letter_disk1 = '') or (letter_disk1 = ' ') or (Length(letter_disk1) > 2)
     then
   begin
@@ -188,7 +205,11 @@ begin
           BtoGb)) * 100));
       end
       else if TimerDisk2.Enabled = False then
-        N4Click(PhisicalMemoryForm);
+      begin
+        DiskNumber2.Caption := letter_disk2 + ': 000/000 Gb';
+        ProgressDisk2.Position := 0;
+        TimerDisk2.Enabled := true;
+      end;
     end
     else
     begin
@@ -404,6 +425,62 @@ begin
   PhisicalMemoryForm.TimerDisk1.Enabled := True;
   PhisicalMemoryForm.TimerDisk2.Enabled := True;
   PhisicalMemoryForm.TimerMesuareDiskSize.Enabled := true;
+end;
+
+procedure TPhisicalMemoryForm.Seldisk1Change(Sender: TObject);
+begin
+  sIniFile := TIniFile.Create(pathINI);
+  sIniFile.WriteString('Disk', 'Disk1', Seldisk1.Text);
+  sIniFile.Free;
+  Seldisk1.Visible := False;
+end;
+
+procedure TPhisicalMemoryForm.DiskNumber1DblClick(Sender: TObject);
+begin
+  Seldisk1.Visible := true;
+  if FileExists(pathINI) then
+  begin
+    sIniFile := TIniFile.Create(pathINI);
+    Seldisk1.Text := sIniFile.ReadString('Disk', 'Disk1', '');
+    sIniFile.Free;
+  end;
+end;
+
+procedure TPhisicalMemoryForm.DiskNumber2DblClick(Sender: TObject);
+begin
+  Seldisk2.Visible := true;
+  if FileExists(pathINI) then
+  begin
+    sIniFile := TIniFile.Create(pathINI);
+    Seldisk2.Text := sIniFile.ReadString('Disk', 'Disk2', '');
+    sIniFile.Free;
+  end;
+end;
+
+procedure TPhisicalMemoryForm.Seldisk2Change(Sender: TObject);
+begin
+  sIniFile := TIniFile.Create(pathINI);
+  sIniFile.WriteString('Disk', 'Disk2', Seldisk2.Text);
+  sIniFile.Free;
+  Seldisk2.Visible := False;
+end;
+
+procedure TPhisicalMemoryForm.Seldisk1KeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if Key = 13 then
+  begin
+    Seldisk1Change(PhisicalMemoryForm);
+  end;
+end;
+
+procedure TPhisicalMemoryForm.Seldisk2KeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if Key = 13 then
+  begin
+    Seldisk2Change(PhisicalMemoryForm);
+  end;
 end;
 
 end.

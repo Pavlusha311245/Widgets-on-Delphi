@@ -2560,6 +2560,7 @@ object MainForm: TMainForm
           ParentShowHint = False
           ShowHint = True
           Max = 7
+          Progress = 47
           LineWidth = 4
           Text = 'num_of_widgets'
         end
