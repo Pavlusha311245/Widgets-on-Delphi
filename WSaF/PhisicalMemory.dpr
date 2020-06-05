@@ -44,17 +44,33 @@ end;
 procedure RefreshPhisicalMemory; stdcall;
 var
   path, pathMainApp: string;
+  empty: Boolean;
 begin
-  phisicalmemoryform.n4click(phisicalmemoryform);
-  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
-  if FileExists(pathMainApp) then
+  isEmpy(PhisicalMemoryForm, empty);
+  if empty = false then
   begin
-    sIniFile := TIniFile.Create(pathMainApp);
-    path := ExtractFilePath(Application.ExeName) + '\Images\background_240_' +
-      sIniFile.ReadString('Theme', 'Color1', '') + '_' +
-      sIniFile.ReadString('Theme',
-      'Color2', '') + '.png';
-    PhisicalMemoryForm.PhisicalMemoryBackground.Picture.LoadFromFile(path);
+    phisicalmemoryform.n4click(phisicalmemoryform);
+    pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
+    if FileExists(pathMainApp) then
+    begin
+      sIniFile := TIniFile.Create(pathMainApp);
+      path := ExtractFilePath(Application.ExeName) + '\Images\background_240_' +
+        sIniFile.ReadString('Theme', 'Color1', '') + '_' +
+        sIniFile.ReadString('Theme',
+        'Color2', '') + '.png';
+      if (sIniFile.ReadString('Theme', 'Color1', '') = 'white') or
+        (sIniFile.ReadString('Theme', 'Color2', '') = 'white') then
+      begin
+        PhisicalMemoryForm.DiskNumber1.Font.Color := 0;
+        PhisicalMemoryForm.DiskNumber2.Font.Color := 0;
+      end
+      else
+      begin
+        PhisicalMemoryForm.DiskNumber1.Font.Color := 16777215;
+        PhisicalMemoryForm.DiskNumber2.Font.Color := 16777215;
+      end;
+      PhisicalMemoryForm.PhisicalMemoryBackground.Picture.LoadFromFile(path);
+    end;
   end;
 end;
 

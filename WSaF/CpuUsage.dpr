@@ -36,16 +36,32 @@ end;
 procedure RefreshCpuUsage; stdcall;
 var
   pathMainApp, path: string;
+  empty: Boolean;
 begin
-  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
-  if FileExists(pathMainApp) then
+  isEmpy(CpuUsageForm, empty);
+  if empty = false then
   begin
-    sIniFile := TIniFile.Create(pathMainApp);
-    path := ExtractFilePath(Application.ExeName) + '\Images\background_120_' +
-      sIniFile.ReadString('Theme', 'Color1', '') + '_' +
-      sIniFile.ReadString('Theme',
-      'Color2', '') + '.png';
-    CpuUsageForm.CpuUsagebackground.Picture.LoadFromFile(path);
+    pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
+    if FileExists(pathMainApp) then
+    begin
+      sIniFile := TIniFile.Create(pathMainApp);
+      path := ExtractFilePath(Application.ExeName) + '\Images\background_120_' +
+        sIniFile.ReadString('Theme', 'Color1', '') + '_' +
+        sIniFile.ReadString('Theme',
+        'Color2', '') + '.png';
+      if (sinifile.readstring('Theme', 'Color1', '') = 'white') or
+        (sinifile.readstring('Theme', 'Color2', '') = 'white') then
+      begin
+        cpuusageform.labelCPU.font.color := 0;
+        cpuusageform.LabelPercentCpuUsage.font.color := 0;
+      end
+      else
+      begin
+        cpuusageform.labelCPU.font.color := 16777215;
+        cpuusageform.LabelPercentCpuUsage.font.color := 16777215;
+      end;
+      CpuUsageForm.CpuUsagebackground.Picture.LoadFromFile(path);
+    end;
   end;
 end;
 
@@ -71,4 +87,4 @@ end;
 exports ShowCpuUsage, RefreshCpuUsage, CloseCpuUsage, FormPos;
 begin
 end.
- 
+

@@ -102,6 +102,17 @@ begin
       sIniFile.ReadString('Theme', 'Color1', '') + '_' +
       sIniFile.ReadString('Theme',
       'Color2', '') + '.png';
+    if (sIniFile.ReadString('Theme', 'Color1', '') = 'white') or
+      (sIniFile.ReadString('Theme', 'Color2', '') = 'white') then
+    begin
+      DateAndTimeForm.Date.Font.Color := 0;
+      DateAndTimeForm.Time.Font.Color := 0;
+    end
+    else
+    begin
+      DateAndTimeForm.Date.Font.Color := 16777215;
+      DateAndTimeForm.Time.Font.Color := 16777215;
+    end;
     DateAndTimeBackground.Picture.LoadFromFile(path);
   end;
 end;

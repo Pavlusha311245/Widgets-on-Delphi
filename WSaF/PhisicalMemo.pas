@@ -115,8 +115,9 @@ const
 procedure TPhisicalMemoryForm.TimerMesuareDiskSizeTimer(Sender: TObject);
 var
   Disk1, Disk2, number_disk1, number_disk2, i: integer;
-  letter_disk1, letter_disk2: string;
+  letter_disk1, letter_disk2, pathMainApp: string;
 begin
+  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
   number_disk1 := 0;
   number_disk2 := 0;
   if FileExists(pathINI) then
@@ -136,7 +137,19 @@ begin
   end
   else
   begin
-    DiskNumber1.Font.Color := clWhite;
+    if FileExists(pathMainApp) then
+    begin
+      sIniFile := TIniFile.Create(pathMainApp);
+      if (sIniFile.ReadString('Theme', 'Color1', '') = 'white') or
+        (sIniFile.ReadString('Theme', 'Color2', '') = 'white') then
+      begin
+        PhisicalMemoryForm.DiskNumber1.Font.Color := 0;
+      end
+      else
+      begin
+        PhisicalMemoryForm.DiskNumber1.Font.Color := 16777215;
+      end;
+    end;
     for i := 1 to Length(alphabet) do
     begin
       if alphabet[i] = letter_disk1 then
@@ -187,7 +200,19 @@ begin
   end
   else
   begin
-    DiskNumber2.Font.Color := clWhite;
+    if FileExists(pathMainApp) then
+    begin
+      sIniFile := TIniFile.Create(pathMainApp);
+      if (sIniFile.ReadString('Theme', 'Color1', '') = 'white') or
+        (sIniFile.ReadString('Theme', 'Color2', '') = 'white') then
+      begin
+        PhisicalMemoryForm.DiskNumber2.Font.Color := 0;
+      end
+      else
+      begin
+        PhisicalMemoryForm.DiskNumber2.Font.Color := 16777215;
+      end;
+    end;
     for i := 1 to Length(alphabet) do
     begin
       if alphabet[i] = letter_disk2 then

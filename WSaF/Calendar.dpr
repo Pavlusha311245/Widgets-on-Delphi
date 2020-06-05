@@ -44,16 +44,21 @@ end;
 procedure RefreshCalendar; stdcall;
 var
   path, pathMainApp: string;
+  empty: boolean;
 begin
-  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
-  if FileExists(pathMainApp) then
+  isEmpy(CalendarForm, empty);
+  if empty = False then
   begin
-    sIniFile := TIniFile.Create(pathMainApp);
-    path := ExtractFilePath(Application.ExeName) + '\Images\background_180_' +
-      sIniFile.ReadString('Theme', 'Color1', '') + '_' +
-      sIniFile.ReadString('Theme',
-      'Color2', '') + '.png';
-    CalendarForm.Background.Picture.LoadFromFile(path);
+    pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
+    if FileExists(pathMainApp) then
+    begin
+      sIniFile := TIniFile.Create(pathMainApp);
+      path := ExtractFilePath(Application.ExeName) + '\Images\background_180_' +
+        sIniFile.ReadString('Theme', 'Color1', '') + '_' +
+        sIniFile.ReadString('Theme',
+        'Color2', '') + '.png';
+      CalendarForm.Background.Picture.LoadFromFile(path);
+    end;
   end;
 end;
 

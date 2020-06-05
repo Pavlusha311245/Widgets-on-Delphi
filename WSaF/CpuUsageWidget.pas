@@ -103,6 +103,17 @@ begin
       sIniFile.ReadString('Theme', 'Color1', '') + '_' +
       sIniFile.ReadString('Theme',
       'Color2', '') + '.png';
+    if (sinifile.readstring('Theme', 'Color1', '') = 'white') or
+      (sinifile.readstring('Theme', 'Color2', '') = 'white') then
+    begin
+      cpuusageform.labelCPU.font.color := 0;
+      cpuusageform.LabelPercentCpuUsage.font.color := 0;
+    end
+    else
+    begin
+      cpuusageform.labelCPU.font.color := 16777215;
+      cpuusageform.LabelPercentCpuUsage.font.color := 16777215;
+    end;
     CpuUsagebackground.Picture.LoadFromFile(path);
   end;
 end;

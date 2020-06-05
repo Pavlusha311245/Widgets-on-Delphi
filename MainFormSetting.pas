@@ -659,49 +659,85 @@ end;
 procedure TMainForm.N5Click(Sender: TObject);
 begin
   if isPopupWidgetActive(pathINIDateAndTime) = False then
-    ShowDateAndTime
+  begin
+    ShowDateAndTime;
+    num_of_widgets.Progress := num_of_widgets.Progress + 1;
+  end
   else
+  begin
     CloseDateAndTime;
+    num_of_widgets.Progress := num_of_widgets.Progress - 1;
+  end;
 end;
 
 procedure TMainForm.N6Click(Sender: TObject);
 begin
   if isPopupWidgetActive(pathINICPUUsage) = False then
-    ShowCpuUsage
+  begin
+    ShowCpuUsage;
+    num_of_widgets.Progress := num_of_widgets.Progress + 1;
+  end
   else
+  begin
+    num_of_widgets.Progress := num_of_widgets.Progress - 1;
     CloseCpuUsage;
+  end;
 end;
 
 procedure TMainForm.N7Click(Sender: TObject);
 begin
   if isPopupWidgetActive(pathINIPhiscalMemory) = False then
-    ShowPhisicalMemory
+  begin
+    ShowPhisicalMemory;
+    num_of_widgets.Progress := num_of_widgets.Progress + 1;
+  end
   else
+  begin
     ClosePhisicalMemory;
+    num_of_widgets.Progress := num_of_widgets.Progress - 1;
+  end;
 end;
 
 procedure TMainForm.N8Click(Sender: TObject);
 begin
   if isPopupWidgetActive(pathINIOpenFolder) = False then
-    ShowFolder
+  begin
+    ShowFolder;
+    num_of_widgets.Progress := num_of_widgets.Progress + 1;
+  end
   else
+  begin
     CloseFolder;
+    num_of_widgets.Progress := num_of_widgets.Progress - 1;
+  end;
 end;
 
 procedure TMainForm.N9Click(Sender: TObject);
 begin
   if isPopupWidgetActive(pathINIOpenApp) = False then
-    ShowApp
+  begin
+    ShowApp;
+    num_of_widgets.Progress := num_of_widgets.Progress + 1;
+  end
   else
+  begin
     CloseApp;
+    num_of_widgets.Progress := num_of_widgets.Progress - 1;
+  end;
 end;
 
 procedure TMainForm.N10Click(Sender: TObject);
 begin
   if isPopupWidgetActive(pathINICalendar) = False then
-    ShowCalendar
+  begin
+    ShowCalendar;
+    num_of_widgets.Progress := num_of_widgets.Progress + 1;
+  end
   else
+  begin
     CloseCalendar;
+    num_of_widgets.Progress := num_of_widgets.Progress - 1;
+  end;
 end;
 
 procedure TMainForm.N11Click(Sender: TObject);

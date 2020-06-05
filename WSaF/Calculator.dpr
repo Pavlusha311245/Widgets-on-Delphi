@@ -34,16 +34,22 @@ end;
 procedure RefreshCalc; stdcall;
 var
   path, pathMainApp: string;
+  empty: Boolean;
 begin
-  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
-  if FileExists(pathMainApp) then
+  isEmpy(CalcForm, empty);
+  if empty = false then
   begin
-    sIniFile := TIniFile.Create(pathMainApp);
-    path := ExtractFilePath(Application.ExeName) + '\Images\background_170_' +
-      sIniFile.ReadString('Theme', 'Color1', '') + '_' +
-      sIniFile.ReadString('Theme',
-      'Color2', '') + '.png';
-    CalcForm.Background.Picture.LoadFromFile(path);
+    pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
+    if FileExists(pathMainApp) then
+    begin
+      sIniFile := TIniFile.Create(pathMainApp);
+      path := ExtractFilePath(Application.ExeName) + '\Images\background_170_'
+        +
+        sIniFile.ReadString('Theme', 'Color1', '') + '_' +
+        sIniFile.ReadString('Theme',
+        'Color2', '') + '.png';
+      CalcForm.Background.Picture.LoadFromFile(path);
+    end;
   end;
 end;
 

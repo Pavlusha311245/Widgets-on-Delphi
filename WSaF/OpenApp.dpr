@@ -44,16 +44,21 @@ end;
 procedure RefreshApp; stdcall;
 var
   path, pathMainApp: string;
+  empty: Boolean;
 begin
-  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
-  if FileExists(pathMainApp) then
+  isEmpy(AppForm, empty);
+  if empty = false then
   begin
-    sIniFile := TIniFile.Create(pathMainApp);
-    path := ExtractFilePath(Application.ExeName) + '\Images\background_120_' +
-      sIniFile.ReadString('Theme', 'Color1', '') + '_' +
-      sIniFile.ReadString('Theme',
-      'Color2', '') + '.png';
-    AppForm.AppBackground.Picture.LoadFromFile(path);
+    pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
+    if FileExists(pathMainApp) then
+    begin
+      sIniFile := TIniFile.Create(pathMainApp);
+      path := ExtractFilePath(Application.ExeName) + '\Images\background_120_' +
+        sIniFile.ReadString('Theme', 'Color1', '') + '_' +
+        sIniFile.ReadString('Theme',
+        'Color2', '') + '.png';
+      AppForm.AppBackground.Picture.LoadFromFile(path);
+    end;
   end;
 end;
 

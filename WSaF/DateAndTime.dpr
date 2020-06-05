@@ -33,16 +33,32 @@ end;
 procedure RefreshDateAndTime; stdcall;
 var
   path, pathmainApp: string;
+  empty: Boolean;
 begin
-  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
-  if FileExists(pathMainApp) then
+  isEmpy(DateAndTimeForm, empty);
+  if empty = false then
   begin
-    sIniFile := TIniFile.Create(pathMainApp);
-    path := ExtractFilePath(Application.ExeName) + '\Images\background_120_' +
-      sIniFile.ReadString('Theme', 'Color1', '') + '_' +
-      sIniFile.ReadString('Theme',
-      'Color2', '') + '.png';
-    DateAndTimeForm.DateAndTimeBackground.Picture.LoadFromFile(path);
+    pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
+    if FileExists(pathMainApp) then
+    begin
+      sIniFile := TIniFile.Create(pathMainApp);
+      path := ExtractFilePath(Application.ExeName) + '\Images\background_120_' +
+        sIniFile.ReadString('Theme', 'Color1', '') + '_' +
+        sIniFile.ReadString('Theme',
+        'Color2', '') + '.png';
+      if (sIniFile.ReadString('Theme', 'Color1', '') = 'white') or
+        (sIniFile.ReadString('Theme', 'Color2', '') = 'white') then
+      begin
+        DateAndTimeForm.Date.Font.Color := 0;
+        DateAndTimeForm.Time.Font.Color := 0;
+      end
+      else
+      begin
+        DateAndTimeForm.Date.Font.Color := 16777215;
+        DateAndTimeForm.Time.Font.Color := 16777215;
+      end;
+      DateAndTimeForm.DateAndTimeBackground.Picture.LoadFromFile(path);
+    end;
   end;
 end;
 
