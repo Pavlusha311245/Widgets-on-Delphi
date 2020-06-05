@@ -53,8 +53,6 @@ type
     editor: TsBitBtn;
     editorlbl: TLabel;
     editorStd: TOpenDialog;
-    Selcol1: TsColorSelect;
-    Selcol2: TsColorSelect;
     Selcolaccess: TsBitBtn;
     Selcolpanel: TsPanel;
     spgcntrl1: TsPageControl;
@@ -68,6 +66,7 @@ type
     verrez: TTntLabel;
     authorrez: TTntLabel;
     num_of_widgets: TsArcGauge;
+    themes: TsComboBox;
     procedure E1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure N3Click(Sender: TObject);
@@ -235,6 +234,11 @@ procedure CalculatorFormPos(x, y: integer); stdcall;
   external 'WSaF\Calculator.dll' name 'FormPos';
 ////////////////////////////////////////////////////////////////////////////////
 
+function RGB(r, g, b: Byte): COLORREF;
+begin
+  Result := r + g * 256 + b * 256 * 256;
+end;
+
 procedure TMainForm.E1Click(Sender: TObject);
 begin
   //Сохранение активного скина
@@ -310,14 +314,16 @@ begin
   begin
     sIniFile := TIniFile.Create(pathINI);
     skins.SkinName := siniFile.ReadString('Main', 'Skin', '');
-    Selcol1.ColorValue := siniFile.ReadInteger('Color', 'Color1', 0000000);
-    Selcol2.ColorValue := siniFile.ReadInteger('Color', 'Color2', 0000000);
-    gradient.PaintData.Color1.Color := siniFile.ReadInteger('Color',
-      'Color1', 0000000);
-    gradient.PaintData.Color2.Color := siniFile.ReadInteger('Color',
-      'Color2', 0000000);
-    selectWidget.Color := siniFile.ReadInteger('Color', 'Color1',
+    gradient.PaintData.Color1.Color := siniFile.ReadInteger('Theme',
+      'ColorGradient1', 0000000);
+    gradient.PaintData.Color2.Color := siniFile.ReadInteger('Theme',
+      'ColorGradient2', 0000000);
+    selectWidget.Color := siniFile.ReadInteger('Theme', 'ColorGradient1',
       0000000);
+    themes.ItemIndex := sinifile.ReadInteger('Theme', 'NumTheme', 0);
+    if (sinifile.ReadString('Theme', 'Color1', '') = 'black') or
+      (siniFile.readstring('Theme', 'Color2', '') = 'black') then
+      selectwidget.Font.Color := clwhite;
     activeautorun := siniFile.ReadBool('Main', 'Autorun', false);
     if activeautorun = True then
     begin
@@ -334,13 +340,14 @@ begin
   else
     showmessage('*.ini File not found!');
   skins.Active := True;
-  num_of_widgets.Progress:=0;
+  num_of_widgets.Progress := 0;
   if FileExists(pathINIDateAndTime) then
   begin
     sIniFile := TIniFile.Create(pathINIDateAndTime);
-    if sIniFile.ReadBool('State', 'Active', false) = True then begin
-    ShowDateAndTime;
-    num_of_widgets.Progress:=num_of_widgets.Progress+1;
+    if sIniFile.ReadBool('State', 'Active', false) = True then
+    begin
+      ShowDateAndTime;
+      num_of_widgets.Progress := num_of_widgets.Progress + 1;
     end;
     authorrez.Caption := siniFile.ReadString('Metadata', 'Author', '');
     verrez.Caption := siniFile.ReadString('Metadata', 'Version', '');
@@ -826,13 +833,141 @@ end;
 
 procedure TMainForm.SelcolaccessClick(Sender: TObject);
 begin
-  siniFile := TIniFile.Create(pathINI);
-  siniFile.WriteInteger('Color', 'Color1', Selcol1.ColorValue);
-  siniFile.WriteInteger('Color', 'Color2', Selcol2.ColorValue);
-  siniFile.Free;
-  gradient.PaintData.Color1.Color := Selcol1.ColorValue;
-  gradient.PaintData.Color2.Color := Selcol2.ColorValue;
-  selectWidget.Color := Selcol1.ColorValue;
+  case themes.ItemIndex of
+    0:
+      begin
+        siniFile := TIniFile.Create(pathINI);
+        siniFile.WriteInteger('Theme', 'NumTheme', 0);
+        siniFile.WriteString('Theme', 'Color1', 'pink');
+        siniFile.WriteString('Theme', 'Color2', 'purple');
+        siniFile.WriteInteger('Theme', 'ColorGradient1', RGB(255, 0, 255));
+        siniFile.WriteInteger('Theme', 'ColorGradient2', RGB(147, 39, 143));
+        siniFile.Free;
+        gradient.PaintData.Color1.Color := RGB(255, 0, 255);
+        gradient.PaintData.Color2.Color := RGB(147, 39, 143);
+        selectWidget.Color := RGB(255, 0, 255);
+        selectwidget.Font.Color := clblack;
+      end;
+    1:
+      begin
+        siniFile := TIniFile.Create(pathINI);
+        siniFile.WriteInteger('Theme', 'NumTheme', 1);
+        siniFile.WriteString('Theme', 'Color1', 'blue');
+        siniFile.WriteString('Theme', 'Color2', 'purple');
+        siniFile.WriteInteger('Theme', 'ColorGradient1', RGB(0, 255, 255));
+        siniFile.WriteInteger('Theme', 'ColorGradient2', RGB(147, 39, 143));
+        siniFile.Free;
+        gradient.PaintData.Color1.Color := RGB(0, 255, 255);
+        gradient.PaintData.Color2.Color := RGB(147, 39, 143);
+        selectWidget.Color := RGB(0, 255, 255);
+        selectwidget.Font.Color := clblack;
+      end;
+    2:
+      begin
+        siniFile := TIniFile.Create(pathINI);
+        siniFile.WriteInteger('Theme', 'NumTheme', 2);
+        siniFile.WriteString('Theme', 'Color1', 'blue');
+        siniFile.WriteString('Theme', 'Color2', 'white');
+        siniFile.WriteInteger('Theme', 'ColorGradient1', RGB(0, 255, 255));
+        siniFile.WriteInteger('Theme', 'ColorGradient2', RGB(255, 255, 255));
+        siniFile.Free;
+        gradient.PaintData.Color1.Color := RGB(0, 255, 255);
+        gradient.PaintData.Color2.Color := RGB(255, 255, 255);
+        selectWidget.Color := RGB(0, 255, 255);
+        selectwidget.Font.Color := clblack;
+      end;
+    3:
+      begin
+        siniFile := TIniFile.Create(pathINI);
+        siniFile.WriteInteger('Theme', 'NumTheme', 3);
+        siniFile.WriteString('Theme', 'Color1', 'black');
+        siniFile.WriteString('Theme', 'Color2', 'red');
+        siniFile.WriteInteger('Theme', 'ColorGradient1', RGB(0, 0, 0));
+        siniFile.WriteInteger('Theme', 'ColorGradient2', RGB(255, 0, 0));
+        siniFile.Free;
+        gradient.PaintData.Color1.Color := RGB(0, 0, 0);
+        gradient.PaintData.Color2.Color := RGB(255, 0, 0);
+        selectWidget.Color := RGB(0, 0, 0);
+        selectwidget.Font.Color := clwhite;
+      end;
+    4:
+      begin
+        siniFile := TIniFile.Create(pathINI);
+        siniFile.WriteInteger('Theme', 'NumTheme', 4);
+        siniFile.WriteString('Theme', 'Color1', 'black');
+        siniFile.WriteString('Theme', 'Color2', 'pink');
+        siniFile.WriteInteger('Theme', 'ColorGradient1', RGB(0, 0, 0));
+        siniFile.WriteInteger('Theme', 'ColorGradient2', RGB(212, 20, 90));
+        siniFile.Free;
+        gradient.PaintData.Color1.Color := RGB(0, 0, 0);
+        gradient.PaintData.Color2.Color := RGB(212, 20, 90);
+        selectWidget.Color := RGB(0, 0, 0);
+        selectwidget.Font.Color := clWhite;
+      end;
+    5:
+      begin
+        siniFile := TIniFile.Create(pathINI);
+        siniFile.WriteInteger('Theme', 'NumTheme', 5);
+        siniFile.WriteString('Theme', 'Color1', 'green');
+        siniFile.WriteString('Theme', 'Color2', 'yellow');
+        siniFile.WriteInteger('Theme', 'ColorGradient1', RGB(0, 255, 0));
+        siniFile.WriteInteger('Theme', 'ColorGradient2', RGB(255, 255, 0));
+        siniFile.Free;
+        gradient.PaintData.Color1.Color := RGB(0, 255, 0);
+        gradient.PaintData.Color2.Color := RGB(255, 255, 0);
+        selectWidget.Color := RGB(0, 255, 0);
+        selectwidget.Font.Color := clblack;
+      end;
+    6:
+      begin
+        siniFile := TIniFile.Create(pathINI);
+        siniFile.WriteInteger('Theme', 'NumTheme', 6);
+        siniFile.WriteString('Theme', 'Color1', 'red');
+        siniFile.WriteString('Theme', 'Color2', 'yellow');
+        siniFile.WriteInteger('Theme', 'ColorGradient1', RGB(255, 0, 0));
+        siniFile.WriteInteger('Theme', 'ColorGradient2', RGB(255, 255, 0));
+        siniFile.Free;
+        gradient.PaintData.Color1.Color := RGB(255, 0, 0);
+        gradient.PaintData.Color2.Color := RGB(255, 255, 0);
+        selectWidget.Color := RGB(255, 0, 0);
+        selectwidget.Font.Color := clblack;
+      end;
+    7:
+      begin
+        siniFile := TIniFile.Create(pathINI);
+        siniFile.WriteInteger('Theme', 'NumTheme', 7);
+        siniFile.WriteString('Theme', 'Color1', 'yellow');
+        siniFile.WriteString('Theme', 'Color2', 'pink');
+        siniFile.WriteInteger('Theme', 'ColorGradient1', RGB(255, 255, 0));
+        siniFile.WriteInteger('Theme', 'ColorGradient2', RGB(255, 0, 255));
+        siniFile.Free;
+        gradient.PaintData.Color1.Color := RGB(255, 255, 0);
+        gradient.PaintData.Color2.Color := RGB(255, 0, 255);
+        selectWidget.Color := RGB(255, 255, 0);
+        selectwidget.Font.Color := clblack;
+      end;
+    8:
+      begin
+        siniFile := TIniFile.Create(pathINI);
+        siniFile.WriteInteger('Theme', 'NumTheme', 8);
+        siniFile.WriteString('Theme', 'Color1', 'white');
+        siniFile.WriteString('Theme', 'Color2', 'red');
+        siniFile.WriteInteger('Theme', 'ColorGradient1', RGB(255, 255, 255));
+        siniFile.WriteInteger('Theme', 'ColorGradient2', RGB(255, 0, 0));
+        siniFile.Free;
+        gradient.PaintData.Color1.Color := RGB(255, 255, 255);
+        gradient.PaintData.Color2.Color := RGB(255, 0, 0);
+        selectWidget.Color := RGB(255, 255, 255);
+        selectwidget.Font.Color := clblack;
+      end;
+  end;
+  RefreshDateAndTime;
+  RefreshCpuUsage;
+  RefreshPhisicalMemory;
+  RefreshFolder;
+  RefreshApp;
+  RefreshCalendar;
+  RefreshCalc;
 end;
 
 procedure TMainForm.TimerTimer(Sender: TObject);

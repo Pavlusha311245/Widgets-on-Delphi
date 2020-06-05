@@ -81,10 +81,9 @@ var
   iconexe: TIcon;
   iconpath: string;
   i: TIcon;
+  path, pathMainApp: string;
 begin
   ShowWindow(Application.Handle, SW_HIDE);
-  AppBackground.Picture.LoadFromFile(extractfilepath(application.ExeName)
-    + '\Images\background_120.png');
   if FileExists(pathINI) then
   begin
     sIniFile := TIniFile.Create(pathINI);
@@ -99,6 +98,16 @@ begin
     AppForm.Left := sIniFile.ReadInteger('Position', 'Left', 0);
     i := nil;
     sIniFile.Free;
+  end;
+  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
+  if FileExists(pathMainApp) then
+  begin
+    sIniFile := TIniFile.Create(pathMainApp);
+    path := ExtractFilePath(Application.ExeName) + '\Images\background_120_' +
+      sIniFile.ReadString('Theme', 'Color1', '') + '_' +
+      sIniFile.ReadString('Theme',
+      'Color2', '') + '.png';
+    AppBackground.Picture.LoadFromFile(path);
   end;
 end;
 

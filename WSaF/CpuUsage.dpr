@@ -34,9 +34,19 @@ begin
 end;
 
 procedure RefreshCpuUsage; stdcall;
+var
+  pathMainApp, path: string;
 begin
-  CpuUsageForm.close;
-  cpuusageform.show;
+  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
+  if FileExists(pathMainApp) then
+  begin
+    sIniFile := TIniFile.Create(pathMainApp);
+    path := ExtractFilePath(Application.ExeName) + '\Images\background_120_' +
+      sIniFile.ReadString('Theme', 'Color1', '') + '_' +
+      sIniFile.ReadString('Theme',
+      'Color2', '') + '.png';
+    CpuUsageForm.CpuUsagebackground.Picture.LoadFromFile(path);
+  end;
 end;
 
 procedure CloseCpuUsage; stdcall;

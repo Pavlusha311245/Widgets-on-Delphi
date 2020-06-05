@@ -164,11 +164,21 @@ const
   ots = 3;
 var
   i: integer;
+  path, pathMainApp: string;
 begin
   pathINI := extractfilepath(application.ExeName) +
     '\WSaF\Settings\CalculatorSettings.ini';
-  Background.Picture.LoadFromFile(extractfilepath(application.ExeName)
-    + '\Images\background_170_calc.png');
+  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
+  if FileExists(pathMainApp) then
+  begin
+    sIniFile := TIniFile.Create(pathMainApp);
+    path := ExtractFilePath(Application.ExeName) + '\Images\background_170_' +
+      sIniFile.ReadString('Theme', 'Color1', '') + '_' +
+      sIniFile.ReadString('Theme',
+      'Color2', '') + '.png';
+    Background.Picture.LoadFromFile(path);
+  end;
+  ;
   edit := true;
   for i := 0 to self.ComponentCount - 1 do
     if self.Components[i] is TButton then
@@ -312,15 +322,15 @@ end;
 
 procedure TCalcForm.N5Click(Sender: TObject);
 begin
-if N5.Checked = True then
+  if N5.Checked = True then
   begin
     N5.Checked := False;
-      CalcForm.FormStyle := fsNormal;
+    CalcForm.FormStyle := fsNormal;
   end
   else
   begin
     n5.Checked := True;
-      CalcForm.FormStyle := fsStayOnTop;
+    CalcForm.FormStyle := fsStayOnTop;
   end;
 end;
 

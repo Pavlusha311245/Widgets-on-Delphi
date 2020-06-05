@@ -42,9 +42,19 @@ begin
 end;
 
 procedure RefreshCalendar; stdcall;
+var
+  path, pathMainApp: string;
 begin
-  CalendarForm.close;
-  calendarform.show;
+  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
+  if FileExists(pathMainApp) then
+  begin
+    sIniFile := TIniFile.Create(pathMainApp);
+    path := ExtractFilePath(Application.ExeName) + '\Images\background_180_' +
+      sIniFile.ReadString('Theme', 'Color1', '') + '_' +
+      sIniFile.ReadString('Theme',
+      'Color2', '') + '.png';
+    CalendarForm.Background.Picture.LoadFromFile(path);
+  end;
 end;
 
 procedure CloseCalendar; stdcall;

@@ -127,10 +127,20 @@ begin
 end;
 
 procedure TCalendarForm.FormShow(Sender: TObject);
+var
+  path, pathMainApp: string;
 begin
   ShowWindow(Application.Handle, SW_HIDE);
-  Background.Picture.LoadFromFile(extractfilepath(application.ExeName)
-    + '\Images\background_180.png');
+  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
+  if FileExists(pathMainApp) then
+  begin
+    sIniFile := TIniFile.Create(pathMainApp);
+    path := ExtractFilePath(Application.ExeName) + '\Images\background_180_' +
+      sIniFile.ReadString('Theme', 'Color1', '') + '_' +
+      sIniFile.ReadString('Theme',
+      'Color2', '') + '.png';
+    Background.Picture.LoadFromFile(path);
+  end;
   if FileExists(pathINI) then
   begin
     sIniFile := TIniFile.Create(pathINI);
@@ -154,12 +164,12 @@ begin
   if N5.Checked = True then
   begin
     N5.Checked := False;
-      CalendarForm.FormStyle := fsNormal;
+    CalendarForm.FormStyle := fsNormal;
   end
   else
   begin
     N5.Checked := True;
-      CalendarForm.FormStyle := fsStayOnTop;
+    CalendarForm.FormStyle := fsStayOnTop;
   end;
 end;
 

@@ -85,15 +85,25 @@ begin
 end;
 
 procedure TCpuUsageForm.FormShow(Sender: TObject);
+var
+  path, pathMainApp: string;
 begin
   ShowWindow(Application.Handle, SW_HIDE);
-  CpuUsagebackground.Picture.LoadFromFile(extractfilepath(application.ExeName)
-    + '\Images\background_120.png');
   if FileExists(pathINI) then
   begin
     sIniFile := TIniFile.Create(pathINI);
     CpuUsageForm.Top := sIniFile.ReadInteger('Position', 'Top', 0);
     CpuUsageForm.Left := sIniFile.ReadInteger('Position', 'Left', 0);
+  end;
+  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
+  if FileExists(pathMainApp) then
+  begin
+    sIniFile := TIniFile.Create(pathMainApp);
+    path := ExtractFilePath(Application.ExeName) + '\Images\background_120_' +
+      sIniFile.ReadString('Theme', 'Color1', '') + '_' +
+      sIniFile.ReadString('Theme',
+      'Color2', '') + '.png';
+    CpuUsagebackground.Picture.LoadFromFile(path);
   end;
 end;
 
@@ -157,15 +167,15 @@ end;
 
 procedure TCpuUsageForm.g1Click(Sender: TObject);
 begin
-if g1.Checked = True then
+  if g1.Checked = True then
   begin
     g1.Checked := False;
-      CpuUsageForm.FormStyle := fsNormal;
+    CpuUsageForm.FormStyle := fsNormal;
   end
   else
   begin
     g1.Checked := True;
-      CpuUsageForm.FormStyle := fsStayOnTop;
+    CpuUsageForm.FormStyle := fsStayOnTop;
   end;
 end;
 

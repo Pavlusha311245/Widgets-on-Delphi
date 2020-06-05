@@ -43,10 +43,19 @@ end;
 
 procedure RefreshPhisicalMemory; stdcall;
 var
-  letter_disk1: string;
-  letter_disk2: string;
+  path, pathMainApp: string;
 begin
   phisicalmemoryform.n4click(phisicalmemoryform);
+  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
+  if FileExists(pathMainApp) then
+  begin
+    sIniFile := TIniFile.Create(pathMainApp);
+    path := ExtractFilePath(Application.ExeName) + '\Images\background_240_' +
+      sIniFile.ReadString('Theme', 'Color1', '') + '_' +
+      sIniFile.ReadString('Theme',
+      'Color2', '') + '.png';
+    PhisicalMemoryForm.PhisicalMemoryBackground.Picture.LoadFromFile(path);
+  end;
 end;
 
 procedure ClosePhisicalMemory; stdcall;

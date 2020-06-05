@@ -42,9 +42,19 @@ begin
 end;
 
 procedure RefreshFolder; stdcall;
+var
+  path, pathMainApp: string;
 begin
-  folderform.close;
-  folderform.show;
+  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
+  if FileExists(pathMainApp) then
+  begin
+    sIniFile := TIniFile.Create(pathMainApp);
+    path := ExtractFilePath(Application.ExeName) + '\Images\background_120_' +
+      sIniFile.ReadString('Theme', 'Color1', '') + '_' +
+      sIniFile.ReadString('Theme',
+      'Color2', '') + '.png';
+    FolderForm.FolderBackground.Picture.LoadFromFile(path);
+  end;
 end;
 
 procedure CloseFolder; stdcall;

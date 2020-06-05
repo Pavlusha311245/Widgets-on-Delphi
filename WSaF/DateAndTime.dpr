@@ -32,11 +32,18 @@ end;
 
 procedure RefreshDateAndTime; stdcall;
 var
-  empty: boolean;
+  path, pathmainApp: string;
 begin
-  isEmpy(DateAndTimeForm, empty);
-  if empty = false then
-    DateAndTimeForm.Refresh;
+  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
+  if FileExists(pathMainApp) then
+  begin
+    sIniFile := TIniFile.Create(pathMainApp);
+    path := ExtractFilePath(Application.ExeName) + '\Images\background_120_' +
+      sIniFile.ReadString('Theme', 'Color1', '') + '_' +
+      sIniFile.ReadString('Theme',
+      'Color2', '') + '.png';
+    DateAndTimeForm.DateAndTimeBackground.Picture.LoadFromFile(path);
+  end;
 end;
 
 procedure CloseDateAndTime; stdcall;

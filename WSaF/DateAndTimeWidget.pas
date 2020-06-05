@@ -83,16 +83,26 @@ begin
 end;
 
 procedure TDateAndTimeForm.FormShow(Sender: TObject);
+var
+  path, pathMainApp: string;
 begin
   ShowWindow(Application.Handle, SW_HIDE);
-  DateAndTimeBackground.Picture.LoadFromFile(extractfilepath(application.ExeName)
-    + '\Images\background_120.png');
   Time.Caption := TimeToStr(now);
   if FileExists(pathINI) then
   begin
     sIniFile := TIniFile.Create(pathINI);
     DateAndTimeForm.Top := sIniFile.ReadInteger('Position', 'Top', 0);
     DateAndTimeForm.Left := sIniFile.ReadInteger('Position', 'Left', 0);
+  end;
+  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
+  if FileExists(pathMainApp) then
+  begin
+    sIniFile := TIniFile.Create(pathMainApp);
+    path := ExtractFilePath(Application.ExeName) + '\Images\background_120_' +
+      sIniFile.ReadString('Theme', 'Color1', '') + '_' +
+      sIniFile.ReadString('Theme',
+      'Color2', '') + '.png';
+    DateAndTimeBackground.Picture.LoadFromFile(path);
   end;
 end;
 
@@ -178,15 +188,15 @@ end;
 
 procedure TDateAndTimeForm.N4Click(Sender: TObject);
 begin
-if N4.Checked = True then
+  if N4.Checked = True then
   begin
     N4.Checked := False;
-      DateAndTimeForm.FormStyle := fsNormal;
+    DateAndTimeForm.FormStyle := fsNormal;
   end
   else
   begin
     n4.Checked := True;
-      DateAndTimeForm.FormStyle := fsStayOnTop;
+    DateAndTimeForm.FormStyle := fsStayOnTop;
   end;
 end;
 

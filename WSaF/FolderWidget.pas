@@ -55,16 +55,26 @@ begin
 end;
 
 procedure TFolderForm.FormShow(Sender: TObject);
+var
+  path, pathMainApp: string;
 begin
   ShowWindow(Application.Handle, SW_HIDE);
-  FolderBackground.Picture.LoadFromFile(extractfilepath(application.ExeName)
-    + '\Images\background_120.png');
   if FileExists(pathINI) then
   begin
     sIniFile := TIniFile.Create(pathINI);
     FolderForm.Top := sIniFile.ReadInteger('Position', 'Top', 0);
     FolderForm.Left := sIniFile.ReadInteger('Position', 'Left', 0);
     sIniFile.Free;
+  end;
+  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
+  if FileExists(pathMainApp) then
+  begin
+    sIniFile := TIniFile.Create(pathMainApp);
+    path := ExtractFilePath(Application.ExeName) + '\Images\background_120_' +
+      sIniFile.ReadString('Theme', 'Color1', '') + '_' +
+      sIniFile.ReadString('Theme',
+      'Color2', '') + '.png';
+    FolderBackground.Picture.LoadFromFile(path);
   end;
 end;
 
@@ -174,15 +184,15 @@ end;
 
 procedure TFolderForm.N6Click(Sender: TObject);
 begin
-if N6.Checked = True then
+  if N6.Checked = True then
   begin
     N6.Checked := False;
-      FolderForm.FormStyle := fsNormal;
+    FolderForm.FormStyle := fsNormal;
   end
   else
   begin
     n6.Checked := True;
-      FolderForm.FormStyle := fsStayOnTop;
+    FolderForm.FormStyle := fsStayOnTop;
   end;
 end;
 

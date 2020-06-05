@@ -82,9 +82,19 @@ procedure TPhisicalMemoryForm.FormShow(Sender: TObject);
 var
   letter_disk1: string;
   letter_disk2: string;
+  path, pathMainApp: string;
 begin
   ShowWindow(Application.Handle, SW_HIDE);
-  PhisicalMemoryBackground.Picture.LoadFromFile(extractfilepath(application.ExeName) + '\Images\background_240.png');
+  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
+  if FileExists(pathMainApp) then
+  begin
+    sIniFile := TIniFile.Create(pathMainApp);
+    path := ExtractFilePath(Application.ExeName) + '\Images\background_240_' +
+      sIniFile.ReadString('Theme', 'Color1', '') + '_' +
+      sIniFile.ReadString('Theme',
+      'Color2', '') + '.png';
+    PhisicalMemoryBackground.Picture.LoadFromFile(path);
+  end;
   if FileExists(pathINI) then
   begin
     sIniFile := TIniFile.Create(pathINI);

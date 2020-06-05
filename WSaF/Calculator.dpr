@@ -32,9 +32,19 @@ begin
 end;
 
 procedure RefreshCalc; stdcall;
+var
+  path, pathMainApp: string;
 begin
-  calcform.close;
-  calcform.show;
+  pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
+  if FileExists(pathMainApp) then
+  begin
+    sIniFile := TIniFile.Create(pathMainApp);
+    path := ExtractFilePath(Application.ExeName) + '\Images\background_170_' +
+      sIniFile.ReadString('Theme', 'Color1', '') + '_' +
+      sIniFile.ReadString('Theme',
+      'Color2', '') + '.png';
+    CalcForm.Background.Picture.LoadFromFile(path);
+  end;
 end;
 
 procedure CloseCalc; stdcall;
