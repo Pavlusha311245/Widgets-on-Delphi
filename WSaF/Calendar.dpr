@@ -77,8 +77,12 @@ begin
   isEmpy(CalendarForm, empty);
   if empty = false then
   begin
-    CalendarForm.Top := x;
-    CalendarForm.Left := y;
+    CalendarForm.Left := x;
+    CalendarForm.Top := y;
+    sIniFile := TIniFile.Create(pathINI);
+    sinifile.writeinteger('Position', 'Left', x);
+    sinifile.writeinteger('Position', 'Top', y);
+    sIniFile.Free;
   end;
 end;
 exports ShowCalendar, RefreshCalendar, CloseCalendar, FormPos;

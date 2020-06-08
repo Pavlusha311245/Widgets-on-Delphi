@@ -96,8 +96,12 @@ begin
   isEmpy(PhisicalMemoryForm, empty);
   if empty = false then
   begin
-    PhisicalMemoryForm.Top := x;
-    PhisicalMemoryForm.Left := y;
+    PhisicalMemoryForm.Left := x;
+    PhisicalMemoryForm.Top := y;
+    sIniFile := TIniFile.Create(pathINI);
+    sinifile.writeinteger('Position', 'Left', x);
+    sinifile.writeinteger('Position', 'Top', y);
+    sIniFile.Free;
   end;
 end;
 exports ShowPhisicalMemory, RefreshPhisicalMemory, ClosePhisicalMemory, FormPos;

@@ -31,8 +31,6 @@ type
     N1: TMenuItem;
     N2: TMenuItem;
     N3: TMenuItem;
-    spdwn1: TsUpDown;
-    spdwn2: TsUpDown;
     N4: TMenuItem;
     N5: TMenuItem;
     N6: TMenuItem;
@@ -67,6 +65,9 @@ type
     authorrez: TTntLabel;
     num_of_widgets: TsArcGauge;
     themes: TsComboBox;
+    Pos: TTimer;
+    PositionPanel: TsPanel;
+    ChangePos: TsBitBtn;
     procedure E1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure N3Click(Sender: TObject);
@@ -109,6 +110,8 @@ type
     procedure EditWidgetClick(Sender: TObject);
     procedure OpenWidgetSetting(path: string);
     procedure gradientClick(Sender: TObject);
+    procedure PosTimer(Sender: TObject);
+    procedure ChangePosClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -1112,6 +1115,112 @@ procedure TMainForm.gradientClick(Sender: TObject);
 begin
   settingPanel.Visible := false;
   ShowSetting.Caption := 'Показать';
+end;
+
+procedure TMainForm.PosTimer(Sender: TObject);
+begin
+  if (edt1.Focused = false) or (edt3.Focused = false) then
+  begin
+    if MainForm.Visible = true then
+    begin
+      case selectWidget.Selected.AbsoluteIndex of
+        0:
+          begin
+            if FileExists(pathINIDateAndTime) then
+            begin
+              siniFile := TIniFile.Create(pathINIDateAndTime);
+              edt1.Text := IntToStr(siniFile.ReadInteger('Position', 'Left',
+                0));
+              edt3.Text := IntToStr(siniFile.ReadInteger('Position', 'Top',
+                0));
+            end;
+          end;
+        1:
+          begin
+            if FileExists(pathINICPUUsage) then
+            begin
+              siniFile := TIniFile.Create(pathINICPUUsage);
+              edt1.Text := IntToStr(siniFile.ReadInteger('Position', 'Left',
+                0));
+              edt3.Text := IntToStr(siniFile.ReadInteger('Position', 'Top',
+                0));
+            end;
+          end;
+        2:
+          begin
+            if FileExists(pathINIPhiscalMemory) then
+            begin
+              siniFile := TIniFile.Create(pathINIPhiscalMemory);
+              edt1.Text := IntToStr(siniFile.ReadInteger('Position', 'Left',
+                0));
+              edt3.Text := IntToStr(siniFile.ReadInteger('Position', 'Top',
+                0));
+            end;
+          end;
+        3:
+          begin
+            if FileExists(pathINIOpenFolder) then
+            begin
+              siniFile := TIniFile.Create(pathINIOpenFolder);
+              edt1.Text := IntToStr(siniFile.ReadInteger('Position', 'Left',
+                0));
+              edt3.Text := IntToStr(siniFile.ReadInteger('Position', 'Top',
+                0));
+            end;
+          end;
+        4:
+          begin
+            if FileExists(pathINIOpenApp) then
+            begin
+              siniFile := TIniFile.Create(pathINIOpenApp);
+              edt1.Text := IntToStr(siniFile.ReadInteger('Position', 'Left',
+                0));
+              edt3.Text := IntToStr(siniFile.ReadInteger('Position', 'Top',
+                0));
+            end;
+          end;
+        5:
+          begin
+            if FileExists(pathINICalendar) then
+            begin
+              siniFile := TIniFile.Create(pathINICalendar);
+              edt1.Text := IntToStr(siniFile.ReadInteger('Position', 'Left',
+                0));
+              edt3.Text := IntToStr(siniFile.ReadInteger('Position', 'Top',
+                0));
+            end;
+          end;
+        6:
+          begin
+            if FileExists(pathINICalc) then
+            begin
+              siniFile := TIniFile.Create(pathINICalc);
+              edt1.Text := IntToStr(siniFile.ReadInteger('Position', 'Left',
+                0));
+              edt3.Text := IntToStr(siniFile.ReadInteger('Position', 'Top',
+                0));
+            end;
+          end;
+      end;
+    end;
+  end;
+end;
+
+procedure TMainForm.ChangePosClick(Sender: TObject);
+begin
+  if pos.Enabled = true then
+  begin
+    ChangePos.Caption:='Применить изменения';
+    pos.Enabled:=False;
+    edt1.ReadOnly:=false;
+    edt3.ReadOnly:=false;
+  end
+  else begin
+    ChangePos.Caption:='Изменить координаты';
+    Pos.Enabled:=true;
+    edt1.ReadOnly:=true;
+    edt3.ReadOnly:=true;
+  end;
 end;
 
 end.

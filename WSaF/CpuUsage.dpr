@@ -80,8 +80,12 @@ begin
   isEmpy(CpuUsageForm, empty);
   if empty = false then
   begin
-    CpuUsageForm.Top := x;
-    CpuUsageForm.Left := y;
+    CpuUsageForm.Left := x;
+    CpuUsageForm.Top := y;
+    sIniFile := TIniFile.Create(pathINI);
+    sinifile.writeinteger('Position', 'Left', x);
+    sinifile.writeinteger('Position', 'Top', y);
+    sIniFile.Free;
   end;
 end;
 exports ShowCpuUsage, RefreshCpuUsage, CloseCpuUsage, FormPos;

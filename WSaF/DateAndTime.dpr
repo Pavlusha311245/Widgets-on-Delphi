@@ -77,8 +77,12 @@ begin
   isEmpy(DateAndTimeForm, empty);
   if empty = false then
   begin
-    DateAndTimeForm.Top := x;
-    DateAndTimeForm.Left := y;
+    DateAndTimeForm.Left := x;
+    DateAndTimeForm.Top := y;
+    sIniFile := TIniFile.Create(pathINI);
+    sinifile.writeinteger('Position', 'Left', x);
+    sinifile.writeinteger('Position', 'Top', y);
+    sIniFile.Free;
   end;
 end;
 exports ShowDateAndTime, RefreshDateAndTime, CloseDateAndTime, FormPos;

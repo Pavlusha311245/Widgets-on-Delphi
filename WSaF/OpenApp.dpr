@@ -77,8 +77,12 @@ begin
   isEmpy(AppForm, empty);
   if empty = false then
   begin
-    AppForm.Top := x;
-    AppForm.Left := y;
+    AppForm.Left := x;
+    AppForm.Top := y;
+    sIniFile := TIniFile.Create(pathINI);
+    sinifile.writeinteger('Position', 'Left', x);
+    sinifile.writeinteger('Position', 'Top', y);
+    sIniFile.Free;
   end;
 end;
 exports ShowApp, RefreshApp, CloseApp, FormPos;

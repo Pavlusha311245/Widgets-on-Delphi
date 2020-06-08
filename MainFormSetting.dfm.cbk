@@ -2257,6 +2257,7 @@ object MainForm: TMainForm
         Top = 10
         Width = 160
         Height = 80
+        SkinData.SkinSection = 'BUTTON'
         DoubleBuffered = False
         TabOrder = 3
         object Selcolaccess: TsBitBtn
@@ -2306,6 +2307,7 @@ object MainForm: TMainForm
         Top = 10
         Width = 170
         Height = 80
+        SkinData.SkinSection = 'BUTTON'
         DoubleBuffered = False
         TabOrder = 4
         object lbl1: TsLabel

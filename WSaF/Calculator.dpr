@@ -68,8 +68,12 @@ begin
   isEmpy(CalcForm, empty);
   if empty = false then
   begin
-    CalcForm.Top := x;
-    CalcForm.Left := y;
+    CalcForm.Left := x;
+    CalcForm.Top := y;
+    sIniFile := TIniFile.Create(pathINI);
+    sinifile.writeinteger('Position', 'Left', x);
+    sinifile.writeinteger('Position', 'Top', y);
+    sIniFile.Free;
   end;
 end;
 exports ShowCalc, RefreshCalc, CloseCalc, FormPos;

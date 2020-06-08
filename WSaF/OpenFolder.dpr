@@ -77,8 +77,12 @@ begin
   isEmpy(FolderForm, empty);
   if empty = false then
   begin
-    FolderForm.Top := x;
-    FolderForm.Left := y;
+    FolderForm.Left := x;
+    FolderForm.Top := y;
+    sIniFile := TIniFile.Create(pathINI);
+    sinifile.writeinteger('Position', 'Left', x);
+    sinifile.writeinteger('Position', 'Top', y);
+    sIniFile.Free;
   end;
 end;
 exports ShowFolder, RefreshFolder, CloseFolder, FormPos;
