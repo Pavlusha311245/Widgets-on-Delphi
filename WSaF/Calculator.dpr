@@ -61,19 +61,30 @@ begin
   sIniFile.Free;
 end;
 
-procedure FormPos(x, y: integer); stdcall;
+procedure FormPos(x, y: integer; center: boolean); stdcall;
 var
   empty: Boolean;
 begin
   isEmpy(CalcForm, empty);
   if empty = false then
   begin
-    CalcForm.Left := x;
-    CalcForm.Top := y;
-    sIniFile := TIniFile.Create(pathINI);
-    sinifile.writeinteger('Position', 'Left', x);
-    sinifile.writeinteger('Position', 'Top', y);
-    sIniFile.Free;
+    if center = true then
+    begin
+      CalcForm.position := poDesktopCenter;
+      sIniFile := TIniFile.Create(pathINI);
+      sinifile.writeinteger('Position', 'Left', x);
+      sinifile.writeinteger('Position', 'Top', y);
+      sIniFile.Free;
+    end
+    else
+    begin
+      CalcForm.Left := x;
+      CalcForm.Top := y;
+      sIniFile := TIniFile.Create(pathINI);
+      sinifile.writeinteger('Position', 'Left', x);
+      sinifile.writeinteger('Position', 'Top', y);
+      sIniFile.Free;
+    end;
   end;
 end;
 exports ShowCalc, RefreshCalc, CloseCalc, FormPos;

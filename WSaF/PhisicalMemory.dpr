@@ -89,19 +89,30 @@ begin
   end;
 end;
 
-procedure FormPos(x, y: integer); stdcall;
+procedure FormPos(x, y: integer; center: boolean); stdcall;
 var
   empty: Boolean;
 begin
   isEmpy(PhisicalMemoryForm, empty);
   if empty = false then
   begin
-    PhisicalMemoryForm.Left := x;
-    PhisicalMemoryForm.Top := y;
-    sIniFile := TIniFile.Create(pathINI);
-    sinifile.writeinteger('Position', 'Left', x);
-    sinifile.writeinteger('Position', 'Top', y);
-    sIniFile.Free;
+    if center = true then
+    begin
+      PhisicalMemoryForm.position := poDesktopCenter;
+      sIniFile := TIniFile.Create(pathINI);
+      sinifile.writeinteger('Position', 'Left', x);
+      sinifile.writeinteger('Position', 'Top', y);
+      sIniFile.Free;
+    end
+    else
+    begin
+      PhisicalMemoryForm.Left := x;
+      PhisicalMemoryForm.Top := y;
+      sIniFile := TIniFile.Create(pathINI);
+      sinifile.writeinteger('Position', 'Left', x);
+      sinifile.writeinteger('Position', 'Top', y);
+      sIniFile.Free;
+    end;
   end;
 end;
 exports ShowPhisicalMemory, RefreshPhisicalMemory, ClosePhisicalMemory, FormPos;

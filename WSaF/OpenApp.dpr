@@ -70,19 +70,30 @@ begin
   sIniFile.Free;
 end;
 
-procedure FormPos(x, y: integer); stdcall;
+procedure FormPos(x, y: integer; center: boolean); stdcall;
 var
   empty: Boolean;
 begin
   isEmpy(AppForm, empty);
   if empty = false then
   begin
-    AppForm.Left := x;
-    AppForm.Top := y;
-    sIniFile := TIniFile.Create(pathINI);
-    sinifile.writeinteger('Position', 'Left', x);
-    sinifile.writeinteger('Position', 'Top', y);
-    sIniFile.Free;
+    if center = true then
+    begin
+      AppForm.position := poDesktopCenter;
+      sIniFile := TIniFile.Create(pathINI);
+      sinifile.writeinteger('Position', 'Left', x);
+      sinifile.writeinteger('Position', 'Top', y);
+      sIniFile.Free;
+    end
+    else
+    begin
+      AppForm.Left := x;
+      AppForm.Top := y;
+      sIniFile := TIniFile.Create(pathINI);
+      sinifile.writeinteger('Position', 'Left', x);
+      sinifile.writeinteger('Position', 'Top', y);
+      sIniFile.Free;
+    end;
   end;
 end;
 exports ShowApp, RefreshApp, CloseApp, FormPos;

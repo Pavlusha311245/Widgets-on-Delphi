@@ -70,19 +70,30 @@ begin
   sIniFile.Free;
 end;
 
-procedure FormPos(x, y: integer); stdcall;
+procedure FormPos(x, y: integer; center: boolean); stdcall;
 var
   empty: Boolean;
 begin
   isEmpy(FolderForm, empty);
   if empty = false then
   begin
-    FolderForm.Left := x;
-    FolderForm.Top := y;
-    sIniFile := TIniFile.Create(pathINI);
-    sinifile.writeinteger('Position', 'Left', x);
-    sinifile.writeinteger('Position', 'Top', y);
-    sIniFile.Free;
+    if center = true then
+    begin
+      FolderForm.position := poDesktopCenter;
+      sIniFile := TIniFile.Create(pathINI);
+      sinifile.writeinteger('Position', 'Left', x);
+      sinifile.writeinteger('Position', 'Top', y);
+      sIniFile.Free;
+    end
+    else
+    begin
+      FolderForm.Left := x;
+      FolderForm.Top := y;
+      sIniFile := TIniFile.Create(pathINI);
+      sinifile.writeinteger('Position', 'Left', x);
+      sinifile.writeinteger('Position', 'Top', y);
+      sIniFile.Free;
+    end;
   end;
 end;
 exports ShowFolder, RefreshFolder, CloseFolder, FormPos;

@@ -10,7 +10,7 @@ DCC = $(ROOT)\bin\dcc32.exe $**
 BRCC = $(ROOT)\bin\brcc32.exe $**
 #------------------------------------------------------------------------------
 PROJECTS = Widgets.exe Calendar.dll PhisicalMemory.dll OpenFolder.dll \
-  OpenApp.dll DateAndTime.dll Calculator.dll CpuUsage.dll
+  OpenApp.dll DateAndTime.dll Calculator.dll CpuUsage.dll PaFWW.dll
 #------------------------------------------------------------------------------
 default: $(PROJECTS)
 #------------------------------------------------------------------------------
@@ -37,6 +37,9 @@ Calculator.dll: WSaF\Calculator.dpr
   $(DCC)
 
 CpuUsage.dll: WSaF\CpuUsage.dpr
+  $(DCC)
+
+PaFWW.dll: WSaF\PaFWW.dpr
   $(DCC)
 
 

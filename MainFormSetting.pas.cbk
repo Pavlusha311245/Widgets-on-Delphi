@@ -1044,8 +1044,11 @@ begin
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
+var
+  WinClass: array[0..255] of Char;
 begin
   UpdateWidget.Enabled := true;
+  getclassname(mainform.Handle, Winclass, SizeOf(Winclass));
 end;
 
 procedure TMainForm.FormHide(Sender: TObject);

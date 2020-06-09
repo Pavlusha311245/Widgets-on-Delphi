@@ -70,19 +70,30 @@ begin
   sIniFile.Free;
 end;
 
-procedure FormPos(x, y: integer); stdcall;
+procedure FormPos(x, y: integer; center: Boolean); stdcall;
 var
   empty: Boolean;
 begin
   isEmpy(CalendarForm, empty);
   if empty = false then
   begin
-    CalendarForm.Left := x;
-    CalendarForm.Top := y;
-    sIniFile := TIniFile.Create(pathINI);
-    sinifile.writeinteger('Position', 'Left', x);
-    sinifile.writeinteger('Position', 'Top', y);
-    sIniFile.Free;
+    if center = true then
+    begin
+      CalendarForm.position := poDesktopCenter;
+      sIniFile := TIniFile.Create(pathINI);
+      sinifile.writeinteger('Position', 'Left', x);
+      sinifile.writeinteger('Position', 'Top', y);
+      sIniFile.Free;
+    end
+    else
+    begin
+      CalendarForm.Left := x;
+      CalendarForm.Top := y;
+      sIniFile := TIniFile.Create(pathINI);
+      sinifile.writeinteger('Position', 'Left', x);
+      sinifile.writeinteger('Position', 'Top', y);
+      sIniFile.Free;
+    end;
   end;
 end;
 exports ShowCalendar, RefreshCalendar, CloseCalendar, FormPos;

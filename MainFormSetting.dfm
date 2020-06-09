@@ -2146,6 +2146,12 @@ object MainForm: TMainForm
     PaintData.IsVertical = False
     PaintData.Color2.Color = clAqua
     PaintData.Color2.UseSkinColor = False
+    object PreviewWidgets: TImage
+      Left = 216
+      Top = 152
+      Width = 570
+      Height = 200
+    end
     object selectWidget: TsTreeView
       Left = 1
       Top = 1
@@ -2223,9 +2229,10 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         ShowFocus = False
         ItemHeight = 13
-        ItemIndex = -1
+        ItemIndex = 0
         TabOrder = 0
-        Text = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100#1089#1082#1086#1077
+        Text = #1057#1074#1077#1088#1093#1091' '#1089#1083#1077#1074#1072
+        OnChange = cbb1Change
         Items.Strings = (
           #1057#1074#1077#1088#1093#1091' '#1089#1083#1077#1074#1072
           #1057#1074#1077#1088#1093#1091' '#1089#1087#1088#1072#1074#1072
@@ -2257,6 +2264,7 @@ object MainForm: TMainForm
         Top = 10
         Width = 160
         Height = 80
+        SkinData.SkinSection = 'BUTTON'
         DoubleBuffered = False
         TabOrder = 3
         object Selcolaccess: TsBitBtn
@@ -2306,12 +2314,13 @@ object MainForm: TMainForm
         Top = 10
         Width = 170
         Height = 80
+        SkinData.SkinSection = 'BUTTON'
         DoubleBuffered = False
         TabOrder = 4
         object lbl1: TsLabel
           Left = 35
           Top = 2
-          Width = 100
+          Width = 91
           Height = 19
           Alignment = taCenter
           Caption = #1050#1086#1086#1088#1076#1080#1085#1072#1090#1099

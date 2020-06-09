@@ -73,19 +73,30 @@ begin
   sIniFile.Free;
 end;
 
-procedure FormPos(x, y: integer); stdcall;
+procedure FormPos(x, y: integer; center: boolean); stdcall;
 var
   empty: Boolean;
 begin
   isEmpy(CpuUsageForm, empty);
   if empty = false then
   begin
-    CpuUsageForm.Left := x;
-    CpuUsageForm.Top := y;
-    sIniFile := TIniFile.Create(pathINI);
-    sinifile.writeinteger('Position', 'Left', x);
-    sinifile.writeinteger('Position', 'Top', y);
-    sIniFile.Free;
+    if center = true then
+    begin
+      CpuUsageForm.position := poDesktopCenter;
+      sIniFile := TIniFile.Create(pathINI);
+      sinifile.writeinteger('Position', 'Left', x);
+      sinifile.writeinteger('Position', 'Top', y);
+      sIniFile.Free;
+    end
+    else
+    begin
+      CpuUsageForm.Left := x;
+      CpuUsageForm.Top := y;
+      sIniFile := TIniFile.Create(pathINI);
+      sinifile.writeinteger('Position', 'Left', x);
+      sinifile.writeinteger('Position', 'Top', y);
+      sIniFile.Free;
+    end;
   end;
 end;
 exports ShowCpuUsage, RefreshCpuUsage, CloseCpuUsage, FormPos;

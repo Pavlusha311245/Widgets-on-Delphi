@@ -14,7 +14,7 @@ begin
   if Obj <> nil then
     empty := false
   else
-    empty := True;
+    empty := True; 
 end;
 
 procedure ShowDateAndTime; stdcall;
@@ -70,19 +70,30 @@ begin
   sIniFile.Free;
 end;
 
-procedure FormPos(x, y: integer); stdcall;
+procedure FormPos(x, y: integer; center: Boolean); stdcall;
 var
   empty: Boolean;
 begin
   isEmpy(DateAndTimeForm, empty);
   if empty = false then
   begin
-    DateAndTimeForm.Left := x;
-    DateAndTimeForm.Top := y;
-    sIniFile := TIniFile.Create(pathINI);
-    sinifile.writeinteger('Position', 'Left', x);
-    sinifile.writeinteger('Position', 'Top', y);
-    sIniFile.Free;
+    if center = true then
+    begin
+      dateandtimeform.position := poDesktopCenter;
+      sIniFile := TIniFile.Create(pathINI);
+      sinifile.writeinteger('Position', 'Left', x);
+      sinifile.writeinteger('Position', 'Top', y);
+      sIniFile.Free;
+    end
+    else
+    begin
+      DateAndTimeForm.Left := x;
+      DateAndTimeForm.Top := y;
+      sIniFile := TIniFile.Create(pathINI);
+      sinifile.writeinteger('Position', 'Left', x);
+      sinifile.writeinteger('Position', 'Top', y);
+      sIniFile.Free;
+    end;
   end;
 end;
 exports ShowDateAndTime, RefreshDateAndTime, CloseDateAndTime, FormPos;

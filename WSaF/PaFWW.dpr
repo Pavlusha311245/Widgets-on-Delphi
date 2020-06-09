@@ -27,7 +27,12 @@ uses
   adCpuUsage in 'WSaF\adCpuUsage.pas';
 
 {$R *.res}
-
+procedure ShowForm(Form:string);
+var
+  WinClass: array[0..255] of Char;
+begin
+  
+end;
 begin
 end.
 
