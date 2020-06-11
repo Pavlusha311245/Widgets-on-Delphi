@@ -2198,19 +2198,6 @@ object MainForm: TMainForm
       SideShadow.Blend = 255
       TabOrder = 1
       Visible = False
-      object lbl3: TsLabel
-        Left = 136
-        Top = 8
-        Width = 62
-        Height = 19
-        Caption = #1055#1086#1079#1080#1094#1080#1103
-        ParentFont = False
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -16
-        Font.Name = 'Tahoma'
-        Font.Style = []
-      end
       object editorlbl: TLabel
         Left = 480
         Top = 48
@@ -2221,33 +2208,13 @@ object MainForm: TMainForm
         Layout = tlCenter
         WordWrap = True
       end
-      object cbb1: TsComboBox
-        Left = 112
-        Top = 40
-        Width = 113
-        Height = 21
-        Cursor = crHandPoint
-        ShowFocus = False
-        ItemHeight = 13
-        ItemIndex = 0
-        TabOrder = 0
-        Text = #1057#1074#1077#1088#1093#1091' '#1089#1083#1077#1074#1072
-        OnChange = cbb1Change
-        Items.Strings = (
-          #1057#1074#1077#1088#1093#1091' '#1089#1083#1077#1074#1072
-          #1057#1074#1077#1088#1093#1091' '#1089#1087#1088#1072#1074#1072
-          #1057#1085#1080#1079#1091' '#1089#1083#1077#1074#1072
-          #1057#1085#1080#1079#1091' '#1089#1087#1088#1072#1074#1072
-          #1055#1086#1089#1077#1088#1077#1076#1080#1085#1077
-          #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100#1089#1082#1086#1077)
-      end
       object autorun: TCheckBox
         Left = 448
         Top = 16
         Width = 97
         Height = 17
         Caption = #1040#1074#1090#1086#1079#1072#1087#1091#1089#1082
-        TabOrder = 1
+        TabOrder = 0
         OnClick = autorunClick
       end
       object editor: TsBitBtn
@@ -2256,7 +2223,7 @@ object MainForm: TMainForm
         Width = 32
         Height = 32
         Cursor = crHandPoint
-        TabOrder = 2
+        TabOrder = 1
         OnClick = editorClick
       end
       object Selcolpanel: TsPanel
@@ -2266,7 +2233,7 @@ object MainForm: TMainForm
         Height = 80
         SkinData.SkinSection = 'BUTTON'
         DoubleBuffered = False
-        TabOrder = 3
+        TabOrder = 2
         object Selcolaccess: TsBitBtn
           Left = 15
           Top = 55
@@ -2316,7 +2283,7 @@ object MainForm: TMainForm
         Height = 80
         SkinData.SkinSection = 'BUTTON'
         DoubleBuffered = False
-        TabOrder = 4
+        TabOrder = 3
         object lbl1: TsLabel
           Left = 35
           Top = 2
@@ -2362,6 +2329,49 @@ object MainForm: TMainForm
           Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1086#1086#1088#1076#1080#1085#1072#1090#1099
           TabOrder = 2
           OnClick = ChangePosClick
+        end
+      end
+      object FixPosiitionPanel: TsPanel
+        Left = 48
+        Top = 8
+        Width = 150
+        Height = 57
+        SkinData.SkinSection = 'BUTTON'
+        DoubleBuffered = False
+        TabOrder = 4
+        object lbl3: TsLabel
+          Left = 42
+          Top = 2
+          Width = 62
+          Height = 19
+          Alignment = taCenter
+          Caption = #1055#1086#1079#1080#1094#1080#1103
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+        end
+        object cbb1: TsComboBox
+          Left = 21
+          Top = 32
+          Width = 115
+          Height = 21
+          Cursor = crHandPoint
+          ShowFocus = False
+          Enabled = False
+          ItemHeight = 13
+          ItemIndex = -1
+          TabOrder = 0
+          OnChange = cbb1Change
+          Items.Strings = (
+            #1057#1074#1077#1088#1093#1091' '#1089#1083#1077#1074#1072
+            #1057#1074#1077#1088#1093#1091' '#1089#1087#1088#1072#1074#1072
+            #1057#1085#1080#1079#1091' '#1089#1083#1077#1074#1072
+            #1057#1085#1080#1079#1091' '#1089#1087#1088#1072#1074#1072
+            #1055#1086#1089#1077#1088#1077#1076#1080#1085#1077
+            #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100#1089#1082#1086#1077)
         end
       end
     end

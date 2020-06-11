@@ -29,7 +29,7 @@ uses
 {$R *.res}
 procedure ShowForm(Form:string);
 var
-  WinClass: array[0..255] of Char;
+  WinClass: array[0..1024] of Char;
 begin
   
 end;

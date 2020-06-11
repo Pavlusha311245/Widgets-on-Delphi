@@ -69,6 +69,7 @@ type
     PositionPanel: TsPanel;
     ChangePos: TsBitBtn;
     PreviewWidgets: TImage;
+    FixPosiitionPanel: TsPanel;
     procedure E1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure N3Click(Sender: TObject);
@@ -116,6 +117,10 @@ type
     procedure cbb1Change(Sender: TObject);
     procedure ChangeLocation(num: integer; path: string);
     procedure ChangePosFun;
+    procedure ChangeTheme(numWidget: integer; color1, color2: string; R1, G1,
+      B1: Integer; r2, g2, b2: integer; fontcolor: TColor);
+    procedure LoadPosition(path: string);
+
   private
     { Private declarations }
   public
@@ -793,7 +798,17 @@ begin
     verrez.Caption := siniFile.ReadString('metadata', 'version',
       'unknown');
     inforez.Caption := siniFile.ReadString('metadata', 'Info', 'unknown');
-    sIniFile.Free;
+    if siniFile.ReadBool('State', 'Active', False) = true then
+    begin
+      cbb1.Enabled := true;
+      cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
+    end
+    else
+    begin
+      cbb1.ItemIndex := -1;
+      cbb1.Enabled := false;
+    end;
+
   end
   else
     showmessage('File not found!');
@@ -801,8 +816,6 @@ end;
 
 procedure TMainForm.selectWidgetClick(Sender: TObject);
 begin
-  settingPanel.Visible := false;
-  ShowSetting.Caption := 'Показать';
   case selectWidget.Selected.AbsoluteIndex of
     0: LoadingMetadata(pathINIDateAndTime);
     1: LoadingMetadata(pathINICPUUsage);
@@ -858,136 +871,24 @@ begin
     end;
 end;
 
-procedure TMainForm.SelcolaccessClick(Sender: TObject);
+procedure TMainForm.ChangeTheme(numWidget: integer; color1, color2: string; R1,
+  G1, B1: Integer; r2, g2, b2: integer; fontcolor: TColor);
 begin
-  case themes.ItemIndex of
-    0:
-      begin
-        siniFile := TIniFile.Create(pathINI);
-        siniFile.WriteInteger('Theme', 'NumTheme', 0);
-        siniFile.WriteString('Theme', 'Color1', 'pink');
-        siniFile.WriteString('Theme', 'Color2', 'purple');
-        siniFile.WriteInteger('Theme', 'ColorGradient1', RGB(255, 0, 255));
-        siniFile.WriteInteger('Theme', 'ColorGradient2', RGB(147, 39, 143));
-        siniFile.Free;
-        gradient.PaintData.Color1.Color := RGB(255, 0, 255);
-        gradient.PaintData.Color2.Color := RGB(147, 39, 143);
-        selectWidget.Color := RGB(255, 0, 255);
-        selectwidget.Font.Color := clblack;
-      end;
-    1:
-      begin
-        siniFile := TIniFile.Create(pathINI);
-        siniFile.WriteInteger('Theme', 'NumTheme', 1);
-        siniFile.WriteString('Theme', 'Color1', 'blue');
-        siniFile.WriteString('Theme', 'Color2', 'purple');
-        siniFile.WriteInteger('Theme', 'ColorGradient1', RGB(0, 255, 255));
-        siniFile.WriteInteger('Theme', 'ColorGradient2', RGB(147, 39, 143));
-        siniFile.Free;
-        gradient.PaintData.Color1.Color := RGB(0, 255, 255);
-        gradient.PaintData.Color2.Color := RGB(147, 39, 143);
-        selectWidget.Color := RGB(0, 255, 255);
-        selectwidget.Font.Color := clblack;
-      end;
-    2:
-      begin
-        siniFile := TIniFile.Create(pathINI);
-        siniFile.WriteInteger('Theme', 'NumTheme', 2);
-        siniFile.WriteString('Theme', 'Color1', 'blue');
-        siniFile.WriteString('Theme', 'Color2', 'white');
-        siniFile.WriteInteger('Theme', 'ColorGradient1', RGB(0, 255, 255));
-        siniFile.WriteInteger('Theme', 'ColorGradient2', RGB(255, 255, 255));
-        siniFile.Free;
-        gradient.PaintData.Color1.Color := RGB(0, 255, 255);
-        gradient.PaintData.Color2.Color := RGB(255, 255, 255);
-        selectWidget.Color := RGB(0, 255, 255);
-        selectwidget.Font.Color := clblack;
-      end;
-    3:
-      begin
-        siniFile := TIniFile.Create(pathINI);
-        siniFile.WriteInteger('Theme', 'NumTheme', 3);
-        siniFile.WriteString('Theme', 'Color1', 'black');
-        siniFile.WriteString('Theme', 'Color2', 'red');
-        siniFile.WriteInteger('Theme', 'ColorGradient1', RGB(0, 0, 0));
-        siniFile.WriteInteger('Theme', 'ColorGradient2', RGB(255, 0, 0));
-        siniFile.Free;
-        gradient.PaintData.Color1.Color := RGB(0, 0, 0);
-        gradient.PaintData.Color2.Color := RGB(255, 0, 0);
-        selectWidget.Color := RGB(0, 0, 0);
-        selectwidget.Font.Color := clwhite;
-      end;
-    4:
-      begin
-        siniFile := TIniFile.Create(pathINI);
-        siniFile.WriteInteger('Theme', 'NumTheme', 4);
-        siniFile.WriteString('Theme', 'Color1', 'black');
-        siniFile.WriteString('Theme', 'Color2', 'pink');
-        siniFile.WriteInteger('Theme', 'ColorGradient1', RGB(0, 0, 0));
-        siniFile.WriteInteger('Theme', 'ColorGradient2', RGB(212, 20, 90));
-        siniFile.Free;
-        gradient.PaintData.Color1.Color := RGB(0, 0, 0);
-        gradient.PaintData.Color2.Color := RGB(212, 20, 90);
-        selectWidget.Color := RGB(0, 0, 0);
-        selectwidget.Font.Color := clWhite;
-      end;
-    5:
-      begin
-        siniFile := TIniFile.Create(pathINI);
-        siniFile.WriteInteger('Theme', 'NumTheme', 5);
-        siniFile.WriteString('Theme', 'Color1', 'green');
-        siniFile.WriteString('Theme', 'Color2', 'yellow');
-        siniFile.WriteInteger('Theme', 'ColorGradient1', RGB(0, 255, 0));
-        siniFile.WriteInteger('Theme', 'ColorGradient2', RGB(255, 255, 0));
-        siniFile.Free;
-        gradient.PaintData.Color1.Color := RGB(0, 255, 0);
-        gradient.PaintData.Color2.Color := RGB(255, 255, 0);
-        selectWidget.Color := RGB(0, 255, 0);
-        selectwidget.Font.Color := clblack;
-      end;
-    6:
-      begin
-        siniFile := TIniFile.Create(pathINI);
-        siniFile.WriteInteger('Theme', 'NumTheme', 6);
-        siniFile.WriteString('Theme', 'Color1', 'red');
-        siniFile.WriteString('Theme', 'Color2', 'yellow');
-        siniFile.WriteInteger('Theme', 'ColorGradient1', RGB(255, 0, 0));
-        siniFile.WriteInteger('Theme', 'ColorGradient2', RGB(255, 255, 0));
-        siniFile.Free;
-        gradient.PaintData.Color1.Color := RGB(255, 0, 0);
-        gradient.PaintData.Color2.Color := RGB(255, 255, 0);
-        selectWidget.Color := RGB(255, 0, 0);
-        selectwidget.Font.Color := clblack;
-      end;
-    7:
-      begin
-        siniFile := TIniFile.Create(pathINI);
-        siniFile.WriteInteger('Theme', 'NumTheme', 7);
-        siniFile.WriteString('Theme', 'Color1', 'yellow');
-        siniFile.WriteString('Theme', 'Color2', 'pink');
-        siniFile.WriteInteger('Theme', 'ColorGradient1', RGB(255, 255, 0));
-        siniFile.WriteInteger('Theme', 'ColorGradient2', RGB(255, 0, 255));
-        siniFile.Free;
-        gradient.PaintData.Color1.Color := RGB(255, 255, 0);
-        gradient.PaintData.Color2.Color := RGB(255, 0, 255);
-        selectWidget.Color := RGB(255, 255, 0);
-        selectwidget.Font.Color := clblack;
-      end;
-    8:
-      begin
-        siniFile := TIniFile.Create(pathINI);
-        siniFile.WriteInteger('Theme', 'NumTheme', 8);
-        siniFile.WriteString('Theme', 'Color1', 'white');
-        siniFile.WriteString('Theme', 'Color2', 'red');
-        siniFile.WriteInteger('Theme', 'ColorGradient1', RGB(255, 255, 255));
-        siniFile.WriteInteger('Theme', 'ColorGradient2', RGB(255, 0, 0));
-        siniFile.Free;
-        gradient.PaintData.Color1.Color := RGB(255, 255, 255);
-        gradient.PaintData.Color2.Color := RGB(255, 0, 0);
-        selectWidget.Color := RGB(255, 255, 255);
-        selectwidget.Font.Color := clblack;
-      end;
-  end;
+  siniFile := TIniFile.Create(pathINI);
+  siniFile.WriteInteger('Theme', 'NumTheme', numWidget);
+  siniFile.WriteString('Theme', 'Color1', color1);
+  siniFile.WriteString('Theme', 'Color2', color2);
+  siniFile.WriteInteger('Theme', 'ColorGradient1', RGB(r1, g1, b1));
+  siniFile.WriteInteger('Theme', 'ColorGradient2', RGB(r2, g2, b2));
+  siniFile.Free;
+  gradient.PaintData.Color1.Color := RGB(r1, g1, b1);
+  gradient.PaintData.Color2.Color := RGB(r2, g2, b2);
+  selectWidget.Color := RGB(r1, g1, b1);
+  selectwidget.Font.Color := fontcolor;
+end;
+
+procedure RefreshAll;
+begin
   RefreshDateAndTime;
   RefreshCpuUsage;
   RefreshPhisicalMemory;
@@ -995,6 +896,22 @@ begin
   RefreshApp;
   RefreshCalendar;
   RefreshCalc;
+end;
+
+procedure TMainForm.SelcolaccessClick(Sender: TObject);
+begin
+  case themes.ItemIndex of
+    0: ChangeTheme(0, 'pink', 'purple', 255, 0, 255, 147, 39, 143, clblack);
+    1: ChangeTheme(1, 'blue', 'purple', 0, 255, 255, 147, 39, 143, clblack);
+    2: ChangeTheme(2, 'blue', 'white', 0, 255, 255, 255, 255, 255, clblack);
+    3: ChangeTheme(3, 'black', 'red', 0, 0, 0, 255, 0, 0, clWhite);
+    4: ChangeTheme(4, 'black', 'pink', 0, 0, 0, 212, 20, 90, clWhite);
+    5: ChangeTheme(5, 'green', 'yellow', 0, 255, 0, 255, 255, 0, clblack);
+    6: ChangeTheme(6, 'red', 'yellow', 255, 0, 0, 255, 255, 0, clblack);
+    7: ChangeTheme(7, 'yellow', 'pink', 255, 255, 0, 255, 0, 255, clblack);
+    8: ChangeTheme(8, 'white', 'red', 255, 255, 255, 255, 0, 0, clblack);
+  end;
+  RefreshAll;
 end;
 
 procedure TMainForm.TimerTimer(Sender: TObject);
@@ -1105,6 +1022,18 @@ begin
   ShowSetting.Caption := 'Показать';
 end;
 
+procedure TMainForm.LoadPosition(path: string);
+begin
+  if FileExists(path) then
+  begin
+    siniFile := TIniFile.Create(path);
+    edt1.Text := IntToStr(siniFile.ReadInteger('Position', 'Left',
+      0));
+    edt3.Text := IntToStr(siniFile.ReadInteger('Position', 'Top',
+      0));
+  end;
+end;
+
 procedure TMainForm.PosTimer(Sender: TObject);
 begin
   if (edt1.Focused = false) or (edt3.Focused = false) then
@@ -1112,83 +1041,13 @@ begin
     if MainForm.Visible = true then
     begin
       case selectWidget.Selected.AbsoluteIndex of
-        0:
-          begin
-            if FileExists(pathINIDateAndTime) then
-            begin
-              siniFile := TIniFile.Create(pathINIDateAndTime);
-              edt1.Text := IntToStr(siniFile.ReadInteger('Position', 'Left',
-                0));
-              edt3.Text := IntToStr(siniFile.ReadInteger('Position', 'Top',
-                0));
-            end;
-          end;
-        1:
-          begin
-            if FileExists(pathINICPUUsage) then
-            begin
-              siniFile := TIniFile.Create(pathINICPUUsage);
-              edt1.Text := IntToStr(siniFile.ReadInteger('Position', 'Left',
-                0));
-              edt3.Text := IntToStr(siniFile.ReadInteger('Position', 'Top',
-                0));
-            end;
-          end;
-        2:
-          begin
-            if FileExists(pathINIPhiscalMemory) then
-            begin
-              siniFile := TIniFile.Create(pathINIPhiscalMemory);
-              edt1.Text := IntToStr(siniFile.ReadInteger('Position', 'Left',
-                0));
-              edt3.Text := IntToStr(siniFile.ReadInteger('Position', 'Top',
-                0));
-            end;
-          end;
-        3:
-          begin
-            if FileExists(pathINIOpenFolder) then
-            begin
-              siniFile := TIniFile.Create(pathINIOpenFolder);
-              edt1.Text := IntToStr(siniFile.ReadInteger('Position', 'Left',
-                0));
-              edt3.Text := IntToStr(siniFile.ReadInteger('Position', 'Top',
-                0));
-            end;
-          end;
-        4:
-          begin
-            if FileExists(pathINIOpenApp) then
-            begin
-              siniFile := TIniFile.Create(pathINIOpenApp);
-              edt1.Text := IntToStr(siniFile.ReadInteger('Position', 'Left',
-                0));
-              edt3.Text := IntToStr(siniFile.ReadInteger('Position', 'Top',
-                0));
-            end;
-          end;
-        5:
-          begin
-            if FileExists(pathINICalendar) then
-            begin
-              siniFile := TIniFile.Create(pathINICalendar);
-              edt1.Text := IntToStr(siniFile.ReadInteger('Position', 'Left',
-                0));
-              edt3.Text := IntToStr(siniFile.ReadInteger('Position', 'Top',
-                0));
-            end;
-          end;
-        6:
-          begin
-            if FileExists(pathINICalc) then
-            begin
-              siniFile := TIniFile.Create(pathINICalc);
-              edt1.Text := IntToStr(siniFile.ReadInteger('Position', 'Left',
-                0));
-              edt3.Text := IntToStr(siniFile.ReadInteger('Position', 'Top',
-                0));
-            end;
-          end;
+        0: LoadPosition(pathinidateandtime);
+        1: LoadPosition(pathinicpuusage);
+        2: LoadPosition(pathINIPhiscalMemory);
+        3: LoadPosition(pathINIOpenFolder);
+        4: LoadPosition(pathINIOpenApp);
+        5: LoadPosition(pathINICalendar);
+        6: LoadPosition(pathINICalc);
       end;
     end;
   end;
@@ -1242,7 +1101,12 @@ begin
         3, path, num);
     4: LocateFormPos(0, 0, true, 4,
         path, num);
-    5: ;
+    5:
+      begin
+        siniFile := TIniFile.Create(path);
+        siniFile.WriteInteger('Position', 'Location', 5);
+        siniFile.Free;
+      end;
   end;
 end;
 
