@@ -17,6 +17,7 @@ uses
   Forms,
   Classes,
   Messages,
+  Variants,
   CpuUsageWidget in 'CpuUsageWidget.pas' {CpuUsageForm},
   CalculatorWidget in 'CalculatorWidget.pas' {CalcForm},
   DateAndTimeWidget in 'DateAndTimeWidget.pas' {DateAndTimeForm},
@@ -27,12 +28,32 @@ uses
   adCpuUsage in 'WSaF\adCpuUsage.pas';
 
 {$R *.res}
-procedure ShowForm(Form:string);
+
+procedure FindClassName(NameForm: string; var classname: string);
 var
-  WinClass: array[0..1024] of Char;
+  winclass: array[0..1024] of char;
+  i: integer;
+  hndl: HWND;
+  nameclass: string;
 begin
-  
+  hndl := FindWindow(nil, PAnsiChar(NameForm));
+  for i := 0 to GetClassName(hndl, @winclass, 1024) do
+    classname := classname + winclass[i];
 end;
+
+procedure ShowForm(Form: string; pathINI: string); stdcall;
+begin
+  Application.CreateHandle;
+  Application.CreateForm(TDateAndTimeForm, DateAndTimeForm);
+  AppForm.Show;
+  if FileExists(pathINI) then
+  begin
+    sIniFile := TIniFile.Create(pathINI);
+    sIniFile.WriteBool('State', 'Active', true);
+    sIniFile.Free;
+  end;
+end;
+exports ShowForm;
 begin
 end.
 

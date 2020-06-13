@@ -461,6 +461,8 @@ begin
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
             num_of_widgets.Progress := num_of_widgets.Progress + 1;
+            cbb1.Enabled := true;
+            cbb1.Text := siniFile.ReadString('Position', 'Location', '');
           end
           else
           begin
@@ -468,6 +470,8 @@ begin
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
             num_of_widgets.Progress := num_of_widgets.Progress - 1;
+            cbb1.Text := '';
+            cbb1.Enabled := false;
           end;
           siniFile.Free;
         end;
@@ -483,6 +487,8 @@ begin
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
             num_of_widgets.Progress := num_of_widgets.Progress + 1;
+            cbb1.Enabled := true;
+            cbb1.Text := siniFile.ReadString('Position', 'Location', '');
           end
           else
           begin
@@ -490,6 +496,8 @@ begin
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
             num_of_widgets.Progress := num_of_widgets.Progress - 1;
+            cbb1.Text := '';
+            cbb1.Enabled := false;
           end;
           siniFile.Free;
         end;
@@ -505,6 +513,8 @@ begin
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
             num_of_widgets.Progress := num_of_widgets.Progress + 1;
+            cbb1.Enabled := true;
+            cbb1.Text := siniFile.ReadString('Position', 'Location', '');
           end
           else
           begin
@@ -512,6 +522,8 @@ begin
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
             num_of_widgets.Progress := num_of_widgets.Progress - 1;
+            cbb1.Text := '';
+            cbb1.Enabled := false;
           end;
           siniFile.Free;
         end;
@@ -527,6 +539,8 @@ begin
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
             num_of_widgets.Progress := num_of_widgets.Progress + 1;
+            cbb1.Enabled := true;
+            cbb1.Text := siniFile.ReadString('Position', 'Location', '');
           end
           else
           begin
@@ -534,6 +548,8 @@ begin
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
             num_of_widgets.Progress := num_of_widgets.Progress - 1;
+            cbb1.Text := '';
+            cbb1.Enabled := false;
           end;
           siniFile.Free;
         end;
@@ -549,6 +565,8 @@ begin
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
             num_of_widgets.Progress := num_of_widgets.Progress + 1;
+            cbb1.Enabled := true;
+            cbb1.Text := siniFile.ReadString('Position', 'Location', '');
           end
           else
           begin
@@ -556,6 +574,8 @@ begin
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
             num_of_widgets.Progress := num_of_widgets.Progress - 1;
+            cbb1.Text := '';
+            cbb1.Enabled := false;
           end;
           siniFile.Free;
         end;
@@ -571,6 +591,8 @@ begin
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
             num_of_widgets.Progress := num_of_widgets.Progress + 1;
+            cbb1.Enabled := true;
+            cbb1.Text := siniFile.ReadString('Position', 'Location', '');
           end
           else
           begin
@@ -578,6 +600,8 @@ begin
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
             num_of_widgets.Progress := num_of_widgets.Progress - 1;
+            cbb1.Text := '';
+            cbb1.Enabled := false;
           end;
           siniFile.Free;
         end;
@@ -593,6 +617,8 @@ begin
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
             num_of_widgets.Progress := num_of_widgets.Progress + 1;
+            cbb1.Enabled := true;
+            cbb1.Text := siniFile.ReadString('Position', 'Location', '');
           end
           else
           begin
@@ -600,6 +626,8 @@ begin
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
             num_of_widgets.Progress := num_of_widgets.Progress - 1;
+            cbb1.Text := '';
+            cbb1.Enabled := false;
           end;
           siniFile.Free;
         end;
@@ -629,6 +657,10 @@ begin
   if Key = 13 then
   begin
     changeposfun;
+    ChangePos.Caption := 'Изменить координаты';
+    Pos.Enabled := true;
+    edt1.ReadOnly := true;
+    edt3.ReadOnly := true;
   end;
 end;
 
@@ -639,6 +671,10 @@ begin
   if Key = 13 then
   begin
     changeposfun;
+    ChangePos.Caption := 'Изменить координаты';
+    Pos.Enabled := true;
+    edt1.ReadOnly := true;
+    edt3.ReadOnly := true;
   end;
 end;
 
