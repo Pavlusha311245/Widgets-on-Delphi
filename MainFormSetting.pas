@@ -70,6 +70,8 @@ type
     ChangePos: TsBitBtn;
     PreviewWidgets: TImage;
     FixPosiitionPanel: TsPanel;
+    AnimSettingHide: TTimer;
+    AnimSettingShow: TTimer;
     procedure E1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure N3Click(Sender: TObject);
@@ -121,6 +123,8 @@ type
       B1: Integer; r2, g2, b2: integer; fontcolor: TColor);
     procedure LoadPosition(path: string);
     function LoadActive(path: string): boolean;
+    procedure AnimSettingHideTimer(Sender: TObject);
+    procedure AnimSettingShowTimer(Sender: TObject);
     //    procedure StartCloseWidgets(Form: string; pathINI: string);
 
   private
@@ -809,14 +813,15 @@ end;
 
 procedure TMainForm.ShowSettingClick(Sender: TObject);
 begin
-  if settingPanel.Visible = True then
+  if settingPanel.Top = 463 then
   begin
-    settingPanel.Visible := False;
-    ShowSetting.caption := 'Показать';
-  end
-  else
+    AnimSettingHide.Enabled := true;
+    ShowSetting.Caption := 'Показать';
+    sknslctr1.Enabled := false;
+  end;
+  if settingPanel.Top = 585 then
   begin
-    settingPanel.Visible := True;
+    AnimSettingShow.Enabled := true;
     ShowSetting.Caption := 'Скрыть';
   end;
 end;
@@ -839,10 +844,10 @@ end;
 procedure TMainForm.N12Click(Sender: TObject);
 begin
   mainform.Show;
-  if settingPanel.Visible = False then
+  if settingPanel.Top = 585 then
   begin
-    settingPanel.Visible := True;
-    ShowSetting.caption := 'Скрыть';
+    AnimSettingShow.Enabled := true;
+    ShowSetting.Caption := 'Скрыть';
   end;
 end;
 
@@ -1026,6 +1031,8 @@ end;
 procedure TMainForm.FormHide(Sender: TObject);
 begin
   UpdateWidget.Enabled := false;
+  settingPanel.top := 585;
+  ShowSetting.Caption := 'Показать';
 end;
 
 procedure TMainForm.RefreshWidgetClick(Sender: TObject);
@@ -1089,6 +1096,12 @@ begin
       0));
     edt3.Text := IntToStr(siniFile.ReadInteger('Position', 'Top',
       0));
+    if (siniFile.ReadInteger('Position', 'Left',
+      0) = 0) and (siniFile.ReadInteger('Position', 'Top',
+      0) = 0) then
+      cbb1.ItemIndex := 0
+    else
+      cbb1.ItemIndex := 5;
   end;
 end;
 
@@ -1221,6 +1234,25 @@ begin
     4: AppFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text), false);
     5: CalendarFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text), false);
     6: CalculatorFormPos(StrToInt(edt1.Text), StrToInt(edt3.Text), false);
+  end;
+end;
+
+procedure TMainForm.AnimSettingHideTimer(Sender: TObject);
+begin
+  if settingPanel.Top <> 585 then
+    settingPanel.Top := settingPanel.Top + 2
+  else
+    AnimSettingHide.Enabled := False;
+end;
+
+procedure TMainForm.AnimSettingShowTimer(Sender: TObject);
+begin
+  if settingPanel.Top <> 463 then
+    settingPanel.Top := settingPanel.Top - 2
+  else
+  begin
+    AnimSettingShow.Enabled := False;
+    sknslctr1.Enabled := True;
   end;
 end;
 

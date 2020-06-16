@@ -90,11 +90,17 @@ begin
     end
     else
     begin
-      AppForm.Left := x;
-      AppForm.Top := y;
+      if x = 0 then
+        AppForm.Left := x
+      else
+        AppForm.Left := x - AppForm.clientwidth;
+      if y = 0 then
+        AppForm.Top := y
+      else
+        AppForm.Top := y - AppForm.clientheight;
       sIniFile := TIniFile.Create(pathINI);
-      sinifile.writeinteger('Position', 'Left', x);
-      sinifile.writeinteger('Position', 'Top', y);
+      sinifile.writeinteger('Position', 'Left', AppForm.Left);
+      sinifile.writeinteger('Position', 'Top', AppForm.Top);
       sIniFile.Free;
     end;
   end;

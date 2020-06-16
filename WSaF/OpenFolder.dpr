@@ -94,11 +94,17 @@ begin
     end
     else
     begin
-      FolderForm.Left := x;
-      FolderForm.Top := y;
+      if x = 0 then
+        FolderForm.Left := x
+      else
+        FolderForm.Left := x - FolderForm.clientwidth;
+      if y = 0 then
+        FolderForm.Top := y
+      else
+        FolderForm.Top := y - FolderForm.clientheight;
       sIniFile := TIniFile.Create(pathINI);
-      sinifile.writeinteger('Position', 'Left', x);
-      sinifile.writeinteger('Position', 'Top', y);
+      sinifile.writeinteger('Position', 'Left', FolderForm.Left);
+      sinifile.writeinteger('Position', 'Top', FolderForm.Top);
       sIniFile.Free;
     end;
   end;

@@ -92,11 +92,17 @@ begin
     end
     else
     begin
-      DateAndTimeForm.Left := x;
-      DateAndTimeForm.Top := y;
+      if x = 0 then
+        DateAndTimeForm.Left := x
+      else
+        DateAndTimeForm.Left := x - DateAndTimeForm.clientwidth;
+      if y = 0 then
+        DateAndTimeForm.Top := y
+      else
+        DateAndTimeForm.Top := y - DateAndTimeForm.clientheight;
       sIniFile := TIniFile.Create(pathINI);
-      sinifile.writeinteger('Position', 'Left', x);
-      sinifile.writeinteger('Position', 'Top', y);
+      sinifile.writeinteger('Position', 'Left', DateAndTimeForm.Left);
+      sinifile.writeinteger('Position', 'Top', DateAndTimeForm.Top);
       sIniFile.Free;
     end;
   end;

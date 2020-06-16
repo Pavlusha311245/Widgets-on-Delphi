@@ -111,11 +111,17 @@ begin
     end
     else
     begin
-      PhisicalMemoryForm.Left := x;
-      PhisicalMemoryForm.Top := y;
+      if x = 0 then
+        PhisicalMemoryForm.Left := x
+      else
+        PhisicalMemoryForm.Left := x - PhisicalMemoryForm.clientwidth;
+      if y = 0 then
+        PhisicalMemoryForm.Top := y
+      else
+        PhisicalMemoryForm.Top := y - PhisicalMemoryForm.clientheight;
       sIniFile := TIniFile.Create(pathINI);
-      sinifile.writeinteger('Position', 'Left', x);
-      sinifile.writeinteger('Position', 'Top', y);
+      sinifile.writeinteger('Position', 'Left', PhisicalMemoryForm.Left);
+      sinifile.writeinteger('Position', 'Top', PhisicalMemoryForm.Top);
       sIniFile.Free;
     end;
   end;

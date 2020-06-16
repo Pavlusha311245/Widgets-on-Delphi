@@ -81,11 +81,17 @@ begin
     end
     else
     begin
-      CalcForm.Left := x;
-      CalcForm.Top := y;
+      if x = 0 then
+        calcform.Left := x
+      else
+        calcform.Left := x - calcform.clientwidth;
+      if y = 0 then
+        calcform.Top := y
+      else
+        calcform.Top := y - calcform.clientheight;
       sIniFile := TIniFile.Create(pathINI);
-      sinifile.writeinteger('Position', 'Left', x);
-      sinifile.writeinteger('Position', 'Top', y);
+      sinifile.writeinteger('Position', 'Left', calcform.left);
+      sinifile.writeinteger('Position', 'Top', calcform.top);
       sIniFile.Free;
     end;
   end;

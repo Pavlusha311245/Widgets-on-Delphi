@@ -4,7 +4,7 @@ object MainForm: TMainForm
   BorderIcons = [biMinimize, biHelp]
   BorderStyle = bsSingle
   Caption = #1043#1083#1072#1074#1085#1086#1077' '#1084#1077#1085#1102
-  ClientHeight = 450
+  ClientHeight = 449
   ClientWidth = 791
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -2139,7 +2139,7 @@ object MainForm: TMainForm
     Left = 0
     Top = 0
     Width = 791
-    Height = 450
+    Height = 449
     Align = alClient
     TabOrder = 0
     OnClick = gradientClick
@@ -2156,7 +2156,7 @@ object MainForm: TMainForm
       Left = 1
       Top = 1
       Width = 200
-      Height = 448
+      Height = 447
       Align = alLeft
       AutoExpand = True
       BorderStyle = bsNone
@@ -2188,15 +2188,13 @@ object MainForm: TMainForm
     end
     object settingPanel: TsPanel
       Left = 0
-      Top = 354
+      Top = 447
       Width = 801
       Height = 100
-      Align = alCustom
       BorderStyle = bsSingle
       DoubleBuffered = False
       SideShadow.Blend = 255
       TabOrder = 1
-      Visible = False
       object editorlbl: TLabel
         Left = 480
         Top = 48
@@ -23468,6 +23466,20 @@ object MainForm: TMainForm
     Interval = 500
     OnTimer = PosTimer
     Left = 456
+    Top = 144
+  end
+  object AnimSettingHide: TTimer
+    Enabled = False
+    Interval = 10
+    OnTimer = AnimSettingHideTimer
+    Left = 424
+    Top = 144
+  end
+  object AnimSettingShow: TTimer
+    Enabled = False
+    Interval = 10
+    OnTimer = AnimSettingShowTimer
+    Left = 392
     Top = 144
   end
 end

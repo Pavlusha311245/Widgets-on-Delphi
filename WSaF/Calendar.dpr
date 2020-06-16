@@ -92,11 +92,17 @@ begin
     end
     else
     begin
-      CalendarForm.Left := x;
-      CalendarForm.Top := y;
+      if x = 0 then
+        CalendarForm.Left := x
+      else
+        CalendarForm.Left := x - CalendarForm.clientwidth;
+      if y = 0 then
+        CalendarForm.Top := y
+      else
+        CalendarForm.Top := y - CalendarForm.clientheight;
       sIniFile := TIniFile.Create(pathINI);
-      sinifile.writeinteger('Position', 'Left', x);
-      sinifile.writeinteger('Position', 'Top', y);
+      sinifile.writeinteger('Position', 'Left', CalendarForm.Left);
+      sinifile.writeinteger('Position', 'Top', CalendarForm.Top);
       sIniFile.Free;
     end;
   end;
