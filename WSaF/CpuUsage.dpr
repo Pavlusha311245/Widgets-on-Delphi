@@ -82,10 +82,15 @@ begin
   begin
     if center = true then
     begin
-      CpuUsageForm.position := poDesktopCenter;
+      CpuUsageForm.top := Round((screen.Height / 2) - (CpuUsageForm.clientheight
+        / 2));
+      CpuUsageForm.Left := Round((screen.Width / 2) - (CpuUsageForm.ClientWidth
+        / 2));
       sIniFile := TIniFile.Create(pathINI);
-      sinifile.writeinteger('Position', 'Left', x);
-      sinifile.writeinteger('Position', 'Top', y);
+      sinifile.writeinteger('Position', 'Left', Round((screen.Width / 2) -
+        (CpuUsageForm.ClientWidth / 2)));
+      sinifile.writeinteger('Position', 'Top', Round((screen.Height / 2) -
+        (CpuUsageForm.clientheight / 2)));
       sIniFile.Free;
     end
     else

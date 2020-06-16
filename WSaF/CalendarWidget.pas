@@ -130,6 +130,7 @@ procedure TCalendarForm.FormShow(Sender: TObject);
 var
   path, pathMainApp: string;
 begin
+  ShowWindow(Handle, SW_HIDE);
   ShowWindow(Application.Handle, SW_HIDE);
   pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
   if FileExists(pathMainApp) then

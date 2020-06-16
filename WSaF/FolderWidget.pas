@@ -58,6 +58,7 @@ procedure TFolderForm.FormShow(Sender: TObject);
 var
   path, pathMainApp: string;
 begin
+  ShowWindow(Handle, SW_HIDE);
   ShowWindow(Application.Handle, SW_HIDE);
   if FileExists(pathINI) then
   begin

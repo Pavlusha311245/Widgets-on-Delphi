@@ -84,6 +84,7 @@ var
   letter_disk2: string;
   path, pathMainApp: string;
 begin
+  ShowWindow(Handle, SW_HIDE);
   ShowWindow(Application.Handle, SW_HIDE);
   pathMainApp := ExtractFilePath(Application.ExeName) + '\Settings.ini';
   if FileExists(pathMainApp) then

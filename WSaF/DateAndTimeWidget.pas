@@ -86,6 +86,7 @@ procedure TDateAndTimeForm.FormShow(Sender: TObject);
 var
   path, pathMainApp: string;
 begin
+  ShowWindow(Handle, SW_HIDE);
   ShowWindow(Application.Handle, SW_HIDE);
   Time.Caption := TimeToStr(now);
   if FileExists(pathINI) then

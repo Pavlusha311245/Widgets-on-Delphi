@@ -120,6 +120,8 @@ type
     procedure ChangeTheme(numWidget: integer; color1, color2: string; R1, G1,
       B1: Integer; r2, g2, b2: integer; fontcolor: TColor);
     procedure LoadPosition(path: string);
+    function LoadActive(path: string): boolean;
+    //    procedure StartCloseWidgets(Form: string; pathINI: string);
 
   private
     { Private declarations }
@@ -245,6 +247,10 @@ procedure CloseCalc; stdcall;
 procedure CalculatorFormPos(x, y: integer; center: Boolean); stdcall;
   external 'WSaF\Calculator.dll' name 'FormPos';
 ////////////////////////////////////////////////////////////////////////////////
+//PaFWW
+
+procedure ShowForm(Form: string; pathINI: string); stdcall;
+  external 'WSaF\PaFWW.dll' name 'ShowForm';
 
 function RGB(r, g, b: Byte): COLORREF;
 begin
@@ -325,7 +331,9 @@ begin
   if FileExists(pathINI) then
   begin
     sIniFile := TIniFile.Create(pathINI);
+    //активный скин
     skins.SkinName := siniFile.ReadString('Main', 'Skin', '');
+    //  тема виджетов и главного окна
     gradient.PaintData.Color1.Color := siniFile.ReadInteger('Theme',
       'ColorGradient1', 0000000);
     gradient.PaintData.Color2.Color := siniFile.ReadInteger('Theme',
@@ -336,6 +344,7 @@ begin
     if (sinifile.ReadString('Theme', 'Color1', '') = 'black') or
       (siniFile.readstring('Theme', 'Color2', '') = 'black') then
       selectwidget.Font.Color := clwhite;
+    //  проверка на добавление приложения в автозагрузку
     activeautorun := siniFile.ReadBool('Main', 'Autorun', false);
     if activeautorun = True then
     begin
@@ -447,6 +456,33 @@ begin
   MainForm.Show;
 end;
 
+//procedure TMainForm.StartCloseWidgets(Form: string; pathINI: string);
+//begin
+//  if FileExists(pathINI) then
+//  begin
+//    siniFile := TIniFile.Create(pathINI);
+//    if siniFile.ReadBool('State', 'Active', false) = False then
+//    begin
+//      ShowDateAndTime;
+//      ActiveWidgLbl.Caption := 'Виджет запущен';
+//      timer.Enabled := true;
+//      num_of_widgets.Progress := num_of_widgets.Progress + 1;
+//      cbb1.Enabled := true;
+//      cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
+//    end
+//    else
+//    begin
+//      CloseDateAndTime;
+//      ActiveWidgLbl.Caption := 'Виджет закрыт';
+//      timer.Enabled := true;
+//      num_of_widgets.Progress := num_of_widgets.Progress - 1;
+//      cbb1.Text := '';
+//      cbb1.Enabled := false;
+//    end;
+//    siniFile.Free;
+//  end;
+//end;
+
 procedure TMainForm.ActiveWidgetClick(Sender: TObject);
 begin
   case selectWidget.Selected.AbsoluteIndex of
@@ -460,16 +496,14 @@ begin
             ShowDateAndTime;
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
-            num_of_widgets.Progress := num_of_widgets.Progress + 1;
             cbb1.Enabled := true;
-            cbb1.Text := siniFile.ReadString('Position', 'Location', '');
+            cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
           end
           else
           begin
             CloseDateAndTime;
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
-            num_of_widgets.Progress := num_of_widgets.Progress - 1;
             cbb1.Text := '';
             cbb1.Enabled := false;
           end;
@@ -486,16 +520,14 @@ begin
             ShowCpuUsage;
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
-            num_of_widgets.Progress := num_of_widgets.Progress + 1;
             cbb1.Enabled := true;
-            cbb1.Text := siniFile.ReadString('Position', 'Location', '');
+            cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
           end
           else
           begin
             CloseCpuUsage;
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
-            num_of_widgets.Progress := num_of_widgets.Progress - 1;
             cbb1.Text := '';
             cbb1.Enabled := false;
           end;
@@ -512,16 +544,14 @@ begin
             ShowPhisicalMemory;
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
-            num_of_widgets.Progress := num_of_widgets.Progress + 1;
             cbb1.Enabled := true;
-            cbb1.Text := siniFile.ReadString('Position', 'Location', '');
+            cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
           end
           else
           begin
             ClosePhisicalMemory;
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
-            num_of_widgets.Progress := num_of_widgets.Progress - 1;
             cbb1.Text := '';
             cbb1.Enabled := false;
           end;
@@ -538,16 +568,14 @@ begin
             ShowFolder;
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
-            num_of_widgets.Progress := num_of_widgets.Progress + 1;
             cbb1.Enabled := true;
-            cbb1.Text := siniFile.ReadString('Position', 'Location', '');
+            cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
           end
           else
           begin
             CloseFolder;
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
-            num_of_widgets.Progress := num_of_widgets.Progress - 1;
             cbb1.Text := '';
             cbb1.Enabled := false;
           end;
@@ -564,16 +592,14 @@ begin
             ShowApp;
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
-            num_of_widgets.Progress := num_of_widgets.Progress + 1;
             cbb1.Enabled := true;
-            cbb1.Text := siniFile.ReadString('Position', 'Location', '');
+            cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
           end
           else
           begin
             CloseApp;
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
-            num_of_widgets.Progress := num_of_widgets.Progress - 1;
             cbb1.Text := '';
             cbb1.Enabled := false;
           end;
@@ -590,16 +616,14 @@ begin
             ShowCalendar;
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
-            num_of_widgets.Progress := num_of_widgets.Progress + 1;
             cbb1.Enabled := true;
-            cbb1.Text := siniFile.ReadString('Position', 'Location', '');
+            cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
           end
           else
           begin
             CloseCalendar;
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
-            num_of_widgets.Progress := num_of_widgets.Progress - 1;
             cbb1.Text := '';
             cbb1.Enabled := false;
           end;
@@ -616,16 +640,14 @@ begin
             ShowCalc;
             ActiveWidgLbl.Caption := 'Виджет запущен';
             timer.Enabled := true;
-            num_of_widgets.Progress := num_of_widgets.Progress + 1;
             cbb1.Enabled := true;
-            cbb1.Text := siniFile.ReadString('Position', 'Location', '');
+            cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
           end
           else
           begin
             CloseCalc;
             ActiveWidgLbl.Caption := 'Виджет закрыт';
             timer.Enabled := true;
-            num_of_widgets.Progress := num_of_widgets.Progress - 1;
             cbb1.Text := '';
             cbb1.Enabled := false;
           end;
@@ -1070,7 +1092,21 @@ begin
   end;
 end;
 
+function TMainForm.LoadActive(path: string): boolean;
+begin
+  if FileExists(path) then
+  begin
+    siniFile := TIniFile.Create(path);
+    if siniFile.ReadBool('State', 'Active', false) = True then
+      result := True
+    else
+      result := False;
+  end;
+end;
+
 procedure TMainForm.PosTimer(Sender: TObject);
+var
+  countActive: Integer;
 begin
   if (edt1.Focused = false) or (edt3.Focused = false) then
   begin
@@ -1087,6 +1123,22 @@ begin
       end;
     end;
   end;
+  countActive := 0;
+  if LoadActive(pathINIDateAndTime) = True then
+    countActive := countActive + 1;
+  if LoadActive(pathINICPUUsage) = True then
+    countActive := countActive + 1;
+  if LoadActive(pathINIPhiscalMemory) = True then
+    countActive := countActive + 1;
+  if LoadActive(pathINIOpenFolder) = True then
+    countActive := countActive + 1;
+  if LoadActive(pathINIOpenApp) = True then
+    countActive := countActive + 1;
+  if LoadActive(pathINICalendar) = True then
+    countActive := countActive + 1;
+  if LoadActive(pathINICalc) = True then
+    countActive := countActive + 1;
+  num_of_widgets.Progress := countActive;
 end;
 
 procedure TMainForm.ChangePosClick(Sender: TObject);
@@ -1129,11 +1181,11 @@ procedure TMainForm.ChangeLocation(num: integer; path: string);
 begin
   case cbb1.ItemIndex of
     0: LocateFormPos(0, 0, false, 0, path, num);
-    1: LocateFormPos(Screen.Width - 157, 0, False, 1,
+    1: LocateFormPos(Screen.Width, 0, False, 1,
         path, num);
-    2: LocateFormPos(0, Screen.Height - 157, False, 2,
+    2: LocateFormPos(0, Screen.Height, False, 2,
         path, num);
-    3: LocateFormPos(Screen.Width - 157, Screen.Height - 157, False,
+    3: LocateFormPos(Screen.Width, Screen.Height, False,
         3, path, num);
     4: LocateFormPos(0, 0, true, 4,
         path, num);

@@ -29,23 +29,14 @@ uses
 
 {$R *.res}
 
-procedure FindClassName(NameForm: string; var classname: string);
-var
-  winclass: array[0..1024] of char;
-  i: integer;
-  hndl: HWND;
-  nameclass: string;
-begin
-  hndl := FindWindow(nil, PAnsiChar(NameForm));
-  for i := 0 to GetClassName(hndl, @winclass, 1024) do
-    classname := classname + winclass[i];
-end;
-
 procedure ShowForm(Form: string; pathINI: string); stdcall;
+var
+  FormClass: Tcomponentclass;
 begin
   Application.CreateHandle;
-  Application.CreateForm(TDateAndTimeForm, DateAndTimeForm);
-  AppForm.Show;
+  FormClass := tcomponentclass(findclass(Form));
+  Application.CreateForm(FormClass, Form);
+  DateAndTimeForm.Show;
   if FileExists(pathINI) then
   begin
     sIniFile := TIniFile.Create(pathINI);
@@ -53,7 +44,19 @@ begin
     sIniFile.Free;
   end;
 end;
-exports ShowForm;
+
+procedure CloseForm(Form: string; pathINI: string); stdcall;
+var
+  FormClass: Tcomponentclass;
+begin
+  if FileExists(pathINI) then
+  begin
+    sIniFile := TIniFile.Create(pathINI);
+    sIniFile.WriteBool('State', 'Active', false);
+    sIniFile.Free;
+  end;
+end;
+exports ShowForm, CloseForm;
 begin
 end.
 
