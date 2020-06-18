@@ -2188,7 +2188,7 @@ object MainForm: TMainForm
     end
     object settingPanel: TsPanel
       Left = 0
-      Top = 447
+      Top = 354
       Width = 801
       Height = 100
       BorderStyle = bsSingle
@@ -23470,14 +23470,14 @@ object MainForm: TMainForm
   end
   object AnimSettingHide: TTimer
     Enabled = False
-    Interval = 10
+    Interval = 1
     OnTimer = AnimSettingHideTimer
     Left = 424
     Top = 144
   end
   object AnimSettingShow: TTimer
     Enabled = False
-    Interval = 10
+    Interval = 1
     OnTimer = AnimSettingShowTimer
     Left = 392
     Top = 144

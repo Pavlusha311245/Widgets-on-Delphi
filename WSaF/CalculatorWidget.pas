@@ -76,8 +76,6 @@ implementation
 {$R *.dfm}
 
 procedure TCalcForm.Calculator(codekey: word);
-var
-  x: integer;
 begin
   case codekey of
     8: { бакспейс }
@@ -186,8 +184,6 @@ begin
 end;
 
 procedure TCalcForm.FormShow(Sender: TObject);
-var
-  key: integer;
 begin
   self.SetFocus;
   ShowWindow(Application.Handle, SW_HIDE);

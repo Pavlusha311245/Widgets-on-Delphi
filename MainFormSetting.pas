@@ -121,10 +121,11 @@ type
     procedure ChangePosFun;
     procedure ChangeTheme(numWidget: integer; color1, color2: string; R1, G1,
       B1: Integer; r2, g2, b2: integer; fontcolor: TColor);
-    procedure LoadPosition(path: string);
-    function LoadActive(path: string): boolean;
+    procedure LoadPosition(path: string; numWidget: integer);
+    function isActive(path: string): boolean;
     procedure AnimSettingHideTimer(Sender: TObject);
     procedure AnimSettingShowTimer(Sender: TObject);
+    procedure WriteCoord(pos: Integer; x, y: Integer; path: string);
     //    procedure StartCloseWidgets(Form: string; pathINI: string);
 
   private
@@ -166,6 +167,10 @@ procedure CloseDateAndTime; stdcall;
 procedure DateFormPos(x, y: integer; center: Boolean); stdcall;
   external 'WSaF\DateAndTime.dll' name 'FormPos';
 
+procedure DateFormCoord(pos: Integer; var x, y: integer; var userpos: Boolean);
+  stdcall;
+  external 'WSaF\DateAndTime.dll' name 'FormCoord';
+
 ////////////////////////////////////////////////////////////////////////////////
 //DLL CPUUsage
 
@@ -180,6 +185,10 @@ procedure CloseCpuUsage; stdcall;
 
 procedure CpuFormPos(x, y: integer; center: Boolean); stdcall;
   external 'WSaF\CpuUsage.dll' name 'FormPos';
+
+procedure CPUFormCoord(pos: Integer; var x, y: integer; var userpos: Boolean);
+  stdcall;
+  external 'WSaF\CpuUsage.dll' name 'FormCoord';
 ////////////////////////////////////////////////////////////////////////////////
 //DLL PhisicalMemory
 
@@ -194,6 +203,11 @@ procedure ClosePhisicalMemory; stdcall;
 
 procedure MemoryFormPos(x, y: integer; center: Boolean); stdcall;
   external 'WSaF\PhisicalMemory.dll' name 'FormPos';
+
+procedure MemoryFormCoord(pos: Integer; var x, y: integer; var userpos:
+  Boolean);
+  stdcall;
+  external 'WSaF\PhisicalMemory.dll' name 'FormCoord';
 ////////////////////////////////////////////////////////////////////////////////
 //DLL OpenFolder
 
@@ -208,6 +222,10 @@ procedure CloseFolder; stdcall;
 
 procedure FolderFormPos(x, y: integer; center: Boolean); stdcall;
   external 'WSaF\OpenFolder.dll' name 'FormPos';
+
+procedure FolderFormCoord(pos: Integer; varx, y: integer; var userpos: Boolean);
+  stdcall;
+  external 'WSaF\OpenFolder.dll' name 'FormCoord';
 ///////////////////////////////////////////////////////////////////////////////
 //DLL OpenApp
 
@@ -222,6 +240,10 @@ procedure CloseApp; stdcall;
 
 procedure AppFormPos(x, y: integer; center: Boolean); stdcall;
   external 'WSaF\OpenApp.dll' name 'FormPos';
+
+procedure AppFormCoord(pos: Integer; var x, y: integer; var userpos: Boolean);
+  stdcall;
+  external 'WSaF\OpenApp.dll' name 'FormCoord';
 ////////////////////////////////////////////////////////////////////////////////
 //DLL Calendar
 
@@ -236,6 +258,10 @@ procedure CloseCalendar; stdcall;
 
 procedure CalendarFormPos(x, y: integer; center: Boolean); stdcall;
   external 'WSaF\Calendar.dll' name 'FormPos';
+
+procedure CalendarFormCoord(pos: Integer; var x, y: integer; var userpos:
+  Boolean); stdcall;
+  external 'WSaF\Calendar.dll' name 'FormCoord';
 ////////////////////////////////////////////////////////////////////////////////
 //DLL Calculator
 
@@ -250,11 +276,11 @@ procedure CloseCalc; stdcall;
 
 procedure CalculatorFormPos(x, y: integer; center: Boolean); stdcall;
   external 'WSaF\Calculator.dll' name 'FormPos';
-////////////////////////////////////////////////////////////////////////////////
-//PaFWW
 
-procedure ShowForm(Form: string; pathINI: string); stdcall;
-  external 'WSaF\PaFWW.dll' name 'ShowForm';
+procedure CalcFormCoord(pos: Integer; var x, y: integer; var userpos: Boolean);
+  stdcall;
+  external 'WSaF\Calculator.dll' name 'FormCoord';
+////////////////////////////////////////////////////////////////////////////////
 
 function RGB(r, g, b: Byte): COLORREF;
 begin
@@ -300,13 +326,6 @@ end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 var
-  activeDate: Boolean;
-  activeCPU: Boolean;
-  activeMemory: Boolean;
-  activeFolder: Boolean;
-  activeApp: Boolean;
-  activeCalendar: Boolean;
-  activeCalc: Boolean;
   activeautorun: Boolean;
 begin
   //Путь к настройкам виджетов и главной формы
@@ -819,7 +838,7 @@ begin
     ShowSetting.Caption := 'Показать';
     sknslctr1.Enabled := false;
   end;
-  if settingPanel.Top = 585 then
+  if settingPanel.Top = 587 then
   begin
     AnimSettingShow.Enabled := true;
     ShowSetting.Caption := 'Скрыть';
@@ -875,6 +894,7 @@ begin
   end
   else
     showmessage('File not found!');
+  settingPanel.Top := 587;
 end;
 
 procedure TMainForm.selectWidgetClick(Sender: TObject);
@@ -1021,6 +1041,10 @@ begin
       6: CheckWidget(pathINICalc);
     end;
   end;
+  if (AnimSettingHide.Enabled = true) and (AnimSettingShow.Enabled = true) then
+  begin
+    AnimSettingShow.Enabled := False;
+  end;
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
@@ -1031,7 +1055,7 @@ end;
 procedure TMainForm.FormHide(Sender: TObject);
 begin
   UpdateWidget.Enabled := false;
-  settingPanel.top := 585;
+  settingPanel.top := 587;
   ShowSetting.Caption := 'Показать';
 end;
 
@@ -1087,7 +1111,25 @@ begin
   ShowSetting.Caption := 'Показать';
 end;
 
-procedure TMainForm.LoadPosition(path: string);
+procedure TMainForm.WriteCoord(pos: Integer; x, y: Integer; path: string);
+begin
+  if FileExists(path) then
+  begin
+    siniFile := TIniFile.Create(path);
+    if (siniFile.ReadInteger('Position', 'Left',
+      0) = x) and (siniFile.ReadInteger('Position', 'Top',
+      0) = y) then
+    begin
+      cbb1.ItemIndex := pos;
+      siniFile.WriteInteger('Position', 'Location', pos);
+    end;
+  end;
+end;
+
+procedure TMainForm.LoadPosition(path: string; numWidget: integer);
+var
+  x, y: integer;
+  userpos: Boolean;
 begin
   if FileExists(path) then
   begin
@@ -1096,16 +1138,208 @@ begin
       0));
     edt3.Text := IntToStr(siniFile.ReadInteger('Position', 'Top',
       0));
-    if (siniFile.ReadInteger('Position', 'Left',
-      0) = 0) and (siniFile.ReadInteger('Position', 'Top',
-      0) = 0) then
-      cbb1.ItemIndex := 0
-    else
-      cbb1.ItemIndex := 5;
+    case numWidget of
+      0:
+        begin
+          if isActive(pathINIDateAndTime) = True then
+          begin
+            DateFormCoord(5, x, y, userpos);
+            if userpos <> True then
+            begin
+              DateFormCoord(0, x, y, userpos);
+              Writecoord(0, x, y, pathINIDateAndTime);
+              DateFormCoord(1, x, y, userpos);
+              Writecoord(1, x, y, pathINIDateAndTime);
+              DateFormCoord(2, x, y, userpos);
+              Writecoord(2, x, y, pathINIDateAndTime);
+              DateFormCoord(3, x, y, userpos);
+              Writecoord(3, x, y, pathINIDateAndTime);
+              DateFormCoord(4, x, y, userpos);
+              Writecoord(4, x, y, pathINIDateAndTime);
+              DateFormCoord(5, x, y, userpos);
+              Writecoord(5, x, y, pathINIDateAndTime);
+            end
+            else
+            begin
+              siniFile := TIniFile.Create(pathINIDateAndTime);
+              siniFile.WriteInteger('Position', 'Location', 5);
+              siniFile.Free;
+            end;
+          end;
+        end;
+      1:
+        begin
+          if isActive(pathINICPUUsage) = true then
+          begin
+            CPUFormCoord(5, x, y, userpos);
+            if userpos <> true then
+            begin
+              CPUFormCoord(0, x, y, userpos);
+              Writecoord(0, x, y, pathINICPUUsage);
+              CPUFormCoord(1, x, y, userpos);
+              Writecoord(1, x, y, pathINICPUUsage);
+              CPUFormCoord(2, x, y, userpos);
+              Writecoord(2, x, y, pathINICPUUsage);
+              CPUFormCoord(3, x, y, userpos);
+              Writecoord(3, x, y, pathINICPUUsage);
+              CPUFormCoord(4, x, y, userpos);
+              Writecoord(4, x, y, pathINICPUUsage);
+              CPUFormCoord(5, x, y, userpos);
+              Writecoord(5, x, y, pathINICPUUsage);
+            end
+            else
+            begin
+              siniFile := TIniFile.Create(pathINICPUUsage);
+              siniFile.WriteInteger('Position', 'Location', 5);
+              siniFile.Free;
+            end;
+          end;
+        end;
+      2:
+        begin
+          if isActive(pathINIPhiscalMemory) = true then
+          begin
+            MemoryFormCoord(5, x, y, userpos);
+            if userpos <> true then
+            begin
+              MemoryFormCoord(0, x, y, userpos);
+              Writecoord(0, x, y, pathINIPhiscalMemory);
+              MemoryFormCoord(1, x, y, userpos);
+              Writecoord(1, x, y, pathINIPhiscalMemory);
+              MemoryFormCoord(2, x, y, userpos);
+              Writecoord(2, x, y, pathINIPhiscalMemory);
+              MemoryFormCoord(3, x, y, userpos);
+              Writecoord(3, x, y, pathINIPhiscalMemory);
+              MemoryFormCoord(4, x, y, userpos);
+              Writecoord(4, x, y, pathINIPhiscalMemory);
+              MemoryFormCoord(5, x, y, userpos);
+              Writecoord(5, x, y, pathINIPhiscalMemory);
+            end
+            else
+            begin
+              siniFile := TIniFile.Create(pathINIPhiscalMemory);
+              siniFile.WriteInteger('Position', 'Location', 5);
+              siniFile.Free;
+            end;
+          end;
+        end;
+      3:
+        begin
+          if isActive(pathINIOpenFolder) = true then
+          begin
+            FolderFormCoord(5, x, y, userpos);
+            if userpos <> true then
+            begin
+              FolderFormCoord(0, x, y, userpos);
+              Writecoord(0, x, y, pathINIOpenFolder);
+              FolderFormCoord(1, x, y, userpos);
+              Writecoord(1, x, y, pathINIOpenFolder);
+              FolderFormCoord(2, x, y, userpos);
+              Writecoord(2, x, y, pathINIOpenFolder);
+              FolderFormCoord(3, x, y, userpos);
+              Writecoord(3, x, y, pathINIOpenFolder);
+              FolderFormCoord(4, x, y, userpos);
+              Writecoord(4, x, y, pathINIOpenFolder);
+              FolderFormCoord(5, x, y, userpos);
+              Writecoord(5, x, y, pathINIOpenFolder);
+            end
+            else
+            begin
+              siniFile := TIniFile.Create(pathINIOpenFolder);
+              siniFile.WriteInteger('Position', 'Location', 5);
+              siniFile.Free;
+            end;
+          end;
+        end;
+      4:
+        begin
+          if isActive(pathINIOpenApp) = true then
+          begin
+            AppFormCoord(5, x, y, userpos);
+            if userpos <> true then
+            begin
+              AppFormCoord(0, x, y, userpos);
+              Writecoord(0, x, y, pathINIOpenApp);
+              AppFormCoord(1, x, y, userpos);
+              Writecoord(1, x, y, pathINIOpenApp);
+              AppFormCoord(2, x, y, userpos);
+              Writecoord(2, x, y, pathINIOpenApp);
+              AppFormCoord(3, x, y, userpos);
+              Writecoord(3, x, y, pathINIOpenApp);
+              AppFormCoord(4, x, y, userpos);
+              Writecoord(4, x, y, pathINIOpenApp);
+              AppFormCoord(5, x, y, userpos);
+              Writecoord(5, x, y, pathINIOpenApp);
+            end
+            else
+            begin
+              siniFile := TIniFile.Create(pathINIOpenApp);
+              siniFile.WriteInteger('Position', 'Location', 5);
+              siniFile.Free;
+            end;
+          end;
+        end;
+      5:
+        begin
+          if isActive(pathINICalendar) = true then
+          begin
+            CalendarFormCoord(5, x, y, userpos);
+            if userpos <> true then
+            begin
+              CalendarFormCoord(0, x, y, userpos);
+              Writecoord(0, x, y, pathINICalendar);
+              CalendarFormCoord(1, x, y, userpos);
+              Writecoord(1, x, y, pathINICalendar);
+              CalendarFormCoord(2, x, y, userpos);
+              Writecoord(2, x, y, pathINICalendar);
+              CalendarFormCoord(3, x, y, userpos);
+              Writecoord(3, x, y, pathINICalendar);
+              CalendarFormCoord(4, x, y, userpos);
+              Writecoord(4, x, y, pathINICalendar);
+              CalendarFormCoord(5, x, y, userpos);
+              Writecoord(5, x, y, pathINICalendar);
+            end
+            else
+            begin
+              siniFile := TIniFile.Create(pathINICalendar);
+              siniFile.WriteInteger('Position', 'Location', 5);
+              siniFile.Free;
+            end;
+          end;
+        end;
+      6:
+        begin
+          if isActive(pathINICalc) = true then
+          begin
+            CalcFormCoord(5, x, y, userpos);
+            if userpos <> true then
+            begin
+              CalcFormCoord(0, x, y, userpos);
+              Writecoord(0, x, y, pathINICalc);
+              CalcFormCoord(1, x, y, userpos);
+              Writecoord(1, x, y, pathINICalc);
+              CalcFormCoord(2, x, y, userpos);
+              Writecoord(2, x, y, pathINICalc);
+              CalcFormCoord(3, x, y, userpos);
+              Writecoord(3, x, y, pathINICalc);
+              CalcFormCoord(4, x, y, userpos);
+              Writecoord(4, x, y, pathINICalc);
+              CalcFormCoord(5, x, y, userpos);
+              Writecoord(5, x, y, pathINICalc);
+            end
+            else
+            begin
+              siniFile := TIniFile.Create(pathINICalc);
+              siniFile.WriteInteger('Position', 'Location', 5);
+              siniFile.Free;
+            end;
+          end;
+        end;
+    end;
   end;
 end;
 
-function TMainForm.LoadActive(path: string): boolean;
+function TMainForm.isActive(path: string): boolean;
 begin
   if FileExists(path) then
   begin
@@ -1126,30 +1360,30 @@ begin
     if MainForm.Visible = true then
     begin
       case selectWidget.Selected.AbsoluteIndex of
-        0: LoadPosition(pathinidateandtime);
-        1: LoadPosition(pathinicpuusage);
-        2: LoadPosition(pathINIPhiscalMemory);
-        3: LoadPosition(pathINIOpenFolder);
-        4: LoadPosition(pathINIOpenApp);
-        5: LoadPosition(pathINICalendar);
-        6: LoadPosition(pathINICalc);
+        0: LoadPosition(pathINIDateAndTime, 0);
+        1: LoadPosition(pathinicpuusage, 1);
+        2: LoadPosition(pathINIPhiscalMemory, 2);
+        3: LoadPosition(pathINIOpenFolder, 3);
+        4: LoadPosition(pathINIOpenApp, 4);
+        5: LoadPosition(pathINICalendar, 5);
+        6: LoadPosition(pathINICalc, 6);
       end;
     end;
   end;
   countActive := 0;
-  if LoadActive(pathINIDateAndTime) = True then
+  if isActive(pathINIDateAndTime) = True then
     countActive := countActive + 1;
-  if LoadActive(pathINICPUUsage) = True then
+  if isActive(pathINICPUUsage) = True then
     countActive := countActive + 1;
-  if LoadActive(pathINIPhiscalMemory) = True then
+  if isActive(pathINIPhiscalMemory) = True then
     countActive := countActive + 1;
-  if LoadActive(pathINIOpenFolder) = True then
+  if isActive(pathINIOpenFolder) = True then
     countActive := countActive + 1;
-  if LoadActive(pathINIOpenApp) = True then
+  if isActive(pathINIOpenApp) = True then
     countActive := countActive + 1;
-  if LoadActive(pathINICalendar) = True then
+  if isActive(pathINICalendar) = True then
     countActive := countActive + 1;
-  if LoadActive(pathINICalc) = True then
+  if isActive(pathINICalc) = True then
     countActive := countActive + 1;
   num_of_widgets.Progress := countActive;
 end;
@@ -1192,22 +1426,29 @@ end;
 
 procedure TMainForm.ChangeLocation(num: integer; path: string);
 begin
-  case cbb1.ItemIndex of
-    0: LocateFormPos(0, 0, false, 0, path, num);
-    1: LocateFormPos(Screen.Width, 0, False, 1,
-        path, num);
-    2: LocateFormPos(0, Screen.Height, False, 2,
-        path, num);
-    3: LocateFormPos(Screen.Width, Screen.Height, False,
-        3, path, num);
-    4: LocateFormPos(0, 0, true, 4,
-        path, num);
-    5:
-      begin
-        siniFile := TIniFile.Create(path);
-        siniFile.WriteInteger('Position', 'Location', 5);
-        siniFile.Free;
+  if FileExists(path) then
+  begin
+    siniFile := TIniFile.Create(path);
+    if siniFile.ReadBool('State', 'Active', false) = true then
+    begin
+      case cbb1.ItemIndex of
+        0: LocateFormPos(0, 0, false, 0, path, num);
+        1: LocateFormPos(Screen.Width, 0, False, 1,
+            path, num);
+        2: LocateFormPos(0, Screen.Height, False, 2,
+            path, num);
+        3: LocateFormPos(Screen.Width, Screen.Height, False,
+            3, path, num);
+        4: LocateFormPos(0, 0, true, 4,
+            path, num);
+        5:
+          begin
+            siniFile := TIniFile.Create(path);
+            siniFile.WriteInteger('Position', 'Location', 5);
+            siniFile.Free;
+          end;
       end;
+    end;
   end;
 end;
 
@@ -1239,8 +1480,8 @@ end;
 
 procedure TMainForm.AnimSettingHideTimer(Sender: TObject);
 begin
-  if settingPanel.Top <> 585 then
-    settingPanel.Top := settingPanel.Top + 2
+  if settingPanel.Top <> 587 then
+    settingPanel.Top := settingPanel.Top + 4
   else
     AnimSettingHide.Enabled := False;
 end;
@@ -1248,7 +1489,7 @@ end;
 procedure TMainForm.AnimSettingShowTimer(Sender: TObject);
 begin
   if settingPanel.Top <> 463 then
-    settingPanel.Top := settingPanel.Top - 2
+    settingPanel.Top := settingPanel.Top - 4
   else
   begin
     AnimSettingShow.Enabled := False;
