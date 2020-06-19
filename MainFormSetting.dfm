@@ -2246,6 +2246,7 @@ object MainForm: TMainForm
           Top = 32
           Width = 150
           Height = 21
+          Enabled = False
           ItemHeight = 13
           ItemIndex = -1
           TabOrder = 1
@@ -2269,6 +2270,7 @@ object MainForm: TMainForm
           Color = clGray
           SkinData.CustomColor = True
           SkinData.SkinSection = 'TRANSPARENT'
+          Enabled = False
           ItemHeight = 16
           TabOrder = 2
         end
@@ -2303,6 +2305,7 @@ object MainForm: TMainForm
           Width = 65
           Height = 21
           Cursor = crIBeam
+          Enabled = False
           ReadOnly = True
           TabOrder = 0
           Text = '0'
@@ -2313,6 +2316,7 @@ object MainForm: TMainForm
           Top = 30
           Width = 65
           Height = 21
+          Enabled = False
           ReadOnly = True
           TabOrder = 1
           Text = '0'
@@ -23463,7 +23467,7 @@ object MainForm: TMainForm
     Top = 144
   end
   object Pos: TTimer
-    Interval = 500
+    Interval = 100
     OnTimer = PosTimer
     Left = 456
     Top = 144

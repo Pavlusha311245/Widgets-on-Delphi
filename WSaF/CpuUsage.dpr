@@ -47,8 +47,7 @@ begin
       sIniFile := TIniFile.Create(pathMainApp);
       path := ExtractFilePath(Application.ExeName) + '\Images\background_120_' +
         sIniFile.ReadString('Theme', 'Color1', '') + '_' +
-        sIniFile.ReadString('Theme',
-        'Color2', '') + '.png';
+        sIniFile.ReadString('Theme', 'Color2', '') + '.png';
       if (sinifile.readstring('Theme', 'Color1', '') = 'white') or
         (sinifile.readstring('Theme', 'Color2', '') = 'white') then
       begin
@@ -95,8 +94,14 @@ begin
     end
     else
     begin
-      CpuUsageForm.Left := x;
-      CpuUsageForm.Top := y;
+      if x = 0 then
+        CpuUsageForm.Left := x
+      else
+        CpuUsageForm.Left := x - CpuUsageForm.clientwidth;
+      if y = 0 then
+        CpuUsageForm.Top := y
+      else
+        CpuUsageForm.Top := y - CpuUsageForm.clientheight;
       sIniFile := TIniFile.Create(pathINI);
       sinifile.writeinteger('Position', 'Left', x);
       sinifile.writeinteger('Position', 'Top', y);
@@ -142,10 +147,8 @@ begin
         end;
       4:
         begin
-          y := Round((screen.height / 2) -
-            (CpuUsageForm.clientheight / 2));
-          x := Round((screen.width / 2) -
-            (CpuUsageForm.clientwidth / 2));
+          y := Round((screen.height / 2) - (CpuUsageForm.clientheight / 2));
+          x := Round((screen.width / 2) - (CpuUsageForm.clientwidth / 2));
         end;
       5:
         begin
@@ -160,29 +163,34 @@ begin
               CpuUsageForm.clientwidth) then
               left_bot := false;
             if (sinifile.readinteger('Position', 'Top', 0) <> screen.height -
-              CpuUsageForm.clientheight) and
-              (sinifile.readinteger('Position', 'Left', 0) <> 0) then
+              CpuUsageForm.clientheight) and (sinifile.readinteger('Position',
+              'Left', 0) <> 0) then
               right_top := false;
             if (sinifile.readinteger('Position', 'Top', 0) <> screen.height -
-              CpuUsageForm.clientheight) and
-              (sinifile.readinteger('Position', 'Left', 0) <> screen.width -
-              CpuUsageForm.clientwidth) then
+              CpuUsageForm.clientheight) and (sinifile.readinteger('Position',
+              'Left', 0) <> screen.width - CpuUsageForm.clientwidth) then
               right_bot := false;
             if (sinifile.readinteger('Position', 'Top', 0) <>
               Round((screen.height / 2) - (CpuUsageForm.clientheight / 2))) and
               (sinifile.readinteger('Position', 'Left', 0) <> Round((screen.width
               / 2) - (CpuUsageForm.clientwidth / 2))) then
               centered := false;
-            if (left_top = false) and (left_bot = False) and (right_top =
-              false) and
-              (right_bot = false) and (centered = false) then
+            if (left_top = false) and (left_bot = False) and (right_top = false)
+              and (right_bot = false) and (centered = false) then
               userpos := true;
           end;
         end;
     end;
   end;
 end;
-exports ShowCpuUsage, RefreshCpuUsage, CloseCpuUsage, FormPos, FormCoord;
+
+exports
+  ShowCpuUsage,
+  RefreshCpuUsage,
+  CloseCpuUsage,
+  FormPos,
+  FormCoord;
+
 begin
 end.
 

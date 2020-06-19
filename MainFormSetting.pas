@@ -328,6 +328,7 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   activeautorun: Boolean;
 begin
+  settingPanel.Top := 587;
   //Путь к настройкам виджетов и главной формы
   pathINI := extractfilepath(application.ExeName) + '\Settings.ini';
   pathINIDateAndTime :=
@@ -392,6 +393,7 @@ begin
     begin
       ShowDateAndTime;
       num_of_widgets.Progress := num_of_widgets.Progress + 1;
+      cbb1.ItemIndex := siniFile.ReadInteger('State', 'Active', 0);
     end;
     authorrez.Caption := siniFile.ReadString('Metadata', 'Author', '');
     verrez.Caption := siniFile.ReadString('Metadata', 'Version', '');
@@ -479,33 +481,6 @@ begin
   MainForm.Show;
 end;
 
-//procedure TMainForm.StartCloseWidgets(Form: string; pathINI: string);
-//begin
-//  if FileExists(pathINI) then
-//  begin
-//    siniFile := TIniFile.Create(pathINI);
-//    if siniFile.ReadBool('State', 'Active', false) = False then
-//    begin
-//      ShowDateAndTime;
-//      ActiveWidgLbl.Caption := 'Виджет запущен';
-//      timer.Enabled := true;
-//      num_of_widgets.Progress := num_of_widgets.Progress + 1;
-//      cbb1.Enabled := true;
-//      cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
-//    end
-//    else
-//    begin
-//      CloseDateAndTime;
-//      ActiveWidgLbl.Caption := 'Виджет закрыт';
-//      timer.Enabled := true;
-//      num_of_widgets.Progress := num_of_widgets.Progress - 1;
-//      cbb1.Text := '';
-//      cbb1.Enabled := false;
-//    end;
-//    siniFile.Free;
-//  end;
-//end;
-
 procedure TMainForm.ActiveWidgetClick(Sender: TObject);
 begin
   case selectWidget.Selected.AbsoluteIndex of
@@ -521,6 +496,8 @@ begin
             timer.Enabled := true;
             cbb1.Enabled := true;
             cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
+            edt1.Enabled := true;
+            edt3.Enabled := true;
           end
           else
           begin
@@ -529,6 +506,8 @@ begin
             timer.Enabled := true;
             cbb1.Text := '';
             cbb1.Enabled := false;
+            edt1.Enabled := false;
+            edt3.Enabled := false;
           end;
           siniFile.Free;
         end;
@@ -837,6 +816,14 @@ begin
     AnimSettingHide.Enabled := true;
     ShowSetting.Caption := 'Показать';
     sknslctr1.Enabled := false;
+    themes.Enabled := False;
+    cbb1.Enabled := false;
+    edt1.Text := '';
+    edt3.Text := '';
+    edt1.Enabled := False;
+    edt3.Enabled := false;
+    Pos.Enabled := False;
+    UpdateWidget.Enabled := False;
   end;
   if settingPanel.Top = 587 then
   begin
@@ -863,7 +850,7 @@ end;
 procedure TMainForm.N12Click(Sender: TObject);
 begin
   mainform.Show;
-  if settingPanel.Top = 585 then
+  if settingPanel.Top = 587 then
   begin
     AnimSettingShow.Enabled := true;
     ShowSetting.Caption := 'Скрыть';
@@ -894,7 +881,6 @@ begin
   end
   else
     showmessage('File not found!');
-  settingPanel.Top := 587;
 end;
 
 procedure TMainForm.selectWidgetClick(Sender: TObject);
@@ -1156,12 +1142,11 @@ begin
               Writecoord(3, x, y, pathINIDateAndTime);
               DateFormCoord(4, x, y, userpos);
               Writecoord(4, x, y, pathINIDateAndTime);
-              DateFormCoord(5, x, y, userpos);
-              Writecoord(5, x, y, pathINIDateAndTime);
             end
             else
             begin
               siniFile := TIniFile.Create(pathINIDateAndTime);
+              cbb1.ItemIndex := 5;
               siniFile.WriteInteger('Position', 'Location', 5);
               siniFile.Free;
             end;
@@ -1184,12 +1169,11 @@ begin
               Writecoord(3, x, y, pathINICPUUsage);
               CPUFormCoord(4, x, y, userpos);
               Writecoord(4, x, y, pathINICPUUsage);
-              CPUFormCoord(5, x, y, userpos);
-              Writecoord(5, x, y, pathINICPUUsage);
             end
             else
             begin
               siniFile := TIniFile.Create(pathINICPUUsage);
+              cbb1.ItemIndex := 5;
               siniFile.WriteInteger('Position', 'Location', 5);
               siniFile.Free;
             end;
@@ -1212,12 +1196,11 @@ begin
               Writecoord(3, x, y, pathINIPhiscalMemory);
               MemoryFormCoord(4, x, y, userpos);
               Writecoord(4, x, y, pathINIPhiscalMemory);
-              MemoryFormCoord(5, x, y, userpos);
-              Writecoord(5, x, y, pathINIPhiscalMemory);
             end
             else
             begin
               siniFile := TIniFile.Create(pathINIPhiscalMemory);
+              cbb1.ItemIndex := 5;
               siniFile.WriteInteger('Position', 'Location', 5);
               siniFile.Free;
             end;
@@ -1240,12 +1223,11 @@ begin
               Writecoord(3, x, y, pathINIOpenFolder);
               FolderFormCoord(4, x, y, userpos);
               Writecoord(4, x, y, pathINIOpenFolder);
-              FolderFormCoord(5, x, y, userpos);
-              Writecoord(5, x, y, pathINIOpenFolder);
             end
             else
             begin
               siniFile := TIniFile.Create(pathINIOpenFolder);
+              cbb1.ItemIndex := 5;
               siniFile.WriteInteger('Position', 'Location', 5);
               siniFile.Free;
             end;
@@ -1268,12 +1250,11 @@ begin
               Writecoord(3, x, y, pathINIOpenApp);
               AppFormCoord(4, x, y, userpos);
               Writecoord(4, x, y, pathINIOpenApp);
-              AppFormCoord(5, x, y, userpos);
-              Writecoord(5, x, y, pathINIOpenApp);
             end
             else
             begin
               siniFile := TIniFile.Create(pathINIOpenApp);
+              cbb1.ItemIndex := 5;
               siniFile.WriteInteger('Position', 'Location', 5);
               siniFile.Free;
             end;
@@ -1296,12 +1277,11 @@ begin
               Writecoord(3, x, y, pathINICalendar);
               CalendarFormCoord(4, x, y, userpos);
               Writecoord(4, x, y, pathINICalendar);
-              CalendarFormCoord(5, x, y, userpos);
-              Writecoord(5, x, y, pathINICalendar);
             end
             else
             begin
               siniFile := TIniFile.Create(pathINICalendar);
+              cbb1.ItemIndex := 5;
               siniFile.WriteInteger('Position', 'Location', 5);
               siniFile.Free;
             end;
@@ -1324,12 +1304,11 @@ begin
               Writecoord(3, x, y, pathINICalc);
               CalcFormCoord(4, x, y, userpos);
               Writecoord(4, x, y, pathINICalc);
-              CalcFormCoord(5, x, y, userpos);
-              Writecoord(5, x, y, pathINICalc);
             end
             else
             begin
               siniFile := TIniFile.Create(pathINICalc);
+              cbb1.ItemIndex := 5;
               siniFile.WriteInteger('Position', 'Location', 5);
               siniFile.Free;
             end;
@@ -1355,21 +1334,21 @@ procedure TMainForm.PosTimer(Sender: TObject);
 var
   countActive: Integer;
 begin
-  if (edt1.Focused = false) or (edt3.Focused = false) then
+  //  if (edt1.Focused = false) or (edt3.Focused = false) then
+  //  begin
+  if MainForm.Visible = true then
   begin
-    if MainForm.Visible = true then
-    begin
-      case selectWidget.Selected.AbsoluteIndex of
-        0: LoadPosition(pathINIDateAndTime, 0);
-        1: LoadPosition(pathinicpuusage, 1);
-        2: LoadPosition(pathINIPhiscalMemory, 2);
-        3: LoadPosition(pathINIOpenFolder, 3);
-        4: LoadPosition(pathINIOpenApp, 4);
-        5: LoadPosition(pathINICalendar, 5);
-        6: LoadPosition(pathINICalc, 6);
-      end;
+    case selectWidget.Selected.AbsoluteIndex of
+      0: LoadPosition(pathINIDateAndTime, 0);
+      1: LoadPosition(pathinicpuusage, 1);
+      2: LoadPosition(pathINIPhiscalMemory, 2);
+      3: LoadPosition(pathINIOpenFolder, 3);
+      4: LoadPosition(pathINIOpenApp, 4);
+      5: LoadPosition(pathINICalendar, 5);
+      6: LoadPosition(pathINICalc, 6);
     end;
   end;
+  //  end;
   countActive := 0;
   if isActive(pathINIDateAndTime) = True then
     countActive := countActive + 1;
@@ -1494,6 +1473,12 @@ begin
   begin
     AnimSettingShow.Enabled := False;
     sknslctr1.Enabled := True;
+    themes.Enabled := True;
+    cbb1.Enabled := true;
+    edt1.Enabled := true;
+    edt3.Enabled := true;
+    Pos.Enabled := True;
+    UpdateWidget.Enabled := True;
   end;
 end;
 
