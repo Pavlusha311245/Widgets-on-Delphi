@@ -11,6 +11,8 @@ uses
   sSpeedButton, sColorSelect, sPageControl, TntStdCtrls;
 
 type
+  Tproc = procedure;
+  TprocPos = procedure(pos: Integer; var x, y: integer; var userpos: Boolean);
   TMainForm = class(TForm)
     gradient: TsGradientPanel;
     skins: TsSkinManager;
@@ -81,10 +83,6 @@ type
     procedure N1Click(Sender: TObject);
     procedure AddStart;
     procedure DelStart;
-    procedure edt1KeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure edt3KeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
     procedure N5Click(Sender: TObject);
     procedure N6Click(Sender: TObject);
     procedure N7Click(Sender: TObject);
@@ -125,7 +123,10 @@ type
     procedure AnimSettingHideTimer(Sender: TObject);
     procedure AnimSettingShowTimer(Sender: TObject);
     procedure WriteCoord(pos: Integer; x, y: Integer; path: string);
-    //    procedure StartCloseWidgets(Form: string; pathINI: string);
+    procedure ActiveCloseWidget(Proc_name_active, Proc_name_close: Pointer;
+      path: string);
+    procedure edt1KeyPress(Sender: TObject; var Key: Char);
+    procedure edt3KeyPress(Sender: TObject; var Key: Char);
 
   private
     { Private declarations }
@@ -222,7 +223,8 @@ procedure CloseFolder; stdcall;
 procedure FolderFormPos(x, y: integer; center: Boolean); stdcall;
   external 'WSaF\OpenFolder.dll' name 'FormPos';
 
-procedure FolderFormCoord(pos: Integer; varx, y: integer; var userpos: Boolean);
+procedure FolderFormCoord(pos: integer; var x, y: integer; var userpos:
+  Boolean);
   stdcall;
   external 'WSaF\OpenFolder.dll' name 'FormCoord';
 ///////////////////////////////////////////////////////////////////////////////
@@ -480,181 +482,48 @@ begin
   MainForm.Show;
 end;
 
+procedure TMainForm.ActiveCloseWidget(Proc_name_active, Proc_name_close:
+  Pointer;
+  path: string);
+begin
+  if FileExists(path) then
+  begin
+    siniFile := TIniFile.Create(path);
+    if siniFile.ReadBool('State', 'Active', false) = False then
+    begin
+      TProc(Proc_name_active);
+      ActiveWidgLbl.Caption := 'Виджет запущен';
+      timer.Enabled := true;
+      cbb1.Enabled := true;
+      cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
+      edt1.Enabled := true;
+      edt3.Enabled := true;
+    end
+    else
+    begin
+      TProc(Proc_name_close);
+      ActiveWidgLbl.Caption := 'Виджет закрыт';
+      timer.Enabled := true;
+      cbb1.Text := '';
+      cbb1.Enabled := false;
+      edt1.Enabled := false;
+      edt3.Enabled := false;
+    end;
+  end;
+end;
+
 procedure TMainForm.ActiveWidgetClick(Sender: TObject);
 begin
   case selectWidget.Selected.AbsoluteIndex of
-    0:
-      begin
-        if FileExists(pathINIDateAndTime) then
-        begin
-          siniFile := TIniFile.Create(pathINIDateAndTime);
-          if siniFile.ReadBool('State', 'Active', false) = False then
-          begin
-            ShowDateAndTime;
-            ActiveWidgLbl.Caption := 'Виджет запущен';
-            timer.Enabled := true;
-            cbb1.Enabled := true;
-            cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
-            edt1.Enabled := true;
-            edt3.Enabled := true;
-          end
-          else
-          begin
-            CloseDateAndTime;
-            ActiveWidgLbl.Caption := 'Виджет закрыт';
-            timer.Enabled := true;
-            cbb1.Text := '';
-            cbb1.Enabled := false;
-            edt1.Enabled := false;
-            edt3.Enabled := false;
-          end;
-          siniFile.Free;
-        end;
-      end;
-    1:
-      begin
-        if FileExists(pathINICPUUsage) then
-        begin
-          siniFile := TIniFile.Create(pathINICPUUsage);
-          if siniFile.ReadBool('State', 'Active', false) = False then
-          begin
-            ShowCpuUsage;
-            ActiveWidgLbl.Caption := 'Виджет запущен';
-            timer.Enabled := true;
-            cbb1.Enabled := true;
-            cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
-          end
-          else
-          begin
-            CloseCpuUsage;
-            ActiveWidgLbl.Caption := 'Виджет закрыт';
-            timer.Enabled := true;
-            cbb1.Text := '';
-            cbb1.Enabled := false;
-          end;
-          siniFile.Free;
-        end;
-      end;
-    2:
-      begin
-        if FileExists(pathINIPhiscalMemory) then
-        begin
-          siniFile := TIniFile.Create(pathINIPhiscalMemory);
-          if siniFile.ReadBool('State', 'Active', false) = False then
-          begin
-            ShowPhisicalMemory;
-            ActiveWidgLbl.Caption := 'Виджет запущен';
-            timer.Enabled := true;
-            cbb1.Enabled := true;
-            cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
-          end
-          else
-          begin
-            ClosePhisicalMemory;
-            ActiveWidgLbl.Caption := 'Виджет закрыт';
-            timer.Enabled := true;
-            cbb1.Text := '';
-            cbb1.Enabled := false;
-          end;
-          siniFile.Free;
-        end;
-      end;
-    3:
-      begin
-        if FileExists(pathINIOpenFolder) then
-        begin
-          siniFile := TIniFile.Create(pathINIOpenFolder);
-          if siniFile.ReadBool('State', 'Active', false) = False then
-          begin
-            ShowFolder;
-            ActiveWidgLbl.Caption := 'Виджет запущен';
-            timer.Enabled := true;
-            cbb1.Enabled := true;
-            cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
-          end
-          else
-          begin
-            CloseFolder;
-            ActiveWidgLbl.Caption := 'Виджет закрыт';
-            timer.Enabled := true;
-            cbb1.Text := '';
-            cbb1.Enabled := false;
-          end;
-          siniFile.Free;
-        end;
-      end;
-    4:
-      begin
-        if FileExists(pathINIOpenApp) then
-        begin
-          siniFile := TIniFile.Create(pathINIOpenApp);
-          if siniFile.ReadBool('State', 'Active', false) = False then
-          begin
-            ShowApp;
-            ActiveWidgLbl.Caption := 'Виджет запущен';
-            timer.Enabled := true;
-            cbb1.Enabled := true;
-            cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
-          end
-          else
-          begin
-            CloseApp;
-            ActiveWidgLbl.Caption := 'Виджет закрыт';
-            timer.Enabled := true;
-            cbb1.Text := '';
-            cbb1.Enabled := false;
-          end;
-          siniFile.Free;
-        end;
-      end;
-    5:
-      begin
-        if FileExists(pathINICalendar) then
-        begin
-          siniFile := TIniFile.Create(pathINICalendar);
-          if siniFile.ReadBool('State', 'Active', false) = False then
-          begin
-            ShowCalendar;
-            ActiveWidgLbl.Caption := 'Виджет запущен';
-            timer.Enabled := true;
-            cbb1.Enabled := true;
-            cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
-          end
-          else
-          begin
-            CloseCalendar;
-            ActiveWidgLbl.Caption := 'Виджет закрыт';
-            timer.Enabled := true;
-            cbb1.Text := '';
-            cbb1.Enabled := false;
-          end;
-          siniFile.Free;
-        end;
-      end;
-    6:
-      begin
-        if FileExists(pathINICalc) then
-        begin
-          siniFile := TIniFile.Create(pathINICalc);
-          if siniFile.ReadBool('State', 'Active', false) = False then
-          begin
-            ShowCalc;
-            ActiveWidgLbl.Caption := 'Виджет запущен';
-            timer.Enabled := true;
-            cbb1.Enabled := true;
-            cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
-          end
-          else
-          begin
-            CloseCalc;
-            ActiveWidgLbl.Caption := 'Виджет закрыт';
-            timer.Enabled := true;
-            cbb1.Text := '';
-            cbb1.Enabled := false;
-          end;
-          siniFile.Free;
-        end;
-      end;
+    0: ActiveCloseWidget(@ShowDateAndTime, @CloseDateAndTime,
+        pathINIDateAndTime);
+    1: ActiveCloseWidget(@ShowCpuUsage, @Closecpuusage, pathINICPUUsage);
+    2: ActiveCloseWidget(@ShowPhisicalMemory, @ClosePhisicalMemory,
+        pathINIPhiscalMemory);
+    3: ActiveCloseWidget(@ShowFolder, @CloseFolder, pathINIOpenFolder);
+    4: ActiveCloseWidget(@ShowApp, @CloseApp, pathINIOpenApp);
+    5: ActiveCloseWidget(@ShowCalendar, @CloseCalendar, pathINICalendar);
+    6: ActiveCloseWidget(@ShowCalc, @CloseCalc, pathINICalc);
   end;
 end;
 
@@ -671,34 +540,6 @@ end;
 procedure TMainForm.N1Click(Sender: TObject);
 begin
   AboutApplication.About.Show;
-end;
-
-procedure TMainForm.edt1KeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  //изменение координат виджета по оси X
-  if Key = 13 then
-  begin
-    changeposfun;
-    ChangePos.Caption := 'Изменить координаты';
-    Pos.Enabled := true;
-    edt1.ReadOnly := true;
-    edt3.ReadOnly := true;
-  end;
-end;
-
-procedure TMainForm.edt3KeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  //изменение координат виджета по оси Y
-  if Key = 13 then
-  begin
-    changeposfun;
-    ChangePos.Caption := 'Изменить координаты';
-    Pos.Enabled := true;
-    edt1.ReadOnly := true;
-    edt3.ReadOnly := true;
-  end;
 end;
 
 function TMainForm.isPopupWidgetActive(path: string): boolean;
@@ -1132,10 +973,10 @@ begin
     case numWidget of
       0:
         begin
-          if isActive(pathINIDateAndTime) = True then
+          if isActive(pathINIDateAndTime) = true then
           begin
             DateFormCoord(5, x, y, userpos);
-            if userpos <> True then
+            if userpos <> true then
             begin
               DateFormCoord(0, x, y, userpos);
               Writecoord(0, x, y, pathINIDateAndTime);
@@ -1339,8 +1180,6 @@ procedure TMainForm.PosTimer(Sender: TObject);
 var
   countActive: Integer;
 begin
-  //  if (edt1.Focused = false) or (edt3.Focused = false) then
-  //  begin
   if MainForm.Visible = True then
   begin
     if cbb1.focused = False then
@@ -1390,7 +1229,10 @@ begin
     Pos.Enabled := true;
     edt1.ReadOnly := true;
     edt3.ReadOnly := true;
-    ChangePosFun;
+    if (StrToInt(edt1.Text) >= 0) or (StrToInt(edt1.Text) <= Screen.Width) then
+      ChangePosFun
+    else
+      ShowMessage('Выход за границу экрана!');
   end;
 end;
 
@@ -1409,6 +1251,17 @@ begin
   siniFile := TIniFile.Create(path);
   siniFile.WriteInteger('Position', 'Location', status);
   siniFile.Free;
+end;
+
+procedure TMainForm.edt3KeyPress(Sender: TObject; var Key: Char);
+begin
+  case Key of
+    '0'..'9': ;
+    #8: ;
+    #13: changepos.SetFocus;
+  else
+    Key := Chr(0);
+  end;
 end;
 
 procedure TMainForm.ChangeLocation(num: integer; path: string);
@@ -1490,6 +1343,17 @@ begin
     edt3.Enabled := true;
     Pos.Enabled := True;
     UpdateWidget.Enabled := True;
+  end;
+end;
+
+procedure TMainForm.edt1KeyPress(Sender: TObject; var Key: Char);
+begin
+  case Key of
+    '0'..'9': ;
+    #8: ;
+    #13: edt3.SetFocus;
+  else
+    Key := Chr(0);
   end;
 end;
 

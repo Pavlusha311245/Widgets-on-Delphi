@@ -55,8 +55,7 @@ begin
       sIniFile := TIniFile.Create(pathMainApp);
       path := ExtractFilePath(Application.ExeName) + '\Images\background_120_' +
         sIniFile.ReadString('Theme', 'Color1', '') + '_' +
-        sIniFile.ReadString('Theme',
-        'Color2', '') + '.png';
+        sIniFile.ReadString('Theme', 'Color2', '') + '.png';
       FolderForm.FolderBackground.Picture.LoadFromFile(path);
     end;
   end;
@@ -85,11 +84,9 @@ begin
         2));
       sIniFile := TIniFile.Create(pathINI);
       sinifile.writeinteger('Position', 'Left', Round((screen.width / 2) -
-        (FolderForm.ClientWidth /
-        2)));
+        (FolderForm.ClientWidth / 2)));
       sinifile.writeinteger('Position', 'Top', Round((screen.height / 2) -
-        (FolderForm.ClientHeight /
-        2)));
+        (FolderForm.ClientHeight / 2)));
       sIniFile.Free;
     end
     else
@@ -113,7 +110,7 @@ end;
 procedure FormCoord(pos: integer; var x, y: integer; var userpos: Boolean);
   stdcall;
 var
-  empty: Boolean;
+  empty: boolean;
   left_top, right_top, left_bot, right_bot, centered: Boolean;
 begin
   isEmpy(FolderForm, empty);
@@ -147,10 +144,8 @@ begin
         end;
       4:
         begin
-          y := Round((screen.height / 2) -
-            (FolderForm.clientheight / 2));
-          x := Round((screen.width / 2) -
-            (FolderForm.clientwidth / 2));
+          y := Round((screen.height / 2) - (FolderForm.clientheight / 2));
+          x := Round((screen.width / 2) - (FolderForm.clientwidth / 2));
         end;
       5:
         begin
@@ -165,29 +160,34 @@ begin
               FolderForm.clientwidth) then
               left_bot := false;
             if (sinifile.readinteger('Position', 'Top', 0) <> screen.height -
-              FolderForm.clientheight) and
-              (sinifile.readinteger('Position', 'Left', 0) <> 0) then
+              FolderForm.clientheight) and (sinifile.readinteger('Position',
+              'Left', 0) <> 0) then
               right_top := false;
             if (sinifile.readinteger('Position', 'Top', 0) <> screen.height -
-              FolderForm.clientheight) and
-              (sinifile.readinteger('Position', 'Left', 0) <> screen.width -
-              FolderForm.clientwidth) then
+              FolderForm.clientheight) and (sinifile.readinteger('Position',
+              'Left', 0) <> screen.width - FolderForm.clientwidth) then
               right_bot := false;
             if (sinifile.readinteger('Position', 'Top', 0) <>
               Round((screen.height / 2) - (FolderForm.clientheight / 2))) and
               (sinifile.readinteger('Position', 'Left', 0) <> Round((screen.width
               / 2) - (FolderForm.clientwidth / 2))) then
               centered := false;
-            if (left_top = false) and (left_bot = False) and (right_top =
-              false) and
-              (right_bot = false) and (centered = false) then
+            if (left_top = false) and (left_bot = False) and (right_top = false)
+              and (right_bot = false) and (centered = false) then
               userpos := true;
           end;
         end;
     end;
   end;
 end;
-exports ShowFolder, RefreshFolder, CloseFolder, FormPos, FormCoord;
+
+exports
+  ShowFolder,
+  RefreshFolder,
+  CloseFolder,
+  FormPos,
+  FormCoord;
+
 begin
 end.
- 
+

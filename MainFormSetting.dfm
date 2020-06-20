@@ -2308,7 +2308,7 @@ object MainForm: TMainForm
           ReadOnly = True
           TabOrder = 0
           Text = '0'
-          OnKeyDown = edt1KeyDown
+          OnKeyPress = edt1KeyPress
         end
         object edt3: TsEdit
           Left = 100
@@ -2319,7 +2319,7 @@ object MainForm: TMainForm
           ReadOnly = True
           TabOrder = 1
           Text = '0'
-          OnKeyDown = edt3KeyDown
+          OnKeyPress = edt3KeyPress
         end
         object ChangePos: TsBitBtn
           Left = 25
