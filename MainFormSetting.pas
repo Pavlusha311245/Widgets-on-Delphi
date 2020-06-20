@@ -113,7 +113,6 @@ type
     function isPopupWidgetActive(path: string): boolean;
     procedure EditWidgetClick(Sender: TObject);
     procedure OpenWidgetSetting(path: string);
-    procedure gradientClick(Sender: TObject);
     procedure PosTimer(Sender: TObject);
     procedure ChangePosClick(Sender: TObject);
     procedure cbb1Change(Sender: TObject);
@@ -981,6 +980,18 @@ begin
     8: ChangeTheme(8, 'white', 'red', 255, 255, 255, 255, 0, 0, clblack);
   end;
   RefreshAll;
+  if spgcntrl1.ActivePageIndex = 0 then
+  begin
+    spgcntrl1.ActivePageIndex := 1;
+    spgcntrl1.ActivePageIndex := 0;
+  end
+  else
+  begin
+    spgcntrl1.ActivePageIndex := 0;
+    spgcntrl1.ActivePageIndex := 1;
+  end;
+  settingPanel.Visible := False;
+  settingPanel.Visible := true;
 end;
 
 procedure TMainForm.TimerTimer(Sender: TObject);
@@ -1089,12 +1100,6 @@ begin
     5: OpenWidgetSetting(pathINICalendar);
     6: OpenWidgetSetting(pathINICalc);
   end;
-end;
-
-procedure TMainForm.gradientClick(Sender: TObject);
-begin
-  settingPanel.Visible := false;
-  ShowSetting.Caption := 'Показать';
 end;
 
 procedure TMainForm.WriteCoord(pos: Integer; x, y: Integer; path: string);
@@ -1336,16 +1341,19 @@ var
 begin
   //  if (edt1.Focused = false) or (edt3.Focused = false) then
   //  begin
-  if MainForm.Visible = true then
+  if MainForm.Visible = True then
   begin
-    case selectWidget.Selected.AbsoluteIndex of
-      0: LoadPosition(pathINIDateAndTime, 0);
-      1: LoadPosition(pathinicpuusage, 1);
-      2: LoadPosition(pathINIPhiscalMemory, 2);
-      3: LoadPosition(pathINIOpenFolder, 3);
-      4: LoadPosition(pathINIOpenApp, 4);
-      5: LoadPosition(pathINICalendar, 5);
-      6: LoadPosition(pathINICalc, 6);
+    if cbb1.focused = False then
+    begin
+      case selectWidget.Selected.AbsoluteIndex of
+        0: LoadPosition(pathINIDateAndTime, 0);
+        1: LoadPosition(pathinicpuusage, 1);
+        2: LoadPosition(pathINIPhiscalMemory, 2);
+        3: LoadPosition(pathINIOpenFolder, 3);
+        4: LoadPosition(pathINIOpenApp, 4);
+        5: LoadPosition(pathINICalendar, 5);
+        6: LoadPosition(pathINICalc, 6);
+      end;
     end;
   end;
   //  end;
@@ -1414,9 +1422,11 @@ begin
         0: LocateFormPos(0, 0, false, 0, path, num);
         1: LocateFormPos(Screen.Width, 0, False, 1,
             path, num);
-        2: LocateFormPos(0, Screen.Height, False, 2,
+        2:
+          LocateFormPos(0, Screen.Height, False, 2,
             path, num);
-        3: LocateFormPos(Screen.Width, Screen.Height, False,
+        3:
+          LocateFormPos(Screen.Width, Screen.Height, False,
             3, path, num);
         4: LocateFormPos(0, 0, true, 4,
             path, num);
@@ -1442,6 +1452,7 @@ begin
     5: ChangeLocation(5, pathINICalendar);
     6: ChangeLocation(6, pathINICalc);
   end;
+  selectWidget.SetFocus;
 end;
 
 procedure TMainForm.ChangePosFun;

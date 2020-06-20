@@ -2142,7 +2142,6 @@ object MainForm: TMainForm
     Height = 449
     Align = alClient
     TabOrder = 0
-    OnClick = gradientClick
     PaintData.IsVertical = False
     PaintData.Color2.Color = clAqua
     PaintData.Color2.UseSkinColor = False
