@@ -127,6 +127,7 @@ type
       path: string);
     procedure edt1KeyPress(Sender: TObject; var Key: Char);
     procedure edt3KeyPress(Sender: TObject; var Key: Char);
+    procedure N2Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -1355,6 +1356,18 @@ begin
   else
     Key := Chr(0);
   end;
+end;
+
+procedure TMainForm.N2Click(Sender: TObject);
+var
+  ans: PAnsiChar;
+  dir: string;
+begin
+  dir := extractfilepath(application.ExeName) +
+    '\help.chm';
+  ans := PAnsiChar(dir);
+  ShellExecute(Handle, 'open', ans, nil, nil,
+    SW_SHOW);
 end;
 
 end.
