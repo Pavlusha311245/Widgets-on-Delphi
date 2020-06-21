@@ -2204,14 +2204,12 @@ object MainForm: TMainForm
         Layout = tlCenter
         WordWrap = True
       end
-      object autorun: TCheckBox
-        Left = 448
-        Top = 16
-        Width = 97
-        Height = 17
+      object AutorunLbl: TsLabel
+        Left = 496
+        Top = 20
+        Width = 59
+        Height = 13
         Caption = #1040#1074#1090#1086#1079#1072#1087#1091#1089#1082
-        TabOrder = 0
-        OnClick = autorunClick
       end
       object editor: TsBitBtn
         Left = 432
@@ -2219,7 +2217,7 @@ object MainForm: TMainForm
         Width = 32
         Height = 32
         Cursor = crHandPoint
-        TabOrder = 1
+        TabOrder = 0
         OnClick = editorClick
       end
       object Selcolpanel: TsPanel
@@ -2229,7 +2227,7 @@ object MainForm: TMainForm
         Height = 80
         SkinData.SkinSection = 'BUTTON'
         DoubleBuffered = False
-        TabOrder = 2
+        TabOrder = 1
         object Selcolaccess: TsBitBtn
           Left = 15
           Top = 55
@@ -2281,7 +2279,7 @@ object MainForm: TMainForm
         Height = 80
         SkinData.SkinSection = 'BUTTON'
         DoubleBuffered = False
-        TabOrder = 3
+        TabOrder = 2
         object lbl1: TsLabel
           Left = 35
           Top = 2
@@ -2338,7 +2336,7 @@ object MainForm: TMainForm
         Height = 57
         SkinData.SkinSection = 'BUTTON'
         DoubleBuffered = False
-        TabOrder = 4
+        TabOrder = 3
         object lbl3: TsLabel
           Left = 42
           Top = 2
@@ -2373,6 +2371,16 @@ object MainForm: TMainForm
             #1055#1086#1089#1077#1088#1077#1076#1080#1085#1077
             #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100#1089#1082#1086#1077)
         end
+      end
+      object autorun: TsSlider
+        Left = 432
+        Top = 16
+        DoubleBuffered = False
+        TabOrder = 4
+        OnClick = autorunClick
+        SliderCaptionOn = 'On'
+        SliderCaptionOff = 'Off'
+        UseSymbols = True
       end
     end
     object ShowSetting: TsBitBtn

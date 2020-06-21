@@ -73,6 +73,7 @@ end;
 procedure FormPos(x, y: integer; center: Boolean); stdcall;
 var
   empty: Boolean;
+  modx, mody: integer;
 begin
   isEmpy(DateAndTimeForm, empty);
   if empty = false then
@@ -92,14 +93,16 @@ begin
     end
     else
     begin
-      if x = 0 then
-        DateAndTimeForm.Left := x
+      modx := Screen.width - dateandtimeform.width;
+      mody := screen.height - dateandtimeform.height;
+      if x < modx then
+        dateandtimeform.left := x
       else
-        DateAndTimeForm.Left := x - DateAndTimeForm.clientwidth;
-      if y = 0 then
-        DateAndTimeForm.Top := y
+        dateandtimeform.left := modx;
+      if y < mody then
+        dateandtimeform.top := y
       else
-        DateAndTimeForm.Top := y - DateAndTimeForm.clientheight;
+        dateandtimeform.top := mody;
       sIniFile := TIniFile.Create(pathINI);
       sinifile.writeinteger('Position', 'Left', DateAndTimeForm.Left);
       sinifile.writeinteger('Position', 'Top', DateAndTimeForm.Top);
@@ -173,7 +176,7 @@ begin
               right_bot := false;
             if (sinifile.readinteger('Position', 'Top', 0) <>
               Round((screen.height / 2) - (dateandtimeform.clientheight / 2)))
-                and
+              and
               (sinifile.readinteger('Position', 'Left', 0) <> Round((screen.width
               / 2) - (dateandtimeform.clientwidth / 2))) then
               centered := false;

@@ -92,6 +92,7 @@ end;
 procedure FormPos(x, y: integer; center: boolean); stdcall;
 var
   empty: Boolean;
+  modx, mody: integer;
 begin
   isEmpy(PhisicalMemoryForm, empty);
   if empty = false then
@@ -111,14 +112,16 @@ begin
     end
     else
     begin
-      if x = 0 then
-        PhisicalMemoryForm.Left := x
+      modx := Screen.width - PhisicalMemoryForm.width;
+      mody := screen.height - PhisicalMemoryForm.height;
+      if x < modx then
+        PhisicalMemoryForm.left := x
       else
-        PhisicalMemoryForm.Left := x - PhisicalMemoryForm.clientwidth;
-      if y = 0 then
-        PhisicalMemoryForm.Top := y
+        PhisicalMemoryForm.left := modx;
+      if y < mody then
+        PhisicalMemoryForm.top := y
       else
-        PhisicalMemoryForm.Top := y - PhisicalMemoryForm.clientheight;
+        PhisicalMemoryForm.top := mody;
       sIniFile := TIniFile.Create(pathINI);
       sinifile.writeinteger('Position', 'Left', PhisicalMemoryForm.Left);
       sinifile.writeinteger('Position', 'Top', PhisicalMemoryForm.Top);
@@ -192,7 +195,7 @@ begin
               right_bot := false;
             if (sinifile.readinteger('Position', 'Top', 0) <>
               Round((screen.height / 2) - (PhisicalMemoryForm.clientheight / 2)))
-                and
+              and
               (sinifile.readinteger('Position', 'Left', 0) <> Round((screen.width
               / 2) - (PhisicalMemoryForm.clientwidth / 2))) then
               centered := false;

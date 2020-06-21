@@ -73,6 +73,7 @@ end;
 procedure FormPos(x, y: integer; center: Boolean); stdcall;
 var
   empty: Boolean;
+  modx,mody:Integer;
 begin
   isEmpy(CalendarForm, empty);
   if empty = false then
@@ -92,14 +93,16 @@ begin
     end
     else
     begin
-      if x = 0 then
-        CalendarForm.Left := x
+      modx := Screen.width - CalendarForm.width;
+      mody := screen.height - CalendarForm.height;
+      if x < modx then
+        CalendarForm.left := x
       else
-        CalendarForm.Left := x - CalendarForm.clientwidth;
-      if y = 0 then
-        CalendarForm.Top := y
+        CalendarForm.left := modx;
+      if y < mody then
+        CalendarForm.top := y
       else
-        CalendarForm.Top := y - CalendarForm.clientheight;
+        CalendarForm.top := mody;
       sIniFile := TIniFile.Create(pathINI);
       sinifile.writeinteger('Position', 'Left', CalendarForm.Left);
       sinifile.writeinteger('Position', 'Top', CalendarForm.Top);

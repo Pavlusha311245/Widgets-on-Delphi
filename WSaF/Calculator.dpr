@@ -64,6 +64,7 @@ end;
 procedure FormPos(x, y: integer; center: boolean); stdcall;
 var
   empty: Boolean;
+  Modx, mody: Integer;
 begin
   isEmpy(CalcForm, empty);
   if empty = false then
@@ -81,14 +82,16 @@ begin
     end
     else
     begin
-      if x = 0 then
-        calcform.Left := x
+      modx := Screen.width - CalcForm.width;
+      mody := screen.height - CalcForm.height;
+      if x < modx then
+        CalcForm.left := x
       else
-        calcform.Left := x - calcform.clientwidth;
-      if y = 0 then
-        calcform.Top := y
+        CalcForm.left := modx;
+      if y < mody then
+        CalcForm.top := y
       else
-        calcform.Top := y - calcform.clientheight;
+        CalcForm.top := mody;
       sIniFile := TIniFile.Create(pathINI);
       sinifile.writeinteger('Position', 'Left', calcform.left);
       sinifile.writeinteger('Position', 'Top', calcform.top);

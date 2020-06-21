@@ -8,7 +8,7 @@ uses
   ExtCtrlsX, ComCtrls, sTreeView, StdCtrls, sLabel, sEdit, sComboBox,
   Buttons, sBitBtn, Menus, sComboBoxes, IniFiles, TeeProcs, acArcControls,
   sUpDown, Registry, sCalculator, IBExtract, ShellAPI, acFloatCtrls, acMagn,
-  sSpeedButton, sColorSelect, sPageControl, TntStdCtrls;
+  sSpeedButton, sColorSelect, sPageControl, TntStdCtrls, acSlider;
 
 type
   Tproc = procedure;
@@ -44,7 +44,6 @@ type
     Version: TLabel;
     Info: TLabel;
     ShowSetting: TsBitBtn;
-    autorun: TCheckBox;
     N12: TMenuItem;
     topBtn: TsFloatButtons;
     Zoom: TsMagnifier;
@@ -73,6 +72,8 @@ type
     FixPosiitionPanel: TsPanel;
     AnimSettingHide: TTimer;
     AnimSettingShow: TTimer;
+    autorun: TsSlider;
+    AutorunLbl: TsLabel;
     procedure E1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure N3Click(Sender: TObject);
@@ -369,12 +370,12 @@ begin
     activeautorun := siniFile.ReadBool('Main', 'Autorun', false);
     if activeautorun = True then
     begin
-      autorun.Checked := True;
+      autorun.SliderOn := true;
       AddStart;
     end
     else
     begin
-      autorun.Checked := false;
+      autorun.SliderOn := false;
       DelStart;
     end;
     sIniFile.Free;
@@ -491,8 +492,8 @@ begin
       timer.Enabled := true;
       cbb1.Enabled := true;
       cbb1.ItemIndex := siniFile.ReadInteger('Position', 'Location', 0);
-      edt1.Enabled := true;
-      edt3.Enabled := true;
+//      edt1.Enabled := true;
+//      edt3.Enabled := true;
     end
     else
     begin
@@ -653,7 +654,6 @@ begin
     edt1.Enabled := False;
     edt3.Enabled := false;
     Pos.Enabled := False;
-    UpdateWidget.Enabled := False;
   end;
   if settingPanel.Top = 587 then
   begin
@@ -664,7 +664,7 @@ end;
 
 procedure TMainForm.autorunClick(Sender: TObject);
 begin
-  if autorun.Checked = True then
+  if autorun.SliderOn = false then
     AddStart
   else
     DelStart;
@@ -673,7 +673,7 @@ end;
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   siniFile := TInifile.Create(pathINI);
-  siniFile.writeBool('Main', 'Autorun', autorun.Checked);
+  siniFile.writeBool('Main', 'Autorun', autorun.SliderOn);
   siniFile.Free;
 end;
 
@@ -842,8 +842,8 @@ begin
       RefreshWidget.Enabled := True;
       ActiveWidget.Kind := bkAbort;
       ActiveWidget.Caption := 'Закрыть виджет';
-      edt1.Enabled := true;
-      edt3.Enabled := true;
+      //      edt1.Enabled := true;
+      //      edt3.Enabled := true;
       cbb1.Enabled := true;
       ChangePos.Enabled := true;
     end
@@ -860,7 +860,6 @@ begin
       edt3.Enabled := false;
       ChangePos.Enabled := false;
     end;
-    sIniFile.Free;
   end
   else
     showmessage('File not found!');
@@ -879,10 +878,6 @@ begin
       5: CheckWidget(pathINICalendar);
       6: CheckWidget(pathINICalc);
     end;
-  end;
-  if (AnimSettingHide.Enabled = true) and (AnimSettingShow.Enabled = true) then
-  begin
-    AnimSettingShow.Enabled := False;
   end;
 end;
 
@@ -1223,6 +1218,9 @@ begin
     pos.Enabled := False;
     edt1.ReadOnly := false;
     edt3.ReadOnly := false;
+    edt1.Enabled := true;
+    edt3.Enabled := true;
+    cbb1.Enabled := False;
   end
   else
   begin
@@ -1230,10 +1228,10 @@ begin
       (StrToInt(edt3.Text) < 0) or (StrToInt(edt3.Text) > Screen.Height) then
     begin
       ShowMessage('Выход за границу экрана!');
-      if StrToInt(edt1.Text)>Screen.Width then
-        edt1.Text := '';
-      if StrToInt(edt3.Text)>Screen.Height then
-        edt3.Text := '';
+      if StrToInt(edt1.Text) > Screen.Width then
+        edt1.Text := IntToStr(0);
+      if StrToInt(edt3.Text) > Screen.Height then
+        edt3.Text := IntToStr(0);
     end
     else
     begin
@@ -1242,6 +1240,9 @@ begin
       ChangePos.Caption := 'Изменить координаты';
       edt1.ReadOnly := true;
       edt3.ReadOnly := true;
+      edt1.Enabled := false;
+      edt3.Enabled := false;
+      cbb1.Enabled := true;
     end;
   end;
 end;
@@ -1349,10 +1350,9 @@ begin
     sknslctr1.Enabled := True;
     themes.Enabled := True;
     cbb1.Enabled := true;
-    edt1.Enabled := true;
-    edt3.Enabled := true;
+//    edt1.Enabled := true;
+//    edt3.Enabled := true;
     Pos.Enabled := True;
-    UpdateWidget.Enabled := True;
   end;
 end;
 

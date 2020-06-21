@@ -72,6 +72,7 @@ end;
 procedure FormPos(x, y: integer; center: boolean); stdcall;
 var
   empty: Boolean;
+  modx, mody: integer;
 begin
   isEmpy(FolderForm, empty);
   if empty = false then
@@ -91,14 +92,16 @@ begin
     end
     else
     begin
-      if x = 0 then
-        FolderForm.Left := x
+      modx := Screen.width - FolderForm.width;
+      mody := screen.height - FolderForm.height;
+      if x < modx then
+        FolderForm.left := x
       else
-        FolderForm.Left := x - FolderForm.clientwidth;
-      if y = 0 then
-        FolderForm.Top := y
+        FolderForm.left := modx;
+      if y < mody then
+        FolderForm.top := y
       else
-        FolderForm.Top := y - FolderForm.clientheight;
+        FolderForm.top := mody;
       sIniFile := TIniFile.Create(pathINI);
       sinifile.writeinteger('Position', 'Left', FolderForm.Left);
       sinifile.writeinteger('Position', 'Top', FolderForm.Top);
