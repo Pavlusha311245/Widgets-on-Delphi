@@ -24,7 +24,6 @@ type
     btnmul: TButton;
     btndiv: TButton;
     PopupMenu: TPopupMenu;
-    W1: TMenuItem;
     N1: TMenuItem;
     N2: TMenuItem;
     N3: TMenuItem;
@@ -34,7 +33,6 @@ type
     TimerShow: TTimer;
     btnrez: TButton;
     Background: TImage;
-    N5: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnclrClick(Sender: TObject);
@@ -53,7 +51,6 @@ type
     procedure btnrezClick(Sender: TObject);
     procedure BackgroundMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure N5Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -314,20 +311,6 @@ procedure TCalcForm.BackgroundMouseDown(Sender: TObject;
 begin
   ReleaseCapture;
   CalcForm.perform(WM_SysCommand, $F012, 0);
-end;
-
-procedure TCalcForm.N5Click(Sender: TObject);
-begin
-  if N5.Checked = True then
-  begin
-    N5.Checked := False;
-    CalcForm.FormStyle := fsNormal;
-  end
-  else
-  begin
-    n5.Checked := True;
-    CalcForm.FormStyle := fsStayOnTop;
-  end;
 end;
 
 end.

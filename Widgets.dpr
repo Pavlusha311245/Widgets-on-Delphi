@@ -3,8 +3,7 @@ program Widgets;
 uses
   Forms,
   Windows,
-  MainFormSetting in 'MainFormSetting.pas' {MainForm},
-  AboutApplication in 'AboutApplication.pas' {About};
+  MainFormSetting in 'MainFormSetting.pas' {MainForm};
 
 {$R *.res}
 function Check: boolean;
@@ -27,7 +26,6 @@ begin
   ShowWindow(Application.Handle, SW_HIDE);
   Application.Title := 'Widgets';
   Application.CreateForm(TMainForm, MainForm);
-  Application.CreateForm(TAbout, About);
   Application.Run;
 end.
 

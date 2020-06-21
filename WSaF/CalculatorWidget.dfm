@@ -2415,16 +2415,9 @@ object CalcForm: TCalcForm
   end
   object PopupMenu: TPopupMenu
     Left = 96
-    object W1: TMenuItem
-      Caption = 'Widgets'
-    end
     object N1: TMenuItem
       Caption = #1047#1072#1082#1088#1099#1090#1100' '#1074#1080#1076#1078#1077#1090
       OnClick = N1Click
-    end
-    object N5: TMenuItem
-      Caption = #1055#1086#1074#1077#1088#1093' '#1074#1089#1077#1093' '#1086#1082#1086#1085
-      OnClick = N5Click
     end
     object N2: TMenuItem
       Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100' '#1074#1080#1076#1078#1077#1090

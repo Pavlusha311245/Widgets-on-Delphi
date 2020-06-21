@@ -11,7 +11,6 @@ type
     FolderBackground: TImage;
     FolderFontground: TImage;
     PopupMenu: TPopupMenu;
-    W1: TMenuItem;
     N1: TMenuItem;
     N2: TMenuItem;
     N3: TMenuItem;
@@ -19,7 +18,6 @@ type
     TimerShow: TTimer;
     N5: TMenuItem;
     DialogPathFolder: TOpenDialog;
-    N6: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure WMMoving(var Msg: TWMMoving); message WM_MOVING;
@@ -32,7 +30,6 @@ type
       Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure TimerShowTimer(Sender: TObject);
     procedure N5Click(Sender: TObject);
-    procedure N6Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -181,20 +178,6 @@ begin
   sIniFile.WriteString('Folder', 'Path', SelectedDirName);
   sIniFile.Free;
   FolderForm.FolderFontground.Hint := SelectedDirName;
-end;
-
-procedure TFolderForm.N6Click(Sender: TObject);
-begin
-  if N6.Checked = True then
-  begin
-    N6.Checked := False;
-    FolderForm.FormStyle := fsNormal;
-  end
-  else
-  begin
-    n6.Checked := True;
-    FolderForm.FormStyle := fsStayOnTop;
-  end;
 end;
 
 end.

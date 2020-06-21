@@ -11,7 +11,6 @@ type
   TPhisicalMemoryForm = class(TForm)
     TimerMesuareDiskSize: TTimer;
     PopupMenu: TPopupMenu;
-    W1: TMenuItem;
     N1: TMenuItem;
     N2: TMenuItem;
     N3: TMenuItem;
@@ -24,7 +23,6 @@ type
     TimerDisk1: TTimer;
     TimerDisk2: TTimer;
     TimerShow: TTimer;
-    N5: TMenuItem;
     Seldisk1: TComboBox;
     Seldisk2: TComboBox;
     B1: TMenuItem;
@@ -42,7 +40,6 @@ type
     procedure TimerDisk1Timer(Sender: TObject);
     procedure TimerDisk2Timer(Sender: TObject);
     procedure TimerShowTimer(Sender: TObject);
-    procedure N5Click(Sender: TObject);
     procedure N4Click(Sender: TObject);
     procedure Seldisk1Change(Sender: TObject);
     procedure DiskNumber1DblClick(Sender: TObject);
@@ -424,20 +421,6 @@ begin
     TimerShow.Enabled := false;
     TimerDisk1.Enabled := true;
     TimerDisk2.Enabled := true;
-  end;
-end;
-
-procedure TPhisicalMemoryForm.N5Click(Sender: TObject);
-begin
-  if N5.Checked = True then
-  begin
-    N5.Checked := False;
-    PhisicalMemoryForm.FormStyle := fsNormal;
-  end
-  else
-  begin
-    n5.Checked := True;
-    PhisicalMemoryForm.FormStyle := fsStayOnTop;
   end;
 end;
 

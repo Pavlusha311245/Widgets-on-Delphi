@@ -75,6 +75,8 @@ end;
 procedure FormPos(x, y: integer; center: boolean); stdcall;
 var
   empty: Boolean;
+  modx: integer;
+  mody: Integer;
 begin
   isEmpy(CpuUsageForm, empty);
   if empty = false then
@@ -94,14 +96,16 @@ begin
     end
     else
     begin
-      if x = 0 then
-        CpuUsageForm.Left := x
+      modx := Screen.width - CpuUsageForm.width;
+      mody := screen.height - CpuUsageForm.height;
+      if x < modx then
+        cpuusageform.left := x
       else
-        CpuUsageForm.Left := x - CpuUsageForm.clientwidth;
-      if y = 0 then
-        CpuUsageForm.Top := y
+        cpuusageform.left := modx;
+      if y < mody then
+        cpuusageform.top := y
       else
-        CpuUsageForm.Top := y - CpuUsageForm.clientheight;
+        cpuusageform.top := mody;
       sIniFile := TIniFile.Create(pathINI);
       sinifile.writeinteger('Position', 'Left', CpuUsageForm.Left);
       sinifile.writeinteger('Position', 'Top', CpuUsageForm.Top);
@@ -147,10 +151,8 @@ begin
         end;
       4:
         begin
-          y := Round((screen.height / 2) -
-            (CpuUsageForm.clientheight / 2));
-          x := Round((screen.width / 2) -
-            (CpuUsageForm.clientwidth / 2));
+          y := Round((screen.height / 2) - (CpuUsageForm.clientheight / 2));
+          x := Round((screen.width / 2) - (CpuUsageForm.clientwidth / 2));
         end;
       5:
         begin
@@ -165,23 +167,20 @@ begin
               CpuUsageForm.clientwidth) then
               left_bot := false;
             if (sinifile.readinteger('Position', 'Top', 0) <> screen.height -
-              CpuUsageForm.clientheight) and
-              (sinifile.readinteger('Position', 'Left', 0) <> 0) then
+              CpuUsageForm.clientheight) and (sinifile.readinteger('Position',
+              'Left', 0) <> 0) then
               right_top := false;
             if (sinifile.readinteger('Position', 'Top', 0) <> screen.height -
-              CpuUsageForm.clientheight) and
-              (sinifile.readinteger('Position', 'Left', 0) <> screen.width -
-              CpuUsageForm.clientwidth) then
+              CpuUsageForm.clientheight) and (sinifile.readinteger('Position',
+              'Left', 0) <> screen.width - CpuUsageForm.clientwidth) then
               right_bot := false;
             if (sinifile.readinteger('Position', 'Top', 0) <>
-              Round((screen.height / 2) - (CpuUsageForm.clientheight / 2)))
-              and
+              Round((screen.height / 2) - (CpuUsageForm.clientheight / 2))) and
               (sinifile.readinteger('Position', 'Left', 0) <> Round((screen.width
               / 2) - (CpuUsageForm.clientwidth / 2))) then
               centered := false;
-            if (left_top = false) and (left_bot = False) and (right_top =
-              false) and
-              (right_bot = false) and (centered = false) then
+            if (left_top = false) and (left_bot = False) and (right_top = false)
+              and (right_bot = false) and (centered = false) then
               userpos := true;
           end;
         end;
